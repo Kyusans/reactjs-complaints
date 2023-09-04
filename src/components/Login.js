@@ -6,7 +6,9 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
 	if(sessionStorage.getItem("url") === null) {
-		sessionStorage.setItem("url", "http://localhost/complaint/");
+		// sessionStorage.setItem("url", "http://localhost/complaint/php-complaints-backend/");
+		
+		sessionStorage.setItem("url", "http://www.shareatext.com/gsd/api/");
 	}
 	const [userId, setUserId] = useState("");
 	const [password, setPassword] = useState("");
@@ -15,8 +17,7 @@ export default function Login() {
 	const login = () =>{
 		const url = sessionStorage.getItem("url") + "users.php";
 		const jsonData = {
-			//username for now
-			username: userId,
+			userId: userId,
 			password: password,
 		}
 		const formData = new FormData();
