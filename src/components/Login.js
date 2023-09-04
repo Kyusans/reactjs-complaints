@@ -2,16 +2,18 @@ import React, { useState } from 'react'
 import { Card, Form, FloatingLabel, Container, Button} from 'react-bootstrap'
 import "./css/site.css";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-	if(localStorage.getItem("url") === null) {
-		localStorage.setItem("url", "http://localhost/contact/");
+	if(sessionStorage.getItem("url") === null) {
+		sessionStorage.setItem("url", "http://localhost/complaint/");
 	}
 	const [userId, setUserId] = useState("");
 	const [password, setPassword] = useState("");
+	const navigateTo = useNavigate();
 
 	const login = () =>{
-		const url = localStorage.getItem("url") + "users.php";
+		const url = sessionStorage.getItem("url") + "users.php";
 		const jsonData = {
 			//username for now
 			username: userId,
@@ -26,10 +28,10 @@ export default function Login() {
 			method: "post",
 		})
 		.then((res)=>{
-			console.log("Res: " + res.data);
+			console.log("Res: " + JSON.stringify(res.data));
 			if(res.data !== 0){
-				//login 
-				console.log("nag login na siya");
+				sessionStorage.setItem("userId", res.data.user_id);
+				navigateTo("admin/dashboard");
 			}else{
 				alert("Invalid id or password");
 			}
