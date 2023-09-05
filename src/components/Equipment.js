@@ -1,37 +1,48 @@
 import React, { useState } from 'react'
-import { Card, Col, Container, FloatingLabel, Form, Row } from 'react-bootstrap'
+import { Button, Card, Col, Container, FloatingLabel, Form, Row } from 'react-bootstrap'
 
 function Equipment() {
   const [equipment, setEquipment] = useState("");
   return (
     <div>
-      <Container>
         <Row>
           <Col>
-            <Card>
-              <Card.Body>
-                 <Form>
+            <Container>
+              <Card border='success'>
+                <Card.Header className='text-center'><h3>Equipment Category</h3></Card.Header>
+                <Card.Body>
+                  <Form>
                     <FloatingLabel label="Equipment Category">
-                      <Form.Control type='text' value={equipment} onChange={(e) => setEquipment(e.target.value)}/>
+                      <Form.Control type='text' value={equipment} onChange={(e) => setEquipment(e.target.value)} placeholder='Equipment Category'/>
                     </FloatingLabel>
                   </Form>
-              </Card.Body>
-            </Card>
+                <Container className='text-center mt-3'>
+                  <Button variant='outline-success'>Submit</Button>
+                </Container>
+                </Card.Body>
+              </Card>
+            </Container>
           </Col>
           <Col>
-            <Card>
+          <Container>
+            <Card border='success'>
+              <Card.Header className='text-center'><h3>Equipment</h3></Card.Header>
               <Card.Body>
                  <Form>
-                    <FloatingLabel label="Equipment Category">
-                      <Form.Control type='text' value={equipment} onChange={(e) => setEquipment(e.target.value)}/>
+                    <FloatingLabel label="Equipment">
+                      <Form.Control type='text' value={equipment} onChange={(e) => setEquipment(e.target.value)} placeholder='Equipment'/>
                     </FloatingLabel>
                   </Form>
+                <Container className='text-center mt-3'>
+                  <Button variant='outline-success'>Submit</Button>
+                </Container>
               </Card.Body>
             </Card>
+            </Container>           
           </Col>
         </Row>
 
-      </Container>
+      
     </div>
   )
 }

@@ -37,7 +37,7 @@ function Location() {
         <Col>
           <Container fluid="md" className='text-center'>
             <Card border='success'>
-              <Card.Header><h2>Location Category</h2></Card.Header>
+              <Card.Header><h3>Location Category</h3></Card.Header>
               <Card.Body>
                 <Form>
                   <Form.Group>
@@ -56,6 +56,7 @@ function Location() {
         <Col>
           <Container fluid="md" className='text-center'>
             <Card border='success'>
+            <Card.Header><h3>Location</h3></Card.Header>
               <Card.Body>
                 <Form>
                   <Form.Group>
