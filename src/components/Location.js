@@ -37,6 +37,7 @@ function Location() {
         <Col>
           <Container fluid="md" className='text-center'>
             <Card border='success'>
+              <Card.Header><h2>Location Category</h2></Card.Header>
               <Card.Body>
                 <Form>
                   <Form.Group>
@@ -59,7 +60,7 @@ function Location() {
                 <Form>
                   <Form.Group>
                     <FloatingLabel label="Category">
-                      <Form.Control type='text' value={location} onChange={(e) => setLocation(e.target.value)} placeholder='Category' />
+                      <Form.Control type='text' value={location} onChange={(e) => setLocation(e.target.value)} placeholder='Category'/>
                     </FloatingLabel>
                   </Form.Group>
                 </Form>
