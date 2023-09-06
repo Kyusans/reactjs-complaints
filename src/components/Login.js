@@ -4,6 +4,7 @@ import "./css/site.css";
 import cocLogo from "./images/coclogo.jpg";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import AlertScript from './AlertScript';
 
 export default function Login() {
 	if(sessionStorage.getItem("url") === null) {
@@ -13,6 +14,18 @@ export default function Login() {
 	const [userId, setUserId] = useState("");
 	const [password, setPassword] = useState("");
 	const navigateTo = useNavigate();
+
+	//for alert
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertVariant, setAlertVariant] = useState("");
+	const [alertMessage, setAlertMessage] = useState("");
+
+
+	function getAlert(variantAlert, messageAlert){
+		setShowAlert(true);
+		setAlertVariant(variantAlert);
+		setAlertMessage(messageAlert);
+	}
 
 	const login = () =>{
 		const url = sessionStorage.getItem("url") + "users.php";
@@ -32,7 +45,10 @@ export default function Login() {
 			console.log("Res: " + JSON.stringify(res.data));
 			if(res.data !== 0){
 				sessionStorage.setItem("userId", res.data.user_id);
-				navigateTo("admin/dashboard");
+				getAlert("success", "Success!");
+				setTimeout(() => {
+					navigateTo("admin/dashboard");
+				}, 1500);
 			}else{
 				alert("Invalid id or password");
 			}
@@ -50,6 +66,7 @@ export default function Login() {
 						<Container className='text-center'>	
 							<Image src={cocLogo} className='small-image' rounded />
 						</Container>
+						<AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
 						<Form>
 							<Form.Group className='mt-3 mb-3 fatter-text centered-label'>
 								<FloatingLabel label="Id">
