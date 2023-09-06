@@ -1,18 +1,16 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Login from './components/Login';
-import AdminDashboard from './components/AdminDashboard';
-import NavBar from './components/NavBar';
+import MainLayoutRoutes from './MainLayoutRoutes';
 
 
 function App() {
   return (
     <>
-      <NavBar />
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="*" element={<MainLayoutRoutes />}/>
         </Routes>
       </Router>
     </>
