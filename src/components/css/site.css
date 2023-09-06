@@ -44,10 +44,10 @@
     transform: translate(-50%, -50%);
 }
 
-/* .form-control{
-    width: 250px !important;
-    margin: 0 auto;
-} */
+.green-header {
+    background-color: rgb(71, 252, 71);
+    color: white !important; 
+  }
 
 .button-large {
     width: 250px !important;
@@ -72,10 +72,6 @@
 
 .ms-auto {
     padding-right: 30px;
-}
-
-.green-header {
-    background-color: rgb(7, 114, 7) !important;
 }
 
 .rating-container {

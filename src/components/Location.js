@@ -43,7 +43,6 @@ function Location() {
     axios({url: url, data: formData, method: "post"})
     .then((res)=>{
       if(res.data !== 0){
-        // console.log("res: " + JSON.stringify(res.data));
         setLocationCategory(res.data);
       }
     })
@@ -54,10 +53,10 @@ function Location() {
   return (
     <div>
       <Row>
-        <Col>
+        <Col className='mb-4'>
           <Container fluid="md" className='text-center'>
-            <Card border='success'>
-              <Card.Header><h3>Location Category</h3></Card.Header>
+            <Card border='dark'>
+              <Card.Header className='green-header'><h3>Location Category</h3></Card.Header>
               <Card.Body>
                 <Form>
                   <Form.Group>
@@ -75,8 +74,8 @@ function Location() {
         </Col>
         <Col>
           <Container fluid="md" className='text-center'>
-            <Card border='success'>
-            <Card.Header><h3>Location</h3></Card.Header>
+            <Card border='dark'>
+            <Card.Header className='green-header'><h3>Location</h3></Card.Header>
               <Card.Body>
                 <Form>
                   <Form.Group className='mb-3'>
@@ -89,8 +88,8 @@ function Location() {
                   </Form.Group>
                   
                   <Form.Group>
-                    <FloatingLabel label="Category">
-                      <Form.Control type='text' value={location} onChange={(e) => setLocation(e.target.value)} placeholder='Category'/>
+                    <FloatingLabel label="Location">
+                      <Form.Control type='text' value={location} onChange={(e) => setLocation(e.target.value)} placeholder='Location'/>
                     </FloatingLabel>
                   </Form.Group>
                 </Form>
