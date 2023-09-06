@@ -13,14 +13,12 @@ function LocationCategory() {
 	const [alertVariant, setAlertVariant] = useState("");
 	const [alertMessage, setAlertMessage] = useState("");
 
-
 	function getAlert(variantAlert, messageAlert){
 		setShowAlert(true);
 		setAlertVariant(variantAlert);
 		setAlertMessage(messageAlert);
 	}
   const submitLocationCategory = () =>{
-    console.log(JSON.stringify(localStorage.getItem("url")));
     const url = localStorage.getItem("url") + "users.php";
     const jsonData = {
       locationCategory : locationCategoryText
@@ -28,15 +26,19 @@ function LocationCategory() {
     const formData = new FormData();
     formData.append("json", JSON.stringify(jsonData));
     formData.append("operation", "addLocationCategory");
+    console.log("url: " + url);
     axios({
       url: url,
       data: formData,
       method: "post",
     })
     .then((res)=>{
-      console.log(JSON.stringify(res.data));
+      console.log("res: " + JSON.stringify(res.data));
       if(res.data !== 0){
         getAlert("success", "Success!");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       }
     })
     .catch((err)=>{
@@ -58,11 +60,11 @@ function LocationCategory() {
   return (
     <div>
         <Col>
-          <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
           <Container fluid="md" className='text-center'>
             <Card border='dark'>
               <Card.Header className='green-header'><h3>Location Category</h3></Card.Header>
-              <Card.Body>
+              <Card.Body>    
+                <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
                 <Form noValidate validated={validated} onSubmit={formValidation}>
                   <Form.Group>
                     <FloatingLabel label="Location Category">

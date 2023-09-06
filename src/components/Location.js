@@ -37,6 +37,9 @@ function Location() {
     })
       .then((res) => {
         if (res.data !== 0) {
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500)
           getAlert("success", "Success!");
         }
       })
@@ -51,7 +54,6 @@ function Location() {
     formData.append("operation", "getLocationCategory");
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
-        console.log(JSON.stringify(res.data));
         if (res.data !== 0) {
           setLocationCategory(res.data);
         }
@@ -80,7 +82,6 @@ function Location() {
 
   return (
     <div>
-      <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
       <Row>
         <Col>
           <Container fluid="md" className="text-center">
@@ -89,6 +90,7 @@ function Location() {
                 <h3>Location</h3>
               </Card.Header>
               <Card.Body>
+                <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
                 <Form noValidate validated={validated} onSubmit={formValidation}>
                   <Form.Group className="mb-3">
                     <Form.Select
