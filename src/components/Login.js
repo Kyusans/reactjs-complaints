@@ -6,10 +6,12 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AlertScript from './AlertScript';
 
+
 export default function Login() {
-	if(sessionStorage.getItem("url") === null) {
-		sessionStorage.setItem("url", "http://localhost/complaint/php-complaints-backend/");
-		// sessionStorage.setItem("url", "http://www.shareatext.com/gsd/api/");
+	localStorage.setItem("url", "http://localhost/complaint/php-complaints-backend/");
+	if(localStorage.getItem("url") === null) {
+		localStorage.setItem("url", "http://localhost/complaint/php-complaints-backend/");
+		// localStorage.setItem("url", "http://www.shareatext.com/gsd/api/");
 	}
 	const [userId, setUserId] = useState("");
 	const [password, setPassword] = useState("");
@@ -28,7 +30,7 @@ export default function Login() {
 	}
 
 	const login = () =>{
-		const url = sessionStorage.getItem("url") + "users.php";
+		const url = localStorage.getItem("url") + "users.php";
 		const jsonData = {
 			userId: userId,
 			password: password,
@@ -44,7 +46,7 @@ export default function Login() {
 		.then((res)=>{
 			console.log("Res: " + JSON.stringify(res.data));
 			if(res.data !== 0){
-				sessionStorage.setItem("userId", res.data.user_id);
+				localStorage.setItem("userId", res.data.user_id);
 				getAlert("success", "Success!");
 				setTimeout(() => {
 					navigateTo("admin/dashboard");
