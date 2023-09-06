@@ -13,7 +13,6 @@ function Location() {
   const submitLocation = () =>{
     const url = localStorage.getItem("url") + "users.php";
 		const jsonData = {
-			userId: sessionStorage.getItem("userId"),
 			location: location
 		}
 		const formData = new FormData();
@@ -27,8 +26,6 @@ function Location() {
 		.then((res)=>{
 			if(res.data !== 0){
         alert("Success!");
-			}else{
-				alert("Invalid id or password");
 			}
 		})
 		.catch((err)=>{
