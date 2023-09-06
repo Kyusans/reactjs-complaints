@@ -8,6 +8,11 @@
     margin: 0 auto;
 }
 
+.small-image {
+    width: 150px;
+    height: 150px;
+  }
+
 .navbar-light .navbar-brand,
 .navbar-light .navbar-nav .nav-link {
     color: white;

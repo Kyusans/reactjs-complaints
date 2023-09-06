@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { Card, Form, FloatingLabel, Container, Button} from 'react-bootstrap'
+import React, { useState } from 'react';
+import { Card, Form, FloatingLabel, Container, Button, Image} from 'react-bootstrap';
 import "./css/site.css";
+import cocLogo from "./images/coclogo.jpg";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -46,8 +47,10 @@ export default function Login() {
 		<>
 			<Container fluid="md" className='centered'>
 				<Card className="card-thin" border='success'>
-					<Card.Header><h2>Login</h2></Card.Header>
 					<Card.Body>
+						<Container className='text-center'>	
+							<Image src={cocLogo} className='small-image' rounded />
+						</Container>
 						<Form>
 							<Form.Group className='mt-3 mb-3 fatter-text centered-label'>
 								<FloatingLabel label="Id">
