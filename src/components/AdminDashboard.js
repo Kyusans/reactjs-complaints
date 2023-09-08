@@ -16,11 +16,11 @@ export default function AdminDashboard() {
   return (
     <div>
       {localStorage.getItem("adminLoggedIn") === "true" ? (
-        <Row className="mt-5">
-          <Col>
+        <Row className="mt-2">
+          <Col className="mt-3">
             <LocationCategory />
           </Col>
-          <Col>
+          <Col className="mt-3">
             <Location />
           </Col>
         </Row>

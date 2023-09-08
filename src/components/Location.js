@@ -2,12 +2,18 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Card, Form, FloatingLabel, Container, Button, Row, Col } from 'react-bootstrap';
 import AlertScript from './AlertScript';
+import LocationModal from './LocationModal';
 
 function Location() {
   const [location, setLocation] = useState("");
   const [locationCategory, setLocationCategory] = useState([]);
   const [categoryId, setCategoryId] = useState("");
   const [validated, setValidated] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
+
+  const openLocationModal = () => {setShowLocationModal(true);}
+  const closeLocationModal = () => {setShowLocationModal(false);}
+
   // For alert
   const [showAlert, setShowAlert] = useState(false);
   const [alertVariant, setAlertVariant] = useState("");
@@ -18,9 +24,6 @@ function Location() {
     setAlertVariant(variantAlert);
     setAlertMessage(messageAlert);
   }
-
-  localStorage.setItem("url", "http://localhost/complaint/php-complaints-backend/");
-
   const submitLocation = () => {
     const url = localStorage.getItem("url") + "users.php";
     const jsonData = {
@@ -29,7 +32,7 @@ function Location() {
     };
     const formData = new FormData();
     formData.append("json", JSON.stringify(jsonData));
-    formData.append("operation", "submitLocation");
+    formData.append("operation", "addLocation");
     axios({
       url: url,
       data: formData,
@@ -122,9 +125,8 @@ function Location() {
                     </FloatingLabel>
                   </Form.Group>
                   <Container className="mt-3">
-                    <Button type="submit" variant="outline-success">
-                      Submit
-                    </Button>
+                    <Button type="submit" variant="outline-success">Submit</Button>{" "}
+                    <Button variant='outline-secondary' onClick={openLocationModal}>See all location</Button>
                   </Container>
                 </Form>
               </Card.Body>
@@ -132,6 +134,7 @@ function Location() {
           </Container>
         </Col>
       </Row>
+      <LocationModal show={showLocationModal} onHide={closeLocationModal}/>
     </div>
   );
 }
