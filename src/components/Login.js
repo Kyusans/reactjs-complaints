@@ -47,10 +47,15 @@ export default function Login() {
 			console.log("Res: " + JSON.stringify(res.data));
 			if(res.data !== 0){
 				localStorage.setItem("userId", res.data.user_id);
-				getAlert("success", "Success!");
-				setTimeout(() => {
-					navigateTo("admin/dashboard");
-				}, 1500);
+				if(res.data.user_level === 100){
+					localStorage.setItem("adminLoggedIn", "true");
+					getAlert("success", "Success!");
+					setTimeout(() => {
+						navigateTo("admin/dashboard");
+					}, 1500);
+				}else{
+					//navigate sa non admin dashboard
+				}
 			}else{
 				alert("Invalid id or password");
 			}
