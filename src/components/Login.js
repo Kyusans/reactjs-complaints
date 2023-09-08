@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Form, FloatingLabel, Container, Button, Image} from 'react-bootstrap';
 import "./css/site.css";
 import cocLogo from "./images/coclogo.jpg";
@@ -8,11 +8,16 @@ import AlertScript from './AlertScript';
 
 
 export default function Login() {
-	localStorage.setItem("url", "http://localhost/complaint/php-complaints-backend/");
-	if(localStorage.getItem("url") === null) {
-		localStorage.setItem("url", "http://localhost/complaint/php-complaints-backend/");
+	if(localStorage.getItem("url") === null || localStorage.getItem("url") !== "http://localhost/gsd/") {
+		console.log("Nag change ang url")
+		localStorage.setItem("url", "http://localhost/gsd/");
 		// localStorage.setItem("url", "http://www.shareatext.com/gsd/api/");
 	}
+	useEffect(() => {
+		localStorage.setItem("userId", null);
+		localStorage.setItem("isLoggedIn", "0");
+	}, [])
+	
 	const [userId, setUserId] = useState("");
 	const [password, setPassword] = useState("");
 	const navigateTo = useNavigate();
@@ -44,20 +49,22 @@ export default function Login() {
 			method: "post",
 		})
 		.then((res)=>{
-			console.log("Res: " + JSON.stringify(res.data));
 			if(res.data !== 0){
 				localStorage.setItem("userId", res.data.user_id);
+				localStorage.setItem("isLoggedIn", "1");
+				getAlert("success", "Success!");
 				if(res.data.user_level === 100){
 					localStorage.setItem("adminLoggedIn", "true");
-					getAlert("success", "Success!");
 					setTimeout(() => {
-						navigateTo("admin/dashboard");
+						navigateTo("/admin/dashboard");
 					}, 1500);
 				}else{
-					//navigate sa non admin dashboard
+					setTimeout(() => {
+						navigateTo("/user/dashboard")
+					}, 1500);
 				}
 			}else{
-				alert("Invalid id or password");
+				getAlert("danger" ,"Invalid id or password");
 			}
 		})
 		.catch((err)=>{

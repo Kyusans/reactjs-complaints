@@ -5,7 +5,7 @@ function NavBar() {
     <>
       <Navbar className="nav-background" expand="lg" text="light">
         <Container>
-          <Navbar.Brand className="brand">-Brand Name-</Navbar.Brand>
+          <Navbar.Brand className="brand">GSD</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <NavLink

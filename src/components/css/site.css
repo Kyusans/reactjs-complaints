@@ -122,3 +122,19 @@
     height: 50px;
     width: 50px;
 }
+
+.ticket-cell {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.3s ease;
+}
+  
+.unread-ticket {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+  
+.read-ticket {
+    font-weight: normal;
+    background-color: white;
+}
