@@ -153,5 +153,10 @@
 }
 
 .ticket-description{
+    font-size: 12px;
+}
+
+.ticket-date{
     font-size: 13px;
+    padding: 10px;
 }
