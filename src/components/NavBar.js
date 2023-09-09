@@ -10,7 +10,7 @@ function NavBar() {
           <Navbar.Collapse id="basic-navbar-nav">
             <NavLink
               style={{ color: "white", marginRight: "10px" }}
-              href="/itdays/"
+              href="/user/dashboard/"
             >
               Home
             </NavLink>
@@ -18,7 +18,7 @@ function NavBar() {
           <Navbar.Collapse className="justify-content-end">
             <NavLink
               style={{ color: "white", marginRight: "10px" }}
-              href="/itdays/"
+              href="/"
             >
               Signout
             </NavLink>

@@ -8,6 +8,15 @@
     margin: 0 auto;
 }
 
+.card-medium{
+    width: 90%;
+    margin: 0 auto;
+}
+
+.width-100{
+    width: 100%;
+}
+
 .small-image {
     width: 150px;
     height: 150px;
@@ -118,6 +127,10 @@
     border: 1px solid black;
 }
 
+.border-3 {
+    border: 3px solid black;
+}
+
 .small-button {
     height: 50px;
     width: 50px;
@@ -137,4 +150,8 @@
 .read-ticket {
     font-weight: normal;
     background-color: white;
+}
+
+.ticket-description{
+    font-size: 13px;
 }
