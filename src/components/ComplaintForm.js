@@ -6,18 +6,17 @@ import AlertScript from './AlertScript';
 function ComplaintForm(props) {
   const {show, onHide} = props;
   const [subject, setSubject] = useState("");
-  const [clientId, setClientId] = useState(0);
-  const [locationId, setLocationId] = useState(0);
-  const [locationCategoryId, setLocationCategoryId] = useState(0);
+  const [locationId, setLocationId] = useState("");
+  const [locationCategoryId, setLocationCategoryId] = useState("");
   const [description, setDescription] = useState("");
   const [locationCategory, setLocationCategory] = useState([]);
   const [locationName, setLocationName] = useState([]);
+  const [validated, setValidated] = useState(false);
 
   //for alert
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertVariant, setAlertVariant] = useState("");
 	const [alertMessage, setAlertMessage] = useState("");
-
 
 	function getAlert(variantAlert, messageAlert){
 		setShowAlert(true);
@@ -26,7 +25,8 @@ function ComplaintForm(props) {
 	}
 
   const addComplaint = () => {
-    const url = localStorage.getItem("url") + "admin.php";
+    const url = localStorage.getItem("url") + "users.php";
+    const clientId = localStorage.getItem("userId");
     const jsonData = {
       subject: subject,
       clientId: clientId,
@@ -39,9 +39,12 @@ function ComplaintForm(props) {
     formData.append("operation", "addComplaint");
     axios({ url: url, data: formData, method: "post" })
      .then((res) => {
+        console.log("response complaint: " + JSON.stringify(res.data))
         if (res.data !== 0) {
-          getAlert("");
-          handleClose();
+          getAlert("success", "Success");
+          setTimeout(() => {
+            handleClose();
+          }, 1500);
         }
       })
      .catch((err) => {
@@ -66,14 +69,23 @@ function ComplaintForm(props) {
   };
 
   function handleClose(){
+    setValidated(false);
     setSubject("");
-    setClientId(0);
-    setLocationId(0);
-    setLocationCategoryId(0);
+    setLocationId("");
+    setLocationCategoryId("");
     setDescription("");
+    setShowAlert(false);
     onHide();
   }
-
+	const formValidation = (e) =>{
+		const form = e.currentTarget;
+    e.preventDefault();
+    e.stopPropagation();
+		if(form.checkValidity() === true){
+      addComplaint();
+		}
+		setValidated(true);
+	}
   useEffect(() => {
     const getLocationCategory = () => {
       const url = localStorage.getItem("url") + "admin.php";
@@ -90,7 +102,7 @@ function ComplaintForm(props) {
         });
     };
     getLocationCategory();
-    if(locationCategoryId !== 0){
+    if(locationCategoryId !== ""){
       getLocation(locationCategoryId);
     }
   }, [locationCategoryId])
@@ -101,10 +113,11 @@ function ComplaintForm(props) {
         <Modal.Header closeButton>Complaint Form</Modal.Header>
         <Modal.Body>
           <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
-          <Form>
+          <Form noValidate validated={validated} onSubmit={formValidation}>
             <Form.Group className='mb-3'>
               <FloatingLabel label="Subject">
                 <Form.Control type='text' value={subject} onChange={(e) => setSubject(e.target.value)} placeholder='Subject' autoFocus required/>
+                <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
               </FloatingLabel>
             </Form.Group>
             <Form.Group className='mb-3'>
@@ -117,35 +130,38 @@ function ComplaintForm(props) {
                   as='textarea'
                   required
                 />
+                <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
               </FloatingLabel>
             </Form.Group>
             <Form.Group className='mb-4'>
               <Row className='g2'>
                 <Col>
                   <FloatingLabel label="Location Category">
-                    <Form.Select value={locationCategoryId} onChange={(e) => setLocationCategoryId(e.target.value)}>
-                      <option disabled={locationCategoryId !== 0 ? true : false}>Open this select menu</option>
+                    <Form.Select value={locationCategoryId} onChange={(e) => setLocationCategoryId(e.target.value)} required>
+                      <option disabled={locationCategoryId !== "" ? true : false} value={""}>Open this select menu</option>
                       {locationCategory.map((locationCateg, index) => (
                         <option key={index} value={locationCateg.locCateg_id}>{locationCateg.locCateg_name}</option>
                       ))}
                     </Form.Select>
+                    <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
                   </FloatingLabel>
                 </Col>
                 <Col>
                   <FloatingLabel label="Location">
-                    <Form.Select value={locationId} onChange={(e) => setLocationId(e.target.value)} disabled={locationCategoryId !== 0 ? false : true}>
-                      <option>Open this select menu</option>
+                    <Form.Select value={locationId} onChange={(e) => setLocationId(e.target.value)} disabled={locationCategoryId !== "" ? false : true} required>
+                      <option value={""}>Open this select menu</option>
                       {locationName.map((location, index) =>(
                         <option key={index} value={location.location_id}>{location.location_name}</option>
                       ))}
                     </Form.Select>
+                    <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
                   </FloatingLabel>
                 </Col>
               </Row>
             </Form.Group>
             <Modal.Footer>
               <Button variant='outline-danger' onClick={handleClose}>Close</Button>
-              <Button variant='outline-success' onClick={addComplaint}>Submit</Button>
+              <Button variant='outline-success' type='submit'>Submit</Button>
             </Modal.Footer>
           </Form>
         </Modal.Body>
