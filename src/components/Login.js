@@ -8,15 +8,11 @@ import AlertScript from './AlertScript';
 
 
 export default function Login() {
-	if(localStorage.getItem("url") === null || localStorage.getItem("url") !== "http://localhost/gsd/") {
+	if(localStorage.getItem("url") !== "http://localhost/gsd/") {
 		console.log("Nag change ang url")
 		localStorage.setItem("url", "http://localhost/gsd/");
 		// localStorage.setItem("url", "http://www.shareatext.com/gsd/api/");
 	}
-	useEffect(() => {
-		localStorage.setItem("userId", null);
-		localStorage.setItem("isLoggedIn", "0");
-	}, [])
 	
 	const [userId, setUserId] = useState("");
 	const [password, setPassword] = useState("");
@@ -72,7 +68,10 @@ export default function Login() {
 			alert("There was an unexpected error: " + err);
 		})
 	}
-
+	useEffect(() => {
+		localStorage.setItem("userId", null);
+		localStorage.setItem("isLoggedIn", "0");
+	}, [])
 	return (
 		<>
 			<Container fluid="md" className='centered'>

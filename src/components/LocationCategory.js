@@ -19,7 +19,7 @@ function LocationCategory() {
 		setAlertMessage(messageAlert);
 	}
   const submitLocationCategory = () =>{
-    const url = localStorage.getItem("url") + "users.php";
+    const url = localStorage.getItem("url") + "admin.php";
     const jsonData = {
       locationCategory : locationCategoryText
     }

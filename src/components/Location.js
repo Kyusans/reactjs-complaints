@@ -25,7 +25,7 @@ function Location() {
     setAlertMessage(messageAlert);
   }
   const submitLocation = () => {
-    const url = localStorage.getItem("url") + "users.php";
+    const url = localStorage.getItem("url") + "admin.php";
     const jsonData = {
       location: location,
       categoryId: categoryId,
@@ -52,7 +52,7 @@ function Location() {
   };
 
   const getLocationCategory = () => {
-    const url = localStorage.getItem("url") + "users.php";
+    const url = localStorage.getItem("url") + "admin.php";
     const formData = new FormData();
     formData.append("operation", "getLocationCategory");
     axios({ url: url, data: formData, method: "post" })
