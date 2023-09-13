@@ -2,7 +2,7 @@ import React from 'react'
 import { Col, Form, Modal, Row } from 'react-bootstrap'
 
 function JobOrderModal(props) {
-  const {show, onHide} = props;
+  const {show, onHide, ticketId} = props;
 
   return (
     <div>
@@ -11,7 +11,7 @@ function JobOrderModal(props) {
         <Modal.Body>
           <Form>
             <Form.Group as={Row}> 
-              <Form.Label column sm="2">Ticket #</Form.Label>
+              <Form.Label column sm="2">{ticketId}</Form.Label>
               <Col sm="10">
                 <Form.Control plaintext readOnly defaultValue="#69" />
               </Col>

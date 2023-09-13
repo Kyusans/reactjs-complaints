@@ -100,10 +100,6 @@
     height: 325px;
 }
 
-.form-control.textarea {
-    height: auto !important;
-}
-
 .margin-auto{
     margin: 0 auto;
 }
