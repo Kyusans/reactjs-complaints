@@ -1,4 +1,4 @@
-import { Col, Container, Pagination, Row, Table } from "react-bootstrap";
+import { Pagination, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";

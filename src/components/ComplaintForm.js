@@ -5,9 +5,9 @@ import AlertScript from './AlertScript';
 
 function ComplaintForm(props) {
   const {show, onHide} = props;
-  const [subject, setSubject] = useState("");
   const [locationId, setLocationId] = useState("");
   const [locationCategoryId, setLocationCategoryId] = useState("");
+  const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [locationCategory, setLocationCategory] = useState([]);
   const [location, setLocation] = useState([]);
