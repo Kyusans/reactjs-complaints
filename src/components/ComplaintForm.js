@@ -10,7 +10,7 @@ function ComplaintForm(props) {
   const [locationCategoryId, setLocationCategoryId] = useState("");
   const [description, setDescription] = useState("");
   const [locationCategory, setLocationCategory] = useState([]);
-  const [locationName, setLocationName] = useState([]);
+  const [location, setLocation] = useState([]);
   const [validated, setValidated] = useState(false);
   //for alert
 	const [showAlert, setShowAlert] = useState(false);
@@ -58,20 +58,15 @@ function ComplaintForm(props) {
     formData.append("operation", "getLocations");
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
+        console.log("res.data ni getLocations: " + JSON.stringify(res.data));
         if (res.data !== 0) {
-          setLocationName(res.data);
+          setLocation(res.data);
         }
       })
       .catch((err) => {
         alert("There was an unexpected error: " + err);
       });
   };
-  
-  function handleCategoryChange(e){
-    const id = e.target.value;
-    setLocationCategoryId(id);
-    console.log(locationCategoryId);
-  }
 
   function handleClose(){
     setValidated(false);
@@ -95,6 +90,8 @@ function ComplaintForm(props) {
     const getLocationCategory = async () => {
       try {
         const url = localStorage.getItem("url") + "admin.php";
+        const clientId = localStorage.getItem("userId");
+        console.log("clientId: " + clientId);
         const formData = new FormData();
         formData.append("operation", "getLocationCategory");
         const response = await axios({
@@ -110,9 +107,9 @@ function ComplaintForm(props) {
         getAlert("danger", "There was an unexpected error: " + error);
       }
     };
-    
     getLocationCategory();
     if(locationCategoryId !== ""){
+      setLocationId("");
       getLocation(locationCategoryId);
     }
   }, [locationCategoryId])
@@ -143,32 +140,34 @@ function ComplaintForm(props) {
                 <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
               </FloatingLabel>
             </Form.Group>
-            <Form.Group className='mb-4'>
-              <Row className='g2'>
-                <Col>
-                  <FloatingLabel label="Location Category">
-                    <Form.Select value={locationCategoryId} onChange={e=>setLocationCategoryId(e.target.value)} required>
-                      <option disabled={locationCategoryId !== "" ? true : false} value="">Open this select menu</option>
-                      {locationCategory.map((locationCateg, index) => (
-                        <option key={index} value={locationCateg.locCateg_id}>{locationCateg.locCateg_name}</option>
-                      ))}
-                    </Form.Select>
-                    <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
-                  </FloatingLabel>
-                </Col>
-                <Col>
-                  <FloatingLabel label="Location">
-                    <Form.Control as="select" value={locationId} onChange={(e) => setLocationId(e.target.value)} disabled={locationCategoryId !== "" ? false : true} required>
-                      <option value={""}>Open this select menu</option>
-                      {locationName.map((location, index) =>(
-                        <option key={index} value={location.location_id}>{location.location_name}</option>
-                      ))}
-                    </Form.Control>
-                    <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
-                  </FloatingLabel>
-                </Col>
-              </Row>
-            </Form.Group>
+            <Row className='g2'>
+              <Form.Group as={Col} className='mb-4'>
+                <FloatingLabel label="Location Category">
+                  <Form.Select value={locationCategoryId} onChange={e=>setLocationCategoryId(e.target.value)} required>
+                    <option disabled={locationCategoryId !== "" ? true : false} value="">Open this select menu</option>
+                    {locationCategory.map((locationCateg, index) => (
+                      <option key={index} value={locationCateg.locCateg_id}>{locationCateg.locCateg_name}</option>
+                    ))}
+                  </Form.Select>
+                  <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
+                </FloatingLabel>
+              </Form.Group>
+              <Form.Group as={Col}>
+                {locationCategoryId && (
+                  <>
+                    <FloatingLabel label="Location">
+                      <Form.Select value={locationId} onChange={e => setLocationId(e.target.value)} required>
+                        <option value={""}>Open this select menu</option>
+                        {location.map((locations, index) => (
+                          <option key={index} value={locations.location_id}>{locations.location_name}</option>
+                        ))}
+                      </Form.Select>
+                      <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
+                    </FloatingLabel>
+                  </>
+                )}
+              </Form.Group>
+            </Row>
             <Modal.Footer>
               <Button variant='outline-danger' onClick={handleClose}>Close</Button>
               <Button variant='outline-success' type='submit'>Submit</Button>

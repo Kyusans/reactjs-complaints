@@ -47,8 +47,8 @@ export default function Login() {
 		.then((res)=>{
 			if(res.data !== 0){
 				localStorage.setItem("userId", res.data.fac_id);
-
 				localStorage.setItem("isLoggedIn", "1");
+				console.log("userId: " + localStorage.getItem("userId"))
 				getAlert("success", "Success!");
 				if(res.data.user_level === 100){
 					localStorage.setItem("adminLoggedIn", "true");
