@@ -65,7 +65,7 @@ function AdminComplaintTable() {
   },[navigateTo])
   return (
     <div>
-      <Table striped bordered hover size='sm' variant='secondary'>
+      <Table striped bordered hover size='sm' variant='secondary' className="text-center">
         <thead className='text-center'>
           <tr>
             <th className="green-header">Subject</th>
@@ -82,7 +82,7 @@ function AdminComplaintTable() {
                     ? `${ticket.comp_description.slice(0, 50)}...`
                     : ticket.comp_description}
                 </td>
-                <td className='text-end ticket-date'>{formatDate(ticket.comp_date)}</td>
+                <td className='ticket-date'>{formatDate(ticket.comp_date)}</td>
             </tr>
           ))}
         </tbody>

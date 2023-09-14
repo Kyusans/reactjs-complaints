@@ -12,7 +12,6 @@ function ComplaintForm(props) {
   const [locationCategory, setLocationCategory] = useState([]);
   const [locationName, setLocationName] = useState([]);
   const [validated, setValidated] = useState(false);
-
   //for alert
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertVariant, setAlertVariant] = useState("");
@@ -67,6 +66,12 @@ function ComplaintForm(props) {
         alert("There was an unexpected error: " + err);
       });
   };
+  
+  function handleCategoryChange(e){
+    const id = e.target.value;
+    setLocationCategoryId(id);
+    console.log(locationCategoryId);
+  }
 
   function handleClose(){
     setValidated(false);
@@ -87,20 +92,25 @@ function ComplaintForm(props) {
 		setValidated(true);
 	}
   useEffect(() => {
-    const getLocationCategory = () => {
-      const url = localStorage.getItem("url") + "admin.php";
-      const formData = new FormData();
-      formData.append("operation", "getLocationCategory");
-      axios({ url: url, data: formData, method: "post" })
-        .then((res) => {
-          if (res.data !== 0) {
-            setLocationCategory(res.data);
-          }
-        })
-        .catch((err) => {
-          getAlert("There was an unexpected error: " + err);
+    const getLocationCategory = async () => {
+      try {
+        const url = localStorage.getItem("url") + "admin.php";
+        const formData = new FormData();
+        formData.append("operation", "getLocationCategory");
+        const response = await axios({
+          url: url,
+          data: formData,
+          method: "post"
         });
+        console.log("location category: " + JSON.stringify(response.data));
+        if (response.data !== 0) {
+          setLocationCategory(response.data);
+        }
+      } catch (error) {
+        getAlert("danger", "There was an unexpected error: " + error);
+      }
     };
+    
     getLocationCategory();
     if(locationCategoryId !== ""){
       getLocation(locationCategoryId);
@@ -137,8 +147,8 @@ function ComplaintForm(props) {
               <Row className='g2'>
                 <Col>
                   <FloatingLabel label="Location Category">
-                    <Form.Select value={locationCategoryId} onChange={(e) => setLocationCategoryId(e.target.value)} required>
-                      <option disabled={locationCategoryId !== "" ? true : false} value={""}>Open this select menu</option>
+                    <Form.Select value={locationCategoryId} onChange={e=>setLocationCategoryId(e.target.value)} required>
+                      <option disabled={locationCategoryId !== "" ? true : false} value="">Open this select menu</option>
                       {locationCategory.map((locationCateg, index) => (
                         <option key={index} value={locationCateg.locCateg_id}>{locationCateg.locCateg_name}</option>
                       ))}
@@ -148,12 +158,12 @@ function ComplaintForm(props) {
                 </Col>
                 <Col>
                   <FloatingLabel label="Location">
-                    <Form.Select value={locationId} onChange={(e) => setLocationId(e.target.value)} disabled={locationCategoryId !== "" ? false : true} required>
+                    <Form.Control as="select" value={locationId} onChange={(e) => setLocationId(e.target.value)} disabled={locationCategoryId !== "" ? false : true} required>
                       <option value={""}>Open this select menu</option>
                       {locationName.map((location, index) =>(
                         <option key={index} value={location.location_id}>{location.location_name}</option>
                       ))}
-                    </Form.Select>
+                    </Form.Control>
                     <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
                   </FloatingLabel>
                 </Col>
