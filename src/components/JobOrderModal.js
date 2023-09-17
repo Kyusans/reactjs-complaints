@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Col, Container, FloatingLabel, Form, Modal, Row, Spinner } from 'react-bootstrap'
+import { Col, Container, FloatingLabel, Form, ListGroup, Modal, Row, Spinner } from 'react-bootstrap'
 
 function JobOrderModal(props) {
   const {show, onHide, ticketId} = props;
@@ -11,6 +11,29 @@ function JobOrderModal(props) {
   const [description, setDescription] = useState("");
   const [locationCategory, setLocationCategory] = useState("");
   const [location, setLocation] = useState("");
+  const [personnel, setPersonnel] = useState([]);
+  const [jobPersonnel, setJobPersonnel] = useState([""]);
+
+  const getAllPersonnel = () =>{
+    const url = localStorage.getItem("url") + "admin.php";
+    const formData = new FormData();
+    formData.append("operation", "getAllPersonnel");
+    axios({ url: url, data: formData, method: "post" })
+      .then((res) => {
+        if (res.data !== 0) {
+          setPersonnel(res.data);
+        }
+      })
+      .catch((err) => {
+        alert("There was an unexpected error: " + err);
+      });
+  }
+
+  const addJobPersonnel = (e) => {
+    const newPersonnel = e.target.value;
+    const updatedJobPersonnel = [...jobPersonnel, newPersonnel];
+    setJobPersonnel(updatedJobPersonnel);
+  }
   
   useEffect(() => {
     if(show){
@@ -32,6 +55,7 @@ function JobOrderModal(props) {
             setDescription(resData.comp_description);
             setLocationCategory(resData.locCateg_name);
             setLocation(resData.location_name);
+            getAllPersonnel();
           }
         } catch (error) {
           alert("There was an unexpected error: " + error);
@@ -88,6 +112,31 @@ function JobOrderModal(props) {
                       as='textarea'
                       required/>
                     </FloatingLabel>
+                  </Row>
+
+                  <Row>
+                    <Col>
+                      <FloatingLabel label="Select Personnel">
+                        <Form.Select onChange={addJobPersonnel}>
+                          {personnel.map((personnel, index) => (
+                            <option key={index} value={personnel.user_full_name}>{personnel.user_full_name}</option>
+                          ))}
+                        </Form.Select>
+                      </FloatingLabel>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      {jobPersonnel && (
+                        <>
+                          <ListGroup>
+                            {jobPersonnel.map((personnel, index) =>(
+                              <ListGroup.Item key={index}>{personnel}</ListGroup.Item>
+                            ))}
+                          </ListGroup>
+                        </>
+                      )}
+                    </Col>
                   </Row>
                 </Modal.Body>
               </Form>
