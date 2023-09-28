@@ -11,6 +11,7 @@ function AdminComplaintTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const ticketsPerPage = 10;
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
+  const showPagination = tickets.length > ticketsPerPage;
   
   const handleClose = () => setShowJobOrderModal(false);
   const handleShow = (id) => {
@@ -50,6 +51,7 @@ function AdminComplaintTable() {
     const formattedDate = `${month} ${day}`;
     return formattedDate;
   }
+  
   useEffect(() => {
     if(localStorage.getItem("adminLoggedIn") !== "true"){
       setTimeout(() => {
@@ -87,24 +89,26 @@ function AdminComplaintTable() {
           ))}
         </tbody>
       </Table>
-      <div className="d-flex justify-content-end mt-2">
-        <Pagination>
-          <Pagination.First/>
-          <Pagination.Prev/>
-          {Array.from({ length: Math.ceil(tickets.length / ticketsPerPage) }, (_, index) => (
-            <Pagination.Item
-              className="mx-1"
-              key={index}
-              active={currentPage === index + 1}
-              onClick={() => handlePageChange(index + 1)}
-            >
-              {index + 1}
-            </Pagination.Item>
-          ))}
-          <Pagination.Next/>
-          <Pagination.Last/>
-        </Pagination>
-      </div>
+      {showPagination && (
+        <div className="d-flex justify-content-end mt-2">
+          <Pagination>
+            <Pagination.First />
+            <Pagination.Prev />
+            {Array.from({ length: Math.ceil(tickets.length / ticketsPerPage) }, (_, index) => (
+              <Pagination.Item
+                className="mx-1"
+                key={index}
+                active={currentPage === index + 1}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next />
+            <Pagination.Last />
+          </Pagination>
+        </div>
+      )}
       <JobOrderModal show={showJobOrderModal} onHide={handleClose} ticketId={ticketId} />
     </div>
   )

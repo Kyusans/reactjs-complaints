@@ -9,7 +9,6 @@ import AlertScript from './AlertScript';
 
 export default function Login() {
 	if(localStorage.getItem("url") !== "http://localhost/gsd/") {
-		console.log("Nag change ang url")
 		localStorage.setItem("url", "http://localhost/gsd/");
 		// localStorage.setItem("url", "http://www.shareatext.com/gsd/api/");
 	}
@@ -45,10 +44,11 @@ export default function Login() {
 			method: "post",
 		})
 		.then((res)=>{
+			console.log("res.data.userLevel: " + res.data.user_level);
 			if(res.data !== 0){
 				localStorage.setItem("isLoggedIn", "1");
 				getAlert("success", "Success!");
-				if(res.data.user_level === 100){
+				if(parseInt(res.data.user_level) === 100){
 					localStorage.setItem("adminLoggedIn", "true");
 					setTimeout(() => {navigateTo("/admin/dashboard");}, 1500);
 					localStorage.setItem("userId", res.data.user_id);
@@ -69,6 +69,7 @@ export default function Login() {
 	useEffect(() => {
 		localStorage.setItem("userId", null);
 		localStorage.setItem("isLoggedIn", "0");
+		localStorage.setItem("adminLoggedIn", "false");
 	}, [])
 	return (
 		<>
