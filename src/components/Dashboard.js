@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Row, Table } from 'react-bootstrap'
+import { Button, Card, Col, Container, Row, Table } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import ComplaintForm from './ComplaintForm';
 
@@ -59,37 +59,41 @@ function Dashboard() {
     <>
       {localStorage.getItem("isLoggedIn") === "1" ? 
         (
-          <div>
-            <Row className='mb-2 mt-2'>
-              <Col className='text-end'>
-                <Button className='btn btn-success' onClick={openComplaintModal}>Add Complaint</Button>
-              </Col>
-            </Row>
-            <Table striped bordered hover size='sm' variant='success'>
-              <thead className='text-center'>
-                <tr>
-                  <th>Tickets</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tickets.map((ticket, index) => (
-                  <tr key={index}>
-                      <td className={`ticket-cell ${ticket.read ? 'read-ticket' : 'unread-ticket'}`}>
-                        <Row>
-                          <Col><strong>{ticket.comp_subject}</strong></Col>
-                          <Col className="ticket-description">
-                              {ticket.comp_description.length > 50
-                                ? `${ticket.comp_description.slice(0, 50)}...`
-                                : ticket.comp_description}
-                          </Col>
-                          <Col className='text-end ticket-date'>{formatDate(ticket.comp_date)}</Col>
-                        </Row>
-                    </td>
-                  </tr>))
-                }
-              </tbody>
-            </Table>
-          </div>
+          <Container className="mt-3">
+            <Card border="secondary">
+              <Card.Body>
+                <Row className='mb-2 mt-2'>
+                  <Col className='text-end'>
+                    <Button className='btn btn-success' onClick={openComplaintModal}>Add Complaint</Button>
+                  </Col>
+                </Row>
+                <Table striped bordered hover size='sm' variant='success'>
+                  <thead className='text-center'>
+                    <tr>
+                      <th>Tickets</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tickets.map((ticket, index) => (
+                      <tr key={index}>
+                          <td className={`ticket-cell ${ticket.read ? 'read-ticket' : 'unread-ticket'}`}>
+                            <Row>
+                              <Col><strong>{ticket.comp_subject}</strong></Col>
+                              <Col className="ticket-description">
+                                  {ticket.comp_description.length > 50
+                                    ? `${ticket.comp_description.slice(0, 50)}...`
+                                    : ticket.comp_description}
+                              </Col>
+                              <Col className='text-end ticket-date'>{formatDate(ticket.comp_date)}</Col>
+                            </Row>
+                        </td>
+                      </tr>))
+                    }
+                  </tbody>
+                </Table>
+              </Card.Body>
+            </Card>
+          </Container>
         ):
         <h3 className='text-center'>You need to login first</h3>
       }

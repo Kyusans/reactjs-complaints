@@ -31,8 +31,16 @@ function JobOrderModal(props) {
 
   const addJobPersonnel = (e) => {
     const newPersonnel = e.target.value;
-    const updatedJobPersonnel = [...jobPersonnel, newPersonnel];
-    setJobPersonnel(updatedJobPersonnel);
+    if(newPersonnel !== "" && !jobPersonnel.includes(newPersonnel)){
+      const updatedJobPersonnel = [...jobPersonnel, newPersonnel];
+      setJobPersonnel(updatedJobPersonnel);
+    }
+  }
+
+  function handleHide(){
+    setJobPersonnel([]);
+    setDescription("");
+    onHide();
   }
   
   useEffect(() => {
@@ -68,7 +76,7 @@ function JobOrderModal(props) {
 
   return (
     <div>
-      <Modal show={show} onHide={onHide}>
+      <Modal show={show} onHide={handleHide}>
         
           {!isLoading ?
             <> 
@@ -118,6 +126,7 @@ function JobOrderModal(props) {
                     <Col>
                       <FloatingLabel label="Select Personnel">
                         <Form.Select onChange={addJobPersonnel}>
+                          <option value={""}>Open this select menu</option>
                           {personnel.map((personnel, index) => (
                             <option key={index} value={personnel.user_full_name}>{personnel.user_full_name}</option>
                           ))}
@@ -125,13 +134,14 @@ function JobOrderModal(props) {
                       </FloatingLabel>
                     </Col>
                   </Row>
-                  <Row>
+
+                  <Row className="mt-3">
                     <Col>
                       {jobPersonnel && (
                         <>
                           <ListGroup>
                             {jobPersonnel.map((personnel, index) =>(
-                              <ListGroup.Item key={index}>{personnel}</ListGroup.Item>
+                              <ListGroup.Item key={index} variant="success">{personnel}</ListGroup.Item>
                             ))}
                           </ListGroup>
                         </>
