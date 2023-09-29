@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Col, Container, FloatingLabel, Form, ListGroup, Modal, Row, Spinner } from 'react-bootstrap'
+import { Button, Col, Container, FloatingLabel, Form, ListGroup, Modal, Row, Spinner } from 'react-bootstrap'
 
 function JobOrderModal(props) {
   const {show, onHide, ticketId} = props;
@@ -12,7 +12,9 @@ function JobOrderModal(props) {
   const [locationCategory, setLocationCategory] = useState("");
   const [location, setLocation] = useState("");
   const [personnel, setPersonnel] = useState([]);
-  const [jobPersonnel, setJobPersonnel] = useState([""]);
+  const [jobPersonnel, setJobPersonnel] = useState([]);
+  const [priorities, setPriorities] = useState([]);
+  const [jobPriority, setJobPriority] = useState("");
 
   const getAllPersonnel = () =>{
     const url = localStorage.getItem("url") + "admin.php";
@@ -27,6 +29,21 @@ function JobOrderModal(props) {
       .catch((err) => {
         alert("There was an unexpected error: " + err);
       });
+  }
+
+  const getPriority = async () =>{
+    try{
+      const url = localStorage.getItem("url") + "admin.php";
+      const formData = new FormData();
+      formData.append("operation",  "getPriority");
+      const res = await axios({url: url, data: formData, method: "post"});
+      if(res.data !== 0){
+        setPriorities(res.data);
+      }
+    }catch(error){
+      alert("There was an error: " + error);
+    }
+    setIsLoading(false);
   }
 
   const addJobPersonnel = (e) => {
@@ -54,7 +71,6 @@ function JobOrderModal(props) {
           formData.append("json", JSON.stringify(jsonData));
           formData.append("operation", "getSelectedTicket");
           const response = await axios({url: url, data: formData, method: "post"});
-          setIsLoading(false);
           if (response.data !== 0) {
             const resData = response.data[0];
             setTicketNumber(resData.comp_id);
@@ -69,6 +85,7 @@ function JobOrderModal(props) {
           alert("There was an unexpected error: " + error);
         }
       };
+      getPriority();
       getSelectedTicket();
     }
   }, [show, ticketId])
@@ -122,6 +139,19 @@ function JobOrderModal(props) {
                     </FloatingLabel>
                   </Row>
 
+                  <Row className='mb-3'>
+                    <Col>
+                      <FloatingLabel label="Select Priority">
+                        <Form.Select onChange={(e) => jobPriority(e.target.value)}>
+                          <option value={""}>Open this select menu</option>
+                          {priorities.map((priority, index) => (
+                            <option key={index} value={priority.priority_id}>{priority.priority_name}</option>
+                          ))}
+                        </Form.Select>
+                      </FloatingLabel>
+                    </Col>
+                  </Row>
+
                   <Row>
                     <Col>
                       <FloatingLabel label="Select Personnel">
@@ -149,6 +179,10 @@ function JobOrderModal(props) {
                     </Col>
                   </Row>
                 </Modal.Body>
+                <Modal.Footer>
+                  <Button variant='outline-secondary' onClick={()=>handleHide()}>Close</Button>
+                  <Button variant='outline-success'>Submit</Button>
+                </Modal.Footer>
               </Form>
             </>
           : 
