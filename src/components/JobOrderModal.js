@@ -15,6 +15,7 @@ function JobOrderModal(props) {
   const [jobPersonnel, setJobPersonnel] = useState([]);
   const [priorities, setPriorities] = useState([]);
   const [jobPriority, setJobPriority] = useState("");
+  const [jobPersonnelId, setJobPersonnelId] = useState([]);
 
   const getAllPersonnel = () =>{
     const url = localStorage.getItem("url") + "admin.php";
@@ -29,6 +30,33 @@ function JobOrderModal(props) {
       .catch((err) => {
         alert("There was an unexpected error: " + err);
       });
+  }
+
+  const submitJobOrder = () => {
+    const url = localStorage.getItem("url") + "admin.php";
+    const jsonData = {
+      ticketNumber : ticketNumber,
+      facultyName : facultyName,
+      subject : subject,
+      description : description,
+      locationCategory : locationCategory,
+      location : location,
+      jobPersonnelId : jobPersonnelId,
+      priority : jobPriority
+    }
+    console.log('JSON Data:', jsonData);
+    const formData = new FormData();
+    formData.append("operation", "submitJobOrder");
+    formData.append("json", JSON.stringify(jsonData));
+    axios({url: url, data: formData, method: "post"})
+    .then((res) => {
+      if(res.data === 1){
+        alert("Success");
+      }
+    })
+    .catch((err) => {
+      alert("There was an unexpected error: " + err);
+    })
   }
 
   const getPriority = async () =>{
@@ -47,16 +75,25 @@ function JobOrderModal(props) {
   }
 
   const addJobPersonnel = (e) => {
-    const newPersonnel = e.target.value;
-    if(newPersonnel !== "" && !jobPersonnel.includes(newPersonnel)){
-      const updatedJobPersonnel = [...jobPersonnel, newPersonnel];
+    const newPersonnelValue = e.target.value;
+    const [userId, username] = newPersonnelValue.split(',');
+  
+    if (newPersonnelValue !== "" && !jobPersonnelId.includes(userId)) {
+      const updatedJobPersonnel = [...jobPersonnel, username];
+      const updatedJobPersonnelId = [...jobPersonnelId, userId];
+  
       setJobPersonnel(updatedJobPersonnel);
+      setJobPersonnelId(updatedJobPersonnelId);
     }
   }
 
   function handleHide(){
     setJobPersonnel([]);
     setDescription("");
+    setPersonnel([]);
+    setJobPersonnel([]);
+    setPriorities([]);
+    setJobPersonnelId([]);
     onHide();
   }
   
@@ -142,7 +179,7 @@ function JobOrderModal(props) {
                   <Row className='mb-3'>
                     <Col>
                       <FloatingLabel label="Select Priority">
-                        <Form.Select onChange={(e) => jobPriority(e.target.value)}>
+                        <Form.Select onChange={(e) => setJobPriority(e.target.value)}>
                           <option value={""}>Open this select menu</option>
                           {priorities.map((priority, index) => (
                             <option key={index} value={priority.priority_id}>{priority.priority_name}</option>
@@ -157,8 +194,8 @@ function JobOrderModal(props) {
                       <FloatingLabel label="Select Personnel">
                         <Form.Select onChange={addJobPersonnel}>
                           <option value={""}>Open this select menu</option>
-                          {personnel.map((personnel, index) => (
-                            <option key={index} value={personnel.user_full_name}>{personnel.user_full_name}</option>
+                          {personnel.map((person, index) => (
+                            <option key={index} value={`${person.user_id},${person.user_full_name}`}>{person.user_full_name}</option>
                           ))}
                         </Form.Select>
                       </FloatingLabel>
@@ -181,7 +218,7 @@ function JobOrderModal(props) {
                 </Modal.Body>
                 <Modal.Footer>
                   <Button variant='outline-secondary' onClick={()=>handleHide()}>Close</Button>
-                  <Button variant='outline-success'>Submit</Button>
+                  <Button variant='outline-success' onClick={()=>submitJobOrder()}>Submit</Button>
                 </Modal.Footer>
               </Form>
             </>
