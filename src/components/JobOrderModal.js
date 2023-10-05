@@ -4,6 +4,7 @@ import { Button, Col, Container, FloatingLabel, Form, ListGroup, Modal, Row, Spi
 
 function JobOrderModal(props) {
   const {show, onHide, ticketId} = props;
+  const [facultyId, setFacultyId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [ticketNumber, setTicketNumber] = useState("");
   const [facultyName, setFacultyName] = useState("");
@@ -34,16 +35,10 @@ function JobOrderModal(props) {
 
   const submitJobOrder = () => {
     const url = localStorage.getItem("url") + "admin.php";
-    const jsonData = {
-      ticketNumber : ticketNumber,
-      facultyName : facultyName,
-      subject : subject,
-      description : description,
-      locationCategory : locationCategory,
-      location : location,
-      jobPersonnelId : jobPersonnelId,
-      priority : jobPriority
-    }
+    const master = {ticketNumber: ticketNumber, facultyId: facultyId, subject: subject, description: description, locationCategory: locationCategory,
+    location: location, priority: jobPriority};
+    const detail = {jobPersonnelId: jobPersonnelId};
+    const jsonData = {master: master, detail: detail};
     console.log('JSON Data:', jsonData);
     const formData = new FormData();
     formData.append("operation", "submitJobOrder");
@@ -116,6 +111,7 @@ function JobOrderModal(props) {
             setDescription(resData.comp_description);
             setLocationCategory(resData.locCateg_name);
             setLocation(resData.location_name);
+            setFacultyId(resData.fac_id);
             getAllPersonnel();
           }
         } catch (error) {
