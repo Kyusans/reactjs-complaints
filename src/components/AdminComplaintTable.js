@@ -72,6 +72,7 @@ function AdminComplaintTable() {
           <tr>
             <th className="green-header">Subject</th>
             <th className="green-header">Description</th>
+            <th className="green-header">Status</th>
             <th className="green-header">Date</th>
           </tr>
         </thead>
@@ -84,6 +85,7 @@ function AdminComplaintTable() {
                     ? `${ticket.comp_description.slice(0, 50)}...`
                     : ticket.comp_description}
                 </td>
+                <td>{ticket.joStatus_name}</td>
                 <td className='ticket-date'>{formatDate(ticket.comp_date)}</td>
             </tr>
           ))}

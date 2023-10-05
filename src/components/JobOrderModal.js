@@ -45,6 +45,7 @@ function JobOrderModal(props) {
     formData.append("json", JSON.stringify(jsonData));
     axios({url: url, data: formData, method: "post"})
     .then((res) => {
+      console.log(JSON.stringify(res.data));
       if(res.data === 1){
         alert("Success");
       }
