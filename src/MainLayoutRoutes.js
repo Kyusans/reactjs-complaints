@@ -15,7 +15,7 @@ function MainLayoutRoutes() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/user/dashboard" element={<Dashboard />} />
         <Route path="/admin/addlocation" element={<AdminAddLocation />} />
-        <Route path="/job/details" element={<JobDetails />} />
+        <Route path="/job/details/:compId" element={<JobDetails />} />
       </Routes>
     </div>
   )

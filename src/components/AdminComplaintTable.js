@@ -14,9 +14,13 @@ function AdminComplaintTable() {
   const showPagination = tickets.length > ticketsPerPage;
   
   const handleClose = () => setShowJobOrderModal(false);
-  const handleShow = (id) => {
-    setTicketId(id);
-    setShowJobOrderModal(true)
+  const handleShow = (id, status) => {
+    if(status === 1){
+      setTicketId(id);
+      setShowJobOrderModal(true)
+    }else{
+      navigateTo(`/job/details/${id}`);
+    }
   };
 
   const getAllTickets = () => {
@@ -78,7 +82,7 @@ function AdminComplaintTable() {
         </thead>
         <tbody>
           {displayedTickets.map((ticket, index) => (
-            <tr key={index} className={`ticket-cell ${ticket.read ? 'read-ticket' : 'unread-ticket'}`} onClick={() => handleShow(ticket.comp_id)}>
+            <tr key={index} className={`ticket-cell ${ticket.read ? 'read-ticket' : 'unread-ticket'}`} onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}>
                 <td>{ticket.comp_subject}</td>
                 <td className="ticket-description">
                   {ticket.comp_description.length > 50

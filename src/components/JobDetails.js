@@ -1,14 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Card, Container, Form, Spinner, Row, Col, FloatingLabel } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 
-export default function JobDetails(props) {
-  const { compId } = props;
+export default function JobDetails() {
+  const { compId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
 
   useEffect(() => {
     const getJobDetails = async () => {
+      console.log("compId: " + compId)
       setIsLoading(true);
       try {
         const url = localStorage.getItem("url") + "admin.php";
