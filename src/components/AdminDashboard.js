@@ -1,6 +1,5 @@
 import { Container, Row } from "react-bootstrap";
 import AdminComplaintTable from "./AdminComplaintTable";
-import AdminAddLocation from "./AdminAddLocation";
 
 
 export default function AdminDashboard() {
@@ -10,10 +9,6 @@ export default function AdminDashboard() {
         <Container className="mt-4">
           <Row>
             <AdminComplaintTable />
-          </Row>
-
-          <Row>
-            <AdminAddLocation />
           </Row>
           
         </Container>

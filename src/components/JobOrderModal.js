@@ -69,21 +69,6 @@ function JobOrderModal(props) {
     })
   }
 
-  const getPriority = async () =>{
-    try{
-      const url = localStorage.getItem("url") + "admin.php";
-      const formData = new FormData();
-      formData.append("operation",  "getPriority");
-      const res = await axios({url: url, data: formData, method: "post"});
-      if(res.data !== 0){
-        setPriorities(res.data);
-      }
-    }catch(error){
-      getAlert("danger", "There was an error: " + error);
-    }
-    setIsLoading(false);
-  }
-
   const addJobPersonnel = (e) => {
     const newPersonnelValue = e.target.value;
     const [userId, username] = newPersonnelValue.split(',');
@@ -133,6 +118,22 @@ function JobOrderModal(props) {
           alert("There was an unexpected error: " + error);
         }
       };
+
+      const getPriority = async () =>{
+        try{
+          const url = localStorage.getItem("url") + "admin.php";
+          const formData = new FormData();
+          formData.append("operation",  "getPriority");
+          const res = await axios({url: url, data: formData, method: "post"});
+          if(res.data !== 0){
+            setPriorities(res.data);
+          }
+        }catch(error){
+          getAlert("danger", "There was an error: " + error);
+        }
+        setIsLoading(false);
+      }
+
       getPriority();
       getSelectedTicket();
     }

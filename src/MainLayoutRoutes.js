@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom'
 import AdminDashboard from './components/AdminDashboard'
 import Dashboard from './components/Dashboard'
 import AdminNavbar from './components/AdminNavbar'
+import AdminAddLocation from './components/AdminAddLocation'
 
 function MainLayoutRoutes() {
   return (
@@ -12,6 +13,7 @@ function MainLayoutRoutes() {
       <Routes>
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/user/dashboard" element={<Dashboard />} />
+        <Route path="/admin/addlocation" element={<AdminAddLocation />} />
       </Routes>
     </div>
   )

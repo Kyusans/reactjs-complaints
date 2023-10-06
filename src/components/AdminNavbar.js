@@ -9,6 +9,7 @@ const AdminNavbar = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <NavLink style={{ color: "white", marginRight: "10px" }} href="/admin/dashboard/">Home</NavLink>
+            <NavLink style={{ color: "white", marginRight: "10px" }} href="/admin/addlocation/">Location</NavLink>
           </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
             <NavLink style={{ color: "white", marginRight: "10px" }} href="/">Signout</NavLink>
