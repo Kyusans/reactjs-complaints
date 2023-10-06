@@ -44,7 +44,6 @@ export default function Login() {
 			method: "post",
 		})
 		.then((res)=>{
-			console.log("res.data.userLevel: " + res.data.user_level);
 			if(res.data !== 0){
 				localStorage.setItem("isLoggedIn", "1");
 				getAlert("success", "Success!");

@@ -5,6 +5,7 @@ import AdminDashboard from './components/AdminDashboard'
 import Dashboard from './components/Dashboard'
 import AdminNavbar from './components/AdminNavbar'
 import AdminAddLocation from './components/AdminAddLocation'
+import JobDetails from './components/JobDetails'
 
 function MainLayoutRoutes() {
   return (
@@ -14,6 +15,7 @@ function MainLayoutRoutes() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/user/dashboard" element={<Dashboard />} />
         <Route path="/admin/addlocation" element={<AdminAddLocation />} />
+        <Route path="/job/details" element={<JobDetails />} />
       </Routes>
     </div>
   )

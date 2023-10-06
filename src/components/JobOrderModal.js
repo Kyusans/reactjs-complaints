@@ -5,7 +5,6 @@ import AlertScript from './AlertScript';
 
 function JobOrderModal(props) {
   const {show, onHide, ticketId} = props;
-  const [facultyId, setFacultyId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [ticketNumber, setTicketNumber] = useState("");
   const [facultyName, setFacultyName] = useState("");
@@ -47,7 +46,8 @@ function JobOrderModal(props) {
 
   const submitJobOrder = () => {
     const url = localStorage.getItem("url") + "admin.php";
-    const master = {ticketNumber: ticketNumber, facultyId: facultyId, subject: subject, description: description, locationCategory: locationCategory,
+    const userId = localStorage.getItem("userId");
+    const master = {ticketNumber: ticketNumber, jobCreatedBy: userId, subject: subject, description: description, locationCategory: locationCategory,
     location: location, priority: jobPriority};
     const detail = {jobPersonnelId: jobPersonnelId};
     const jsonData = {master: master, detail: detail};
@@ -111,7 +111,6 @@ function JobOrderModal(props) {
             setDescription(resData.comp_description);
             setLocationCategory(resData.locCateg_name);
             setLocation(resData.location_name);
-            setFacultyId(resData.fac_id);
             getAllPersonnel();
           }
         } catch (error) {
