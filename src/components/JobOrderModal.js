@@ -141,8 +141,7 @@ function JobOrderModal(props) {
 
   return (
     <div>
-      <Modal show={show} onHide={handleHide}>
-        
+      <Modal show={show} onHide={handleHide} size='lg'>
           {!isLoading ?
             <> 
               <Modal.Header closeButton><h3>Job order creation</h3></Modal.Header>
@@ -150,30 +149,32 @@ function JobOrderModal(props) {
                 <Modal.Body>
                   <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
                   <Row className='mb-3'>
-                    <Col>Ticket number:</Col>
                     <Col>
+                      Ticket number:
                       <Form.Control type="text" placeholder={ticketNumber} readOnly />
+                    </Col>
+                    <Col>
+                      Complaint by:
+                      <Form.Control type="text" placeholder={facultyName} readOnly />
                     </Col>
                   </Row>
 
                   <Row className='mb-3'>
-                    <Col>Complaint by:</Col>
-                    <Col><Form.Control type="text" placeholder={facultyName} readOnly /></Col>
+                    <Col>
+                      Subject:
+                      <Form.Control type="text" placeholder={subject} readOnly />
+                    </Col>
+                    <Col>
+                      Location Category:
+                      <Form.Control type="text" placeholder={locationCategory} readOnly />
+                    </Col>
                   </Row>
 
                   <Row className='mb-3'>
-                    <Col>Subject:</Col>
-                    <Col><Form.Control type="text" placeholder={subject} readOnly /></Col>
-                  </Row>
-
-                  <Row className='mb-3'>
-                    <Col>Location Category:</Col>
-                    <Col><Form.Control type="text" placeholder={locationCategory} readOnly /></Col>
-                  </Row>
-
-                  <Row className='mb-3'>
-                    <Col>Location:</Col>
-                    <Col><Form.Control type="text" placeholder={location} readOnly /></Col>
+                    <Col>
+                      Location:
+                      <Form.Control type="text" placeholder={location} readOnly />
+                    </Col>
                   </Row>
 
                   <Row className='mb-3'>
@@ -182,7 +183,7 @@ function JobOrderModal(props) {
                       value={description} 
                       onChange={(e) => setDescription(e.target.value)} 
                       placeholder='Description' 
-                      style={{ height: '200px' }}
+                      style={{ height: '150px' }}
                       as='textarea'
                       required/>
                     </FloatingLabel>
@@ -199,9 +200,6 @@ function JobOrderModal(props) {
                         </Form.Select>
                       </FloatingLabel>
                     </Col>
-                  </Row>
-
-                  <Row>
                     <Col>
                       <FloatingLabel label="Select Personnel">
                         <Form.Select onChange={addJobPersonnel}>
@@ -213,7 +211,6 @@ function JobOrderModal(props) {
                       </FloatingLabel>
                     </Col>
                   </Row>
-
                   <Row className="mt-3">
                     <Col>
                       {jobPersonnel && (
