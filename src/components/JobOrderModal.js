@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, FloatingLabel, Form, ListGroup, Modal, Row, Spinner } from 'react-bootstrap'
+import AlertScript from './AlertScript';
 
 function JobOrderModal(props) {
   const {show, onHide, ticketId} = props;
@@ -17,6 +18,17 @@ function JobOrderModal(props) {
   const [priorities, setPriorities] = useState([]);
   const [jobPriority, setJobPriority] = useState("");
   const [jobPersonnelId, setJobPersonnelId] = useState([]);
+
+  	//for alert
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertVariant, setAlertVariant] = useState("");
+	const [alertMessage, setAlertMessage] = useState("");
+
+	function getAlert(variantAlert, messageAlert){
+		setShowAlert(true);
+		setAlertVariant(variantAlert);
+		setAlertMessage(messageAlert);
+	}
 
   const getAllPersonnel = () =>{
     const url = localStorage.getItem("url") + "admin.php";
@@ -45,13 +57,15 @@ function JobOrderModal(props) {
     formData.append("json", JSON.stringify(jsonData));
     axios({url: url, data: formData, method: "post"})
     .then((res) => {
-      console.log(JSON.stringify(res.data));
       if(res.data === 1){
-        alert("Success");
+        getAlert("success", "Success");
+        setTimeout(() => {
+          handleHide();
+        }, 1500);
       }
     })
     .catch((err) => {
-      alert("There was an unexpected error: " + err);
+      getAlert("danger", "There was an unexpected error: " + err);
     })
   }
 
@@ -65,7 +79,7 @@ function JobOrderModal(props) {
         setPriorities(res.data);
       }
     }catch(error){
-      alert("There was an error: " + error);
+      getAlert("danger", "There was an error: " + error);
     }
     setIsLoading(false);
   }
@@ -134,6 +148,7 @@ function JobOrderModal(props) {
               <Modal.Header closeButton><h3>Job order creation</h3></Modal.Header>
               <Form>
                 <Modal.Body>
+                  <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
                   <Row className='mb-3'>
                     <Col>Ticket number:</Col>
                     <Col>

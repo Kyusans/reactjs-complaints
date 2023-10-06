@@ -67,7 +67,7 @@ function AdminComplaintTable() {
   },[navigateTo])
   return (
     <div>
-      <Table striped bordered hover size='sm' variant='secondary' className="text-center">
+      <Table striped bordered hover size='sm' variant='success' className="text-center">
         <thead className='text-center'>
           <tr>
             <th className="green-header">Subject</th>

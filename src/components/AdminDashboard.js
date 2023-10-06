@@ -1,4 +1,4 @@
-import { Card, Container, Row } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import AdminComplaintTable from "./AdminComplaintTable";
 import AdminAddLocation from "./AdminAddLocation";
 
@@ -7,14 +7,9 @@ export default function AdminDashboard() {
   return (
     <>
       {localStorage.getItem("adminLoggedIn") === "true" ? (
-        <Container className="mt-2">
+        <Container className="mt-4">
           <Row>
-            <Card>
-              <Card.Header className="text-center"><h3>Complaint Ticket</h3></Card.Header>
-              <Card.Body>
-                <AdminComplaintTable />
-              </Card.Body>
-            </Card>
+            <AdminComplaintTable />
           </Row>
 
           <Row>
