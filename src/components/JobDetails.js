@@ -1,12 +1,20 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Card, Container, Form, Spinner, Row, Col, FloatingLabel } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { Card, Container, Form, Spinner, Row, Col, FloatingLabel, Button } from 'react-bootstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import "./css/site.css";
 
 export default function JobDetails() {
   const { compId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
+  const navigateTo = useNavigate();
+
+  const handleBackButtonClick = () => {
+    navigateTo(-1);
+  };
 
   useEffect(() => {
     const getJobDetails = async () => {
@@ -40,8 +48,16 @@ export default function JobDetails() {
         :
         <Container className='mt-3'>
           <Card>
-            <Card.Header className='text-center'><h3>Job Details</h3></Card.Header>
+            <Card.Header>
+              <div>
+                <Button variant='outline-danger button-m' onClick={() => handleBackButtonClick()}>
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                </Button>
+              </div>
+              
+            </Card.Header>
             <Card.Body>
+              <h3 className='text-center'>Job details</h3>
               <Form>
                 <Row className='mt-3'>
                   <Col>

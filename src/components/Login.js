@@ -45,12 +45,17 @@ export default function Login() {
 		})
 		.then((res)=>{
 			if(res.data !== 0){
+				console.log("res: " + JSON.stringify(res.data));
+				console.log("res.data.user_level: " + res.data.user_level)
 				localStorage.setItem("isLoggedIn", "1");
 				getAlert("success", "Success!");
 				if(parseInt(res.data.user_level) === 100){
 					localStorage.setItem("adminLoggedIn", "true");
 					setTimeout(() => {navigateTo("/admin/dashboard");}, 1500);
 					localStorage.setItem("userId", res.data.user_id);
+				}else if(parseInt(res.data.user_level) === 90){
+					localStorage.setItem("userId", res.data.user_id);
+					setTimeout(() => {navigateTo("/personnel/dashboard")}, 1500);
 				}else{
 					setTimeout(() => {
 						localStorage.setItem("userId", res.data.fac_id);
