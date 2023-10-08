@@ -75,6 +75,14 @@
     border-radius: 0;
 }
 
+
+.green-x {
+    color: green;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 5px; 
+  }
+  
 .link-button {
     background-color: transparent;
     border: none;

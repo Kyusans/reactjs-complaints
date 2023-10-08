@@ -10,6 +10,7 @@ export default function JobDetails() {
   const { compId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
+  const [newComment, setNewComment] = useState("");
   const navigateTo = useNavigate();
 
   const handleBackButtonClick = () => {
@@ -59,7 +60,7 @@ export default function JobDetails() {
             <Card.Body>
               <h3 className='text-center'>Job details</h3>
               <Form>
-                <Row className='mt-3'>
+                <Row className='mt-5'>
                   <Col>
                     <FloatingLabel controlId="subject" label="Subject">
                       <Form.Control type="text" value={details.comp_subject} readOnly />
@@ -109,6 +110,19 @@ export default function JobDetails() {
                     </FloatingLabel>
                   </Col>
                 </Row>
+              </Form>
+            </Card.Body>
+          </Card>
+
+          <Card className='mt-3'>
+            <Card.Body>
+              <Form>
+                <FloatingLabel label="Add a comment..">
+                  <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' />
+                </FloatingLabel>
+                <Container className='mt-3 text-end'>
+                  <Button>Submit</Button>
+                </Container>
               </Form>
             </Card.Body>
           </Card>

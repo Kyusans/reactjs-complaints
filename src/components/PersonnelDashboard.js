@@ -11,6 +11,7 @@ export default function PersonnelDashboard() {
     try {
       const url = localStorage.getItem("url") + "personnel.php";
       const userId = localStorage.getItem("userId");
+      console.log("userId: " + userId);
       const jsonData = {userId: userId}
       const formData = new FormData();
       formData.append("operation", "getJobTicket");
