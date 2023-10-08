@@ -48,7 +48,7 @@ export default function JobDetails() {
         </Container>
         :
         <Container className='mt-3'>
-          <Card>
+          <Card border='secondary'>
             <Card.Header>
               <div>
                 <Button variant='outline-danger button-m' onClick={() => handleBackButtonClick()}>
@@ -79,7 +79,7 @@ export default function JobDetails() {
                     </FloatingLabel>
                   </Col>
                   <Col>
-                    <FloatingLabel controlId="createDate" label="Create Date">
+                    <FloatingLabel controlId="createDate" label="Date Created">
                       <Form.Control type="text" value={details.job_createDate} readOnly />
                     </FloatingLabel>
                   </Col>
@@ -98,7 +98,7 @@ export default function JobDetails() {
                 </Row>
                 <Row className='mt-3'>
                   <Col>
-                    <FloatingLabel controlId="user" label="User">
+                    <FloatingLabel controlId="user" label="Job Created By">
                       <Form.Control type="text" value={details.user_full_name} readOnly />
                     </FloatingLabel>
                   </Col>
@@ -114,7 +114,7 @@ export default function JobDetails() {
             </Card.Body>
           </Card>
 
-          <Card className='mt-3'>
+          <Card className='mt-3' border='secondary'>
             <Card.Body>
               <Form>
                 <FloatingLabel label="Add a comment..">
