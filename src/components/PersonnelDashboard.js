@@ -1,23 +1,25 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Container, Spinner, Table } from 'react-bootstrap';
+import "./css/site.css";
+import { useNavigate } from 'react-router-dom';
 
 export default function PersonnelDashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [ticket, setTicket] = useState([]);
+  const navigateTo = useNavigate();
 
   const getJobTicket = async () => {
     setIsLoading(true);
     try {
       const url = localStorage.getItem("url") + "personnel.php";
       const userId = localStorage.getItem("userId");
-      console.log("userId: " + userId);
       const jsonData = { userId: userId }
       const formData = new FormData();
       formData.append("operation", "getJobTicket");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res: " + JSON.stringify(res.data));
+      console.log("res: " + JSON.stringify(res.data))
       if (res.data !== 0) {
         setTicket(res.data);
         setIsLoading(false);
@@ -39,6 +41,10 @@ export default function PersonnelDashboard() {
     const day = date.getDate();
     const formattedDate = `${month} ${day}`;
     return formattedDate;
+  }
+
+  const handleNavigate = (id) =>{
+    navigateTo(`/job/details/${id}`);
   }
 
   useEffect(() => {
@@ -63,14 +69,14 @@ export default function PersonnelDashboard() {
             </thead>
             <tbody>
               {ticket.map((tickets, index) => (
-                <tr key={index}>
-                  <td>{tickets.job_title}</td>
-                  <td>
+                <tr key={index} className={`ticket-cell ${tickets.read ? 'read-ticket' : 'unread-ticket'}`} onClick={() => handleNavigate(tickets.job_complaintId)}>
+                  <td><strong>{tickets.job_title}</strong></td>
+                  <td className="ticket-description">
                     {tickets.job_description.length > 50
                       ? `${tickets.job_description.slice(0, 50)}...`
                       : tickets.job_description}
                   </td>
-                  <td>{formatDate(tickets.job_createDate)}</td>
+                  <td className='ticket-date'>{formatDate(tickets.job_createDate)}</td>
                 </tr>
               ))}
             </tbody>

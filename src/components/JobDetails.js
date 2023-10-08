@@ -47,7 +47,7 @@ export default function JobDetails() {
           <Spinner animation='border' variant='success' />
         </Container>
         :
-        <Container className='mt-3'>
+        <>
           <Card border='secondary'>
             <Card.Header>
               <div>
@@ -91,7 +91,7 @@ export default function JobDetails() {
                     </FloatingLabel>
                   </Col>
                   <Col>
-                    <FloatingLabel controlId="facility" label="Facility">
+                    <FloatingLabel controlId="complaintBy" label="Complaint By">
                       <Form.Control type="text" value={details.fac_name} readOnly />
                     </FloatingLabel>
                   </Col>
@@ -126,7 +126,7 @@ export default function JobDetails() {
               </Form>
             </Card.Body>
           </Card>
-        </Container>
+        </>
       }
     </>
   )
