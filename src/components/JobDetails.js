@@ -5,12 +5,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import "./css/site.css";
+import ConfirmModal from './ConfirmModal';
 
 export default function JobDetails() {
   const { compId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
   const [newComment, setNewComment] = useState("");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const openConfirmModal = () =>{setShowConfirmModal(true);}
+  const closeConfirmModal = () =>{setShowConfirmModal(false);}
+
   const navigateTo = useNavigate();
 
   const handleBackButtonClick = () => {
@@ -18,6 +24,7 @@ export default function JobDetails() {
   };
 
   useEffect(() => {
+    // console.log("compId: " + details.comp_id)
     const getJobDetails = async () => {
       setIsLoading(true);
       try {
@@ -114,7 +121,7 @@ export default function JobDetails() {
             </Card.Body>
             {localStorage.getItem("userLevel") !== "" && details.joStatus_id === 2 ?
               <Card.Footer className='text-center'>
-                <Button className='mt-2' variant='outline-success'>Mark as done</Button>
+                <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>Mark as done</Button>
               </Card.Footer>  : <></>
             }
           </Card>
@@ -133,6 +140,7 @@ export default function JobDetails() {
           </Card>
         </>
       }
+      <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id}/>
     </>
   )
 }
