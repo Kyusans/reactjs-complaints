@@ -15,7 +15,9 @@ export default function JobDetails() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const openConfirmModal = () =>{setShowConfirmModal(true);}
-  const closeConfirmModal = () =>{setShowConfirmModal(false);}
+  const closeConfirmModal = () =>{
+    setShowConfirmModal(false);
+  }
 
   const navigateTo = useNavigate();
 
@@ -24,7 +26,6 @@ export default function JobDetails() {
   };
 
   useEffect(() => {
-    // console.log("compId: " + details.comp_id)
     const getJobDetails = async () => {
       setIsLoading(true);
       try {
