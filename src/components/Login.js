@@ -55,6 +55,7 @@ export default function Login() {
 					localStorage.setItem("userId", res.data.user_id);
 				}else if(parseInt(res.data.user_level) === 90){
 					localStorage.setItem("userId", res.data.user_id);
+					localStorage.setItem("userLevel", res.data.user_level);
 					setTimeout(() => {navigateTo("/personnel/dashboard")}, 1500);
 				}else{
 					setTimeout(() => {
@@ -71,9 +72,10 @@ export default function Login() {
 		})
 	}
 	useEffect(() => {
-		localStorage.setItem("userId", null);
+		localStorage.setItem("userId", "");
 		localStorage.setItem("isLoggedIn", "0");
 		localStorage.setItem("adminLoggedIn", "false");
+		localStorage.setItem("userLevel", "");
 	}, [])
 	return (
 		<>

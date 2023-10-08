@@ -19,7 +19,6 @@ export default function JobDetails() {
 
   useEffect(() => {
     const getJobDetails = async () => {
-      console.log("compId: " + compId)
       setIsLoading(true);
       try {
         const url = localStorage.getItem("url") + "admin.php";
@@ -28,6 +27,7 @@ export default function JobDetails() {
         formData.append("json", JSON.stringify(jsonData));
         formData.append("operation", "getJobDetails");
         const res = await axios({ url: url, data: formData, method: "post" });
+        // console.log("res ni details: " + JSON.stringify(res.data));
         if (res.data !== 0) {
           setDetails(res.data);
           setIsLoading(false);
@@ -49,16 +49,11 @@ export default function JobDetails() {
         :
         <>
           <Card border='secondary'>
-            <Card.Header>
-              <div>
-                <Button variant='outline-danger button-m' onClick={() => handleBackButtonClick()}>
-                  <FontAwesomeIcon icon={faArrowLeft} />
-                </Button>
-              </div>
-              
-            </Card.Header>
             <Card.Body>
-              <h3 className='text-center'>Job details</h3>
+              <Button variant='outline-danger button-m' onClick={() => handleBackButtonClick()}>
+                <FontAwesomeIcon icon={faArrowLeft} />
+              </Button>
+              <h3 className='text-center mt-3'>Job details</h3>
               <Form>
                 <Row className='mt-5'>
                   <Col>
@@ -67,8 +62,8 @@ export default function JobDetails() {
                     </FloatingLabel>
                   </Col>
                   <Col>
-                    <FloatingLabel controlId="location" label="Location">
-                      <Form.Control type="text" value={details.location_name} readOnly />
+                    <FloatingLabel controlId="status" label="Status">
+                      <Form.Control type="text" value={details.joStatus_name} readOnly />
                     </FloatingLabel>
                   </Col>
                 </Row>
@@ -79,8 +74,8 @@ export default function JobDetails() {
                     </FloatingLabel>
                   </Col>
                   <Col>
-                    <FloatingLabel controlId="createDate" label="Date Created">
-                      <Form.Control type="text" value={details.job_createDate} readOnly />
+                    <FloatingLabel controlId="location" label="Location">
+                      <Form.Control type="text" value={details.location_name} readOnly />
                     </FloatingLabel>
                   </Col>
                 </Row>
@@ -102,6 +97,11 @@ export default function JobDetails() {
                       <Form.Control type="text" value={details.user_full_name} readOnly />
                     </FloatingLabel>
                   </Col>
+                  <Col>
+                    <FloatingLabel controlId="createDate" label="Date Created">
+                      <Form.Control type="text" value={details.job_createDate} readOnly />
+                    </FloatingLabel>
+                  </Col>
                 </Row>
                 <Row className='mt-3'>
                   <Col>
@@ -112,6 +112,11 @@ export default function JobDetails() {
                 </Row>
               </Form>
             </Card.Body>
+            {localStorage.getItem("userLevel") !== "" && details.joStatus_id === 2 ?
+              <Card.Footer className='text-center'>
+                <Button className='mt-2' variant='outline-success'>Mark as done</Button>
+              </Card.Footer>  : <></>
+            }
           </Card>
 
           <Card className='mt-3' border='secondary'>

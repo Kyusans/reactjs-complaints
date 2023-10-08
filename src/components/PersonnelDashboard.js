@@ -52,7 +52,7 @@ export default function PersonnelDashboard() {
   }, [])
 
   return (
-    <>
+    <Container>
       {isLoading ?
         <Container className='text-center mt-3'>
           <Spinner animation='border' variant='success' />
@@ -64,6 +64,7 @@ export default function PersonnelDashboard() {
               <tr>
                 <th className="green-header">Subject</th>
                 <th className="green-header">Description</th>
+                <th className="green-header">Status</th>
                 <th className="green-header">Date</th>
               </tr>
             </thead>
@@ -76,6 +77,7 @@ export default function PersonnelDashboard() {
                       ? `${tickets.job_description.slice(0, 50)}...`
                       : tickets.job_description}
                   </td>
+                  <td className='ticket-description'>{tickets.joStatus_name}</td>
                   <td className='ticket-date'>{formatDate(tickets.job_createDate)}</td>
                 </tr>
               ))}
@@ -83,6 +85,6 @@ export default function PersonnelDashboard() {
           </Table>
         </Container>
       }
-    </>
+    </Container>
   )
 }
