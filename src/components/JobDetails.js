@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Card, Container, Form, Spinner, Row, Col, FloatingLabel, Button } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -37,38 +37,56 @@ export default function JobDetails() {
       .then((res) => {
         console.log("res ni addcomment: " + JSON.stringify(res.data));
         if (res.data === 1) {
+          getComment();
           setNewComment('');
-          //getComment();
         }
       })
       .catch((err) => {
         alert("Error: " + err);
       });
   }
+
+  const getComment = useCallback(async () => {
+    try {
+      const url = localStorage.getItem("url") + "users.php";
+      const jsonData = { compId: compId };
+      const formData = new FormData();
+      formData.append("operation", "getComment");
+      formData.append("json", JSON.stringify(jsonData));
+      const res = await axios({ url: url, data: formData, method: "post" });
+      console.log(JSON.stringify(res.data));
+      if (res.data !== 0) {
+        setComment(res.data);
+      }
+    } catch (error) {
+      alert("There was an unexpected error: " + error);
+    }
+  }, [compId]); 
+
+  const getJobDetails = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const jsonData = { compId: compId };
+      const formData = new FormData();
+      formData.append("json", JSON.stringify(jsonData));
+      formData.append("operation", "getJobDetails");
+      const res = await axios({ url: url, data: formData, method: "post" });
+      // console.log("res ni details: " + JSON.stringify(res.data));
+      if (res.data !== 0) {
+        setDetails(res.data);
+        setIsLoading(false);
+      }
+    } catch (err) {
+      alert("There was an unexpected error: " + err);
+    }
+  }, [compId])
   
 
   useEffect(() => {
-    const getJobDetails = async () => {
-      setIsLoading(true);
-      try {
-        const url = localStorage.getItem("url") + "admin.php";
-        const jsonData = { compId: compId };
-        const formData = new FormData();
-        formData.append("json", JSON.stringify(jsonData));
-        formData.append("operation", "getJobDetails");
-        const res = await axios({ url: url, data: formData, method: "post" });
-        // console.log("res ni details: " + JSON.stringify(res.data));
-        if (res.data !== 0) {
-          setDetails(res.data);
-          setIsLoading(false);
-        }
-      } catch (err) {
-        alert("There was an unexpected error: " + err);
-      }
-    };
-
     getJobDetails();
-  }, [compId]);
+    getComment(); 
+  }, [compId, getComment, getJobDetails]);
 
   return (
     <>
@@ -158,13 +176,10 @@ export default function JobDetails() {
                 :
                   <Container>
                     {comment.map((comments, index) => (
-                    <Card>
+                    <Card className='mb-2 ' key={index} border='secondary'>
                       <Card.Body>
-                        <Row>
-                          <Col>
-                            <strong>{}</strong>
-                          </Col>
-                        </Row>
+                            <p className='text-success'>{comments.full_name}</p>
+                            <p>{comments.comment_commentText}</p>
                       </Card.Body>
                     </Card>
                     ))}
