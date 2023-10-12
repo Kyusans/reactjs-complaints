@@ -74,22 +74,29 @@ function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {tickets.map((ticket, index) => (
-                      <tr key={index}>
+                    {Array.isArray(tickets) && tickets.length > 0 ? (
+                      tickets.map((ticket, index) => (
+                        <tr key={index}>
                           <td className={`ticket-cell ${ticket.read ? 'read-ticket' : 'unread-ticket'}`}>
                             <Row>
                               <Col><strong>{ticket.comp_subject}</strong></Col>
                               <Col className="ticket-description">
-                                  {ticket.comp_description.length > 50
-                                    ? `${ticket.comp_description.slice(0, 50)}...`
-                                    : ticket.comp_description}
+                                {ticket.comp_description.length > 50
+                                  ? `${ticket.comp_description.slice(0, 50)}...`
+                                  : ticket.comp_description}
                               </Col>
                               <Col className='text-end ticket-date'>{formatDate(ticket.comp_date)}</Col>
                             </Row>
-                        </td>
-                      </tr>))
-                    }
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td className="text-center">No tickets available</td>
+                      </tr>
+                    )}
                   </tbody>
+
                 </Table>
               </Card.Body>
             </Card>

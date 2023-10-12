@@ -87,32 +87,34 @@ function ComplaintForm(props) {
 		setValidated(true);
 	}
   useEffect(() => {
-    const getLocationCategory = async () => {
-      try {
-        const url = localStorage.getItem("url") + "admin.php";
-        const clientId = localStorage.getItem("userId");
-        console.log("clientId: " + clientId);
-        const formData = new FormData();
-        formData.append("operation", "getLocationCategory");
-        const response = await axios({
-          url: url,
-          data: formData,
-          method: "post"
-        });
-        console.log("location category: " + JSON.stringify(response.data));
-        if (response.data !== 0) {
-          setLocationCategory(response.data);
+    if(show){
+      const getLocationCategory = async () => {
+        try {
+          const url = localStorage.getItem("url") + "admin.php";
+          const clientId = localStorage.getItem("userId");
+          console.log("clientId: " + clientId);
+          const formData = new FormData();
+          formData.append("operation", "getLocationCategory");
+          const response = await axios({
+            url: url,
+            data: formData,
+            method: "post"
+          });
+          console.log("location category: " + JSON.stringify(response.data));
+          if (response.data !== 0) {
+            setLocationCategory(response.data);
+          }
+        } catch (error) {
+          getAlert("danger", "There was an unexpected error: " + error);
         }
-      } catch (error) {
-        getAlert("danger", "There was an unexpected error: " + error);
+      };
+      getLocationCategory();
+      if(locationCategoryId !== ""){
+        setLocationId("");
+        getLocation(locationCategoryId);
       }
-    };
-    getLocationCategory();
-    if(locationCategoryId !== ""){
-      setLocationId("");
-      getLocation(locationCategoryId);
     }
-  }, [locationCategoryId])
+  }, [locationCategoryId, show])
   
   return (
     <>

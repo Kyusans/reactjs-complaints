@@ -45,8 +45,6 @@ export default function Login() {
 		})
 		.then((res)=>{
 			if(res.data !== 0){
-				console.log("res: " + JSON.stringify(res.data));
-				console.log("res.data.user_level: " + res.data.user_level)
 				localStorage.setItem("isLoggedIn", "1");
 				getAlert("success", "Success!");
 				if(parseInt(res.data.user_level) === 100){

@@ -11,6 +11,7 @@ export default function JobDetails() {
   const { compId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
+  const [comment, setComment] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -24,6 +25,27 @@ export default function JobDetails() {
   const handleBackButtonClick = () => {
     navigateTo(-1);
   };
+
+  const addComment = () => {
+    const url = localStorage.getItem("url") + "users.php";
+    const userId = localStorage.getItem("userId");
+    const jsonData = { compId: compId, userId: userId, commentText: newComment };
+    const formData = new FormData();
+    formData.append("operation", "addComment");
+    formData.append("json", JSON.stringify(jsonData));
+    axios({ url: url, data: formData, method: "post" })
+      .then((res) => {
+        console.log("res ni addcomment: " + JSON.stringify(res.data));
+        if (res.data === 1) {
+          setNewComment('');
+          //getComment();
+        }
+      })
+      .catch((err) => {
+        alert("Error: " + err);
+      });
+  }
+  
 
   useEffect(() => {
     const getJobDetails = async () => {
@@ -126,19 +148,39 @@ export default function JobDetails() {
               </Card.Footer>  : <></>
             }
           </Card>
-
-          <Card className='mt-3' border='secondary'>
-            <Card.Body>
-              <Form>
-                <FloatingLabel label="Add a comment..">
-                  <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' />
-                </FloatingLabel>
-                <Container className='mt-3 text-end'>
-                  <Button>Submit</Button>
-                </Container>
-              </Form>
-            </Card.Body>
-          </Card>
+          <Container>
+            <Card className='mt-3' border='secondary'>
+              <Card.Body>
+                {comment.length <= 0 ? 
+                  <Container className='text-secondary text-center'>
+                    <p>There is no comment yet..</p>
+                  </Container>
+                :
+                  <Container>
+                    {comment.map((comments, index) => (
+                    <Card>
+                      <Card.Body>
+                        <Row>
+                          <Col>
+                            <strong>{}</strong>
+                          </Col>
+                        </Row>
+                      </Card.Body>
+                    </Card>
+                    ))}
+                  </Container>
+                }
+                <Form className='mt-5'>
+                  <FloatingLabel label="Add a comment..">
+                    <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required/>
+                  </FloatingLabel>
+                  <Container className='mt-3 text-end'>
+                    <Button variant='outline-primary' onClick={addComment}>Submit</Button>
+                  </Container>
+                </Form>
+              </Card.Body>
+            </Card>
+          </Container>
         </>
       }
       <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id}/>

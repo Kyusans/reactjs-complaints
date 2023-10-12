@@ -126,6 +126,7 @@ function JobOrderModal(props) {
   };
 
   function handleHide() {
+    setShowAlert(false);
     setPriorityValidation(null);
     setPersonnelValidation(null);
     setJobPersonnel([]);
