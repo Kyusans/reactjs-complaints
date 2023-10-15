@@ -1,8 +1,16 @@
 import { Container, Row } from "react-bootstrap";
 import AdminComplaintTable from "./AdminComplaintTable";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 export default function AdminDashboard() {
+  const navigateTo = useNavigate();
+  useEffect(()=>{
+    if(localStorage.getItem("adminLoggedIn") !== "true"){
+      navigateTo("/")
+    }
+  }, [navigateTo])
   return (
     <>
       {localStorage.getItem("adminLoggedIn") === "true" ? (

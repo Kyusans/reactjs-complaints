@@ -13,6 +13,7 @@ export default function Login() {
 		// localStorage.setItem("url", "http://www.shareatext.com/gsd/api/");
 	}
 	
+  const [permission, setPermission] = useState(Notification.permission);
 	const [userId, setUserId] = useState("");
 	const [password, setPassword] = useState("");
 	const navigateTo = useNavigate();
@@ -58,6 +59,7 @@ export default function Login() {
 				}else{
 					setTimeout(() => {
 						localStorage.setItem("userId", res.data.fac_id);
+						localStorage.setItem("userLevel", "80");
 						navigateTo("/user/dashboard")
 					}, 1500);
 				}
@@ -69,12 +71,25 @@ export default function Login() {
 			alert("There was an unexpected error: " + err);
 		})
 	}
+	const handleRequestPermission = () => {
+    Notification.requestPermission().then(permission => setPermission(permission));
+  };
+
 	useEffect(() => {
-		localStorage.setItem("userId", "");
-		localStorage.setItem("isLoggedIn", "0");
-		localStorage.setItem("adminLoggedIn", "false");
-		localStorage.setItem("userLevel", "");
-	}, [])
+		if(permission !== "granted"){
+			handleRequestPermission();
+		}
+		if(localStorage.getItem("adminLoggedIn") === "true"){
+			navigateTo("/admin/dashboard");
+		}else if(localStorage.getItem("userLevel") === "90"){
+			navigateTo("/personnel/dashboard")
+		}else if(localStorage.getItem("userLevel") === "80"){
+			navigateTo("/user/dashboard")
+		}
+		// localStorage.setItem("userId", "");
+		// localStorage.setItem("isLoggedIn", "0");
+		// localStorage.setItem("userLevel", "");
+	}, [navigateTo, permission])
 	return (
 		<>
 			<Container fluid="md" className='centered'>

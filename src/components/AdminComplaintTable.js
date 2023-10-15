@@ -1,7 +1,7 @@
-import { Pagination, Table } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Pagination, Table } from "react-bootstrap";
 import JobOrderModal from "./JobOrderModal";
 
 function AdminComplaintTable() {
@@ -12,67 +12,84 @@ function AdminComplaintTable() {
   const ticketsPerPage = 10;
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
   const showPagination = tickets.length > ticketsPerPage;
-  
+
   const handleClose = () => setShowJobOrderModal(false);
   const handleShow = (id, status) => {
-    if(status === 1){
+    if (status === 1) {
       setTicketId(id);
-      setShowJobOrderModal(true)
-    }else{
+      setShowJobOrderModal(true);
+    } else {
       navigateTo(`/job/details/${id}`);
     }
   };
 
-  const getAllTickets = () => {
+  const handleShowNotification = () => {
+    const notification = new Notification("New Complaint", { body: "A new complaint has been submitted. Please review it." });
+    notification.onclick = (e) => {
+      window.open("http://localhost:3000/admin/dashboard");
+    };
+  };
+
+  const getAllTickets = useCallback(() => {
     const url = localStorage.getItem("url") + "admin.php";
     const formData = new FormData();
     formData.append("operation", "getAllTickets");
-    axios({ url: url, data: formData, method: "post" })
+    axios({ url, data: formData, method: "post" })
       .then((res) => {
         if (res.data !== 0) {
           setTickets(res.data);
+          const adminTickets = res.data.length;
+          console.log("adminTickets: " + adminTickets);
+          if(localStorage.getItem("adminTickets") !== adminTickets.toString()){
+            handleShowNotification()
+            localStorage.setItem("adminTickets", adminTickets.toString());
+          }
         }
       })
       .catch((err) => {
         alert("There was an unexpected error: " + err);
       });
-  };
+  },[]);
 
-  //para sa page
   const startIndex = (currentPage - 1) * ticketsPerPage;
   const endIndex = startIndex + ticketsPerPage;
   const displayedTickets = tickets.slice(startIndex, endIndex);
-  const handlePageChange = (newPage) => {setCurrentPage(newPage);};
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   function formatDate(inputDate) {
     const date = new Date(inputDate);
     const monthNames = [
       "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
     ];
     const month = monthNames[date.getMonth()];
     const day = date.getDate();
     const formattedDate = `${month} ${day}`;
     return formattedDate;
   }
-  
+
   useEffect(() => {
-    if(localStorage.getItem("adminLoggedIn") !== "true"){
+    if (localStorage.getItem("adminLoggedIn") !== "true") {
       setTimeout(() => {
         navigateTo("/");
       }, 1500);
-    }else{
+    } else {
       getAllTickets();
-      const interval = setInterval(() =>{
+
+      const interval = setInterval(() => {
         getAllTickets();
       }, 2000);
+
       return () => clearInterval(interval);
     }
-  },[navigateTo])
+  }, [getAllTickets, navigateTo]);
+
   return (
     <div>
-      <Table striped bordered hover size='sm' variant='success' className="text-center">
-        <thead className='text-center'>
+      <Table striped bordered hover size="sm" variant="success" className="text-center">
+        <thead className="text-center">
           <tr>
             <th className="green-header">Subject</th>
             <th className="green-header">Description</th>
@@ -82,15 +99,19 @@ function AdminComplaintTable() {
         </thead>
         <tbody>
           {displayedTickets.map((ticket, index) => (
-            <tr key={index} className={`ticket-cell ${ticket.read ? 'read-ticket' : 'unread-ticket'}`} onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}>
-                <td>{ticket.comp_subject}</td>
-                <td className="ticket-description">
-                  {ticket.comp_description.length > 50
-                    ? `${ticket.comp_description.slice(0, 50)}...`
-                    : ticket.comp_description}
-                </td>
-                <td>{ticket.joStatus_name}</td>
-                <td className='ticket-date'>{formatDate(ticket.comp_date)}</td>
+            <tr
+              key={index}
+              className="ticket-cell"
+              onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}
+            >
+              <td>{ticket.comp_subject}</td>
+              <td className="ticket-description">
+                {ticket.comp_description.length > 50
+                  ? `${ticket.comp_description.slice(0, 50)}...`
+                  : ticket.comp_description}
+              </td>
+              <td>{ticket.joStatus_name}</td>
+              <td className="ticket-date">{formatDate(ticket.comp_date)}</td>
             </tr>
           ))}
         </tbody>
@@ -117,7 +138,8 @@ function AdminComplaintTable() {
       )}
       <JobOrderModal show={showJobOrderModal} onHide={handleClose} ticketId={ticketId} />
     </div>
-  )
+  );
 }
 
-export default AdminComplaintTable
+export default AdminComplaintTable;
+

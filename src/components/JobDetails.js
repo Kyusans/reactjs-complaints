@@ -86,6 +86,8 @@ export default function JobDetails() {
   useEffect(() => {
     getJobDetails();
     getComment(); 
+    const interval = setInterval(() => {getComment()}, 2000);
+    return () => clearInterval(interval);
   }, [compId, getComment, getJobDetails]);
 
   return (
