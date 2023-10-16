@@ -104,14 +104,14 @@ function AdminComplaintTable() {
               className="ticket-cell"
               onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}
             >
-              <td>{ticket.comp_subject}</td>
-              <td className="ticket-description">
+              <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>{ticket.comp_subject}</td>
+              <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>
                 {ticket.comp_description.length > 50
                   ? `${ticket.comp_description.slice(0, 50)}...`
                   : ticket.comp_description}
               </td>
-              <td>{ticket.joStatus_name}</td>
-              <td className="ticket-date">{formatDate(ticket.comp_date)}</td>
+              <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>{ticket.joStatus_name}</td>
+              <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>{formatDate(ticket.comp_date)}</td>
             </tr>
           ))}
         </tbody>

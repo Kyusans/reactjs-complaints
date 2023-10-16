@@ -70,15 +70,15 @@ export default function PersonnelDashboard() {
             </thead>
             <tbody>
               {ticket.map((tickets, index) => (
-                <tr key={index} className={`ticket-cell ${tickets.read ? 'read-ticket' : 'unread-ticket'}`} onClick={() => handleNavigate(tickets.job_complaintId)}>
-                  <td><strong>{tickets.job_title}</strong></td>
-                  <td className="ticket-description">
+                <tr key={index} className={`ticket-cell ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`} onClick={() => handleNavigate(tickets.job_complaintId)}>
+                  <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>{tickets.job_title}</td>
+                  <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>
                     {tickets.job_description.length > 50
                       ? `${tickets.job_description.slice(0, 50)}...`
                       : tickets.job_description}
                   </td>
-                  <td className='ticket-description'>{tickets.joStatus_name}</td>
-                  <td className='ticket-date'>{formatDate(tickets.job_createDate)}</td>
+                  <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>{tickets.joStatus_name}</td>
+                  <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>{formatDate(tickets.job_createDate)}</td>
                 </tr>
               ))}
             </tbody>

@@ -1,6 +1,13 @@
 import { NavLink, Navbar, Container } from "react-bootstrap";
 
 function NavBar() {
+
+  const handleSignout = () =>{
+    localStorage.setItem("userId", "");
+		localStorage.setItem("userLevel", "");
+    localStorage.setItem("isLoggedIn", "")
+  }
+
   return (
     <>
       <Navbar className="nav-background" expand="lg" text="light">
@@ -19,6 +26,7 @@ function NavBar() {
             <NavLink
               style={{ color: "white", marginRight: "10px" }}
               href="/"
+              onClick={handleSignout}
             >
               Signout
             </NavLink>

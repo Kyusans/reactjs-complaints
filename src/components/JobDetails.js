@@ -97,7 +97,7 @@ export default function JobDetails() {
           <Spinner animation='border' variant='success' />
         </Container>
         :
-        <>
+        <Container className='mt-3'>
           <Card border='secondary'>
             <Card.Body>
               <Button variant='outline-danger button-m' onClick={() => handleBackButtonClick()}>
@@ -198,7 +198,7 @@ export default function JobDetails() {
               </Card.Body>
             </Card>
           </Container>
-        </>
+        </Container>
       }
       <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id}/>
     </>

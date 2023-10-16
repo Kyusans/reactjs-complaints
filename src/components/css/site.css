@@ -150,7 +150,7 @@
     transition: background-color 0.3s ease;
 }
   
-.unread-ticket {
+/* .unread-ticket {
     font-weight: bold;
     background-color: #f5f5f5;
 }
@@ -158,9 +158,10 @@
 .read-ticket {
     font-weight: normal;
     background-color: white;
-}
+} */
 
-.ticket-description{
+.ticket-unread{
+    font-weight: bold;
     font-size: 12px;
 }
 
