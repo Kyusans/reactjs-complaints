@@ -64,21 +64,23 @@ export default function PersonnelDashboard() {
               <tr>
                 <th className="green-header">Subject</th>
                 <th className="green-header">Description</th>
+                <th className="green-header">Priority</th>
                 <th className="green-header">Status</th>
                 <th className="green-header">Date</th>
               </tr>
             </thead>
             <tbody>
               {ticket.map((tickets, index) => (
-                <tr key={index} className={`ticket-cell ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`} onClick={() => handleNavigate(tickets.job_complaintId)}>
-                  <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>{tickets.job_title}</td>
-                  <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>
+                <tr key={index} className={`ticket-cell`} onClick={() => handleNavigate(tickets.job_complaintId)}>
+                  <td>{tickets.job_title}</td>
+                  <td>
                     {tickets.job_description.length > 50
                       ? `${tickets.job_description.slice(0, 50)}...`
                       : tickets.job_description}
                   </td>
-                  <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>{tickets.joStatus_name}</td>
-                  <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>{formatDate(tickets.job_createDate)}</td>
+                  <td className={`${tickets.priority_name === "High" ? "text-danger" : `${tickets.priority_name === "Medium" ? "text-warning" : ""}`}`}>{tickets.priority_name}</td>
+                  <td className={tickets.joStatus_name === "On-Going" ? "text-dark" : "text-success"}>{tickets.joStatus_name}</td>
+                  <td className={`ticket-date`}>{formatDate(tickets.job_createDate)}</td>
                 </tr>
               ))}
             </tbody>

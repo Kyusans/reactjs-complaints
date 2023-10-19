@@ -57,6 +57,19 @@ function AdminComplaintTable() {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+  const handlePreviousPage = () => {
+    setCurrentPage(currentPage -1);
+  }
+  const handleFirstPage = () => {
+    setCurrentPage(1);
+  };
+  const handleLastPage = () => {
+    const lastPage = Math.ceil(tickets.length / ticketsPerPage);
+    setCurrentPage(lastPage);
+  };
 
   function formatDate(inputDate) {
     const date = new Date(inputDate);
@@ -119,11 +132,10 @@ function AdminComplaintTable() {
       {showPagination && (
         <div className="d-flex justify-content-end mt-2">
           <Pagination>
-            <Pagination.First />
-            <Pagination.Prev />
+            <Pagination.First onClick={handleFirstPage}/>
+            <Pagination.Prev onClick={handlePreviousPage}/>
             {Array.from({ length: Math.ceil(tickets.length / ticketsPerPage) }, (_, index) => (
               <Pagination.Item
-                className="mx-1"
                 key={index}
                 active={currentPage === index + 1}
                 onClick={() => handlePageChange(index + 1)}
@@ -131,8 +143,8 @@ function AdminComplaintTable() {
                 {index + 1}
               </Pagination.Item>
             ))}
-            <Pagination.Next />
-            <Pagination.Last />
+            <Pagination.Next onClick={handleNextPage} />
+            <Pagination.Last onClick={handleLastPage}/>
           </Pagination>
         </div>
       )}
