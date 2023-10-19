@@ -110,7 +110,7 @@ function AdminComplaintTable() {
                   ? `${ticket.comp_description.slice(0, 50)}...`
                   : ticket.comp_description}
               </td>
-              <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>{ticket.joStatus_name}</td>
+              <td className={`${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""} ${ticket.joStatus_name === "Completed" ? "text-success" : `${ticket.joStatus_name === "On-Going" ? "text-secondary":""}`}`}>{ticket.joStatus_name}</td>
               <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>{formatDate(ticket.comp_date)}</td>
             </tr>
           ))}

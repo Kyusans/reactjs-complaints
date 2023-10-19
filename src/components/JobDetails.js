@@ -171,6 +171,14 @@ export default function JobDetails() {
           <Container>
             <Card className='mt-3' border='secondary'>
               <Card.Body>
+                <Form className='mb-5'>
+                  <FloatingLabel label="Add a comment..">
+                    <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required/>
+                  </FloatingLabel>
+                  <Container className='mt-3'>
+                    <Button variant='outline-primary' onClick={addComment}>Submit</Button>
+                  </Container>
+                </Form>
                 {comment.length <= 0 ? 
                   <Container className='text-secondary text-center'>
                     <p>There is no comment yet..</p>
@@ -187,14 +195,7 @@ export default function JobDetails() {
                     ))}
                   </Container>
                 }
-                <Form className='mt-5'>
-                  <FloatingLabel label="Add a comment..">
-                    <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required/>
-                  </FloatingLabel>
-                  <Container className='mt-3 text-end'>
-                    <Button variant='outline-primary' onClick={addComment}>Submit</Button>
-                  </Container>
-                </Form>
+
               </Card.Body>
             </Card>
           </Container>

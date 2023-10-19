@@ -8,8 +8,8 @@ import AlertScript from './AlertScript';
 
 
 export default function Login() {
-	if(localStorage.getItem("url") !== "http://localhost/gsd/") {
-		localStorage.setItem("url", "http://localhost/gsd/");
+	if(localStorage.getItem("url") !== "http://localhost/gsd/api/") {
+		localStorage.setItem("url", "http://localhost/gsd/api/");
 		// localStorage.setItem("url", "http://www.shareatext.com/gsd/api/");
 	}
 	
