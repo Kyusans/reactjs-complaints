@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Container, Spinner, Table } from 'react-bootstrap';
 import "./css/site.css";
 import { useNavigate } from 'react-router-dom';
+import { handleShowNotification } from './NotificationComponent';
 
 export default function PersonnelDashboard() {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,7 +11,6 @@ export default function PersonnelDashboard() {
   const navigateTo = useNavigate();
 
   const getJobTicket = async () => {
-    setIsLoading(true);
     try {
       const url = localStorage.getItem("url") + "personnel.php";
       const userId = localStorage.getItem("userId");
@@ -19,12 +19,14 @@ export default function PersonnelDashboard() {
       formData.append("operation", "getJobTicket");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res: " + JSON.stringify(res.data))
       if (res.data !== 0) {
         setTicket(res.data);
+        const personnelTickets = res.data.length;
+        if(localStorage.getItem("personnelTickets") !== personnelTickets.toString()){
+          handleShowNotification();
+          localStorage.setItem("personnelTickets", personnelTickets);
+        }
         setIsLoading(false);
-      } else {
-        //no job ticket found
       }
     } catch (error) {
       alert("There was an unexpected error: " + error);
@@ -48,18 +50,20 @@ export default function PersonnelDashboard() {
   }
 
   useEffect(() => {
-    getJobTicket();
+    setIsLoading(true);
+    const intervalId = setInterval(() => {getJobTicket()}, 2000);
+    return () => clearInterval(intervalId);
   }, [])
 
   return (
-    <Container>
+    <Container className='scrollable-container'>
       {isLoading ?
         <Container className='text-center mt-3'>
           <Spinner animation='border' variant='success' />
         </Container>
         :
-        <Container className='mt-3'>
-          <Table bordered striped hover variant='success'>
+        <div className='mt-3'>
+          <Table bordered striped hover variant='secondary' className='border-2'>
             <thead>
               <tr>
                 <th className="green-header">Subject</th>
@@ -85,7 +89,7 @@ export default function PersonnelDashboard() {
               ))}
             </tbody>
           </Table>
-        </Container>
+        </div>
       }
     </Container>
   )

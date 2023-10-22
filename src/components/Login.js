@@ -8,8 +8,8 @@ import AlertScript from './AlertScript';
 
 
 export default function Login() {
-	if(localStorage.getItem("url") !== "http://localhost/gsd/api/") {
-		localStorage.setItem("url", "http://localhost/gsd/api/");
+	if(localStorage.getItem("url") !== "http://192.168.1.5/gsd/api/") {
+		localStorage.setItem("url", "http://192.168.1.5/gsd/api/");
 		// localStorage.setItem("url", "http://www.shareatext.com/gsd/api/");
 	}
 	
@@ -77,6 +77,7 @@ export default function Login() {
   };
 
 	useEffect(() => {
+		alert("Permission: " + permission);
 		if(permission !== "granted"){
 			handleRequestPermission();
 		}
@@ -87,9 +88,6 @@ export default function Login() {
 		}else if(localStorage.getItem("userLevel") === "80"){
 			navigateTo("/user/dashboard")
 		}
-		// localStorage.setItem("userId", "");
-		// localStorage.setItem("isLoggedIn", "0");
-		// localStorage.setItem("userLevel", "");
 	}, [navigateTo, permission])
 	return (
 		<>

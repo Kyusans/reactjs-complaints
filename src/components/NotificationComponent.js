@@ -1,26 +1,6 @@
-import React, { useState } from 'react'
-
-export default function NotificationComponent() {
-  const [permission, setPermission] = useState(Notification.permission);
-
-  const handleRequestPermission = () => {
-    Notification.requestPermission().then(permission => setPermission(permission));
+export function handleShowNotification() {
+  const notification = new Notification("New Complaint", { body: "A new complaint has been submitted. Please review it." });
+  notification.onclick = () => {
+    window.open("http://192.168.1.5:3000/admin/dashboard");
   };
-
-  const handleShowNotification = () => {
-    new Notification('Hello, world!', {
-      body: 'This is a notification',
-      // you can add more options here
-    });
-  };
-
-  return (
-    <div>
-      {permission === 'granted' ? (
-        <button onClick={handleShowNotification}>Show Notification</button>
-      ) : (
-        <button onClick={handleRequestPermission}>Request Permission</button>
-      )}
-    </div>
-  );
 }

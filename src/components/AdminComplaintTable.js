@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Pagination, Table } from "react-bootstrap";
 import JobOrderModal from "./JobOrderModal";
+import {handleShowNotification} from "./NotificationComponent";
 
 function AdminComplaintTable() {
   const navigateTo = useNavigate();
   const [tickets, setTickets] = useState([]);
   const [ticketId, setTicketId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const ticketsPerPage = 10;
+  const ticketsPerPage = 20;
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
   const showPagination = tickets.length > ticketsPerPage;
 
@@ -23,13 +24,6 @@ function AdminComplaintTable() {
     }
   };
 
-  const handleShowNotification = () => {
-    const notification = new Notification("New Complaint", { body: "A new complaint has been submitted. Please review it." });
-    notification.onclick = (e) => {
-      window.open("http://localhost:3000/admin/dashboard");
-    };
-  };
-
   const getAllTickets = useCallback(() => {
     const url = localStorage.getItem("url") + "admin.php";
     const formData = new FormData();
@@ -39,7 +33,6 @@ function AdminComplaintTable() {
         if (res.data !== 0) {
           setTickets(res.data);
           const adminTickets = res.data.length;
-          console.log("adminTickets: " + adminTickets);
           if(localStorage.getItem("adminTickets") !== adminTickets.toString()){
             handleShowNotification()
             localStorage.setItem("adminTickets", adminTickets.toString());
