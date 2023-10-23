@@ -38,7 +38,6 @@ function ComplaintForm(props) {
     formData.append("operation", "addComplaint");
     axios({ url: url, data: formData, method: "post" })
      .then((res) => {
-        console.log("response complaint: " + JSON.stringify(res.data))
         if (res.data !== 0) {
           getAlert("success", "Success");
           setTimeout(() => {
@@ -58,7 +57,6 @@ function ComplaintForm(props) {
     formData.append("operation", "getLocations");
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
-        console.log("res.data ni getLocations: " + JSON.stringify(res.data));
         if (res.data !== 0) {
           setLocation(res.data);
         }
@@ -91,8 +89,6 @@ function ComplaintForm(props) {
       const getLocationCategory = async () => {
         try {
           const url = localStorage.getItem("url") + "admin.php";
-          const clientId = localStorage.getItem("userId");
-          console.log("clientId: " + clientId);
           const formData = new FormData();
           formData.append("operation", "getLocationCategory");
           const response = await axios({
@@ -100,7 +96,6 @@ function ComplaintForm(props) {
             data: formData,
             method: "post"
           });
-          console.log("location category: " + JSON.stringify(response.data));
           if (response.data !== 0) {
             setLocationCategory(response.data);
           }

@@ -26,14 +26,12 @@ function LocationCategory() {
     const formData = new FormData();
     formData.append("json", JSON.stringify(jsonData));
     formData.append("operation", "addLocationCategory");
-    console.log("url: " + url);
     axios({
       url: url,
       data: formData,
       method: "post",
     })
     .then((res)=>{
-      console.log("res: " + JSON.stringify(res.data));
       if(res.data !== 0){
         getAlert("success", "Success!");
         setTimeout(() => {

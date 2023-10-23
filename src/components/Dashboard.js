@@ -34,6 +34,14 @@ function Dashboard() {
       });
   };
 
+  const handleNavigate = (id, status) =>{
+    if(status === 1){
+      alert("Ticket is still on pending");
+    }else{
+      navigateTo(`/job/details/${id}`);
+    }
+  }
+
   function formatDate(inputDate) {
     const date = new Date(inputDate);
     const monthNames = [
@@ -53,6 +61,8 @@ function Dashboard() {
       }, 1500);
     }else{
       getComplaints();
+      const intervalId = setInterval(() => {getComplaints()}, 2000);
+      return () => clearInterval(intervalId);
     }
   }, [navigateTo])
   
@@ -77,7 +87,7 @@ function Dashboard() {
               <tbody>
                 {Array.isArray(tickets) && tickets.length > 0 ? (
                   tickets.map((ticket, index) => (
-                    <tr key={index} className='ticket-cell'>
+                    <tr key={index} className='ticket-cell' onClick={() => handleNavigate(ticket.comp_id, ticket.comp_status)}>
                         <td>{ticket.comp_subject}</td>
                         <td className="ticket-description">
                           {ticket.comp_description.length > 50
@@ -89,7 +99,9 @@ function Dashboard() {
                   ))
                 ) : (
                   <tr>
-                    <td className="text-center">No tickets available</td>
+                    <td/>
+                    <td className="text-center ticket-description">No tickets found</td>
+                    <td/>
                   </tr>
                 )}
               </tbody>

@@ -14,6 +14,7 @@ export default function JobDetails() {
   const [comment, setComment] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [isPersonnel, setIsPersonnel] = useState(false);
 
   const openConfirmModal = () =>{setShowConfirmModal(true);}
   const closeConfirmModal = () =>{
@@ -35,7 +36,6 @@ export default function JobDetails() {
     formData.append("json", JSON.stringify(jsonData));
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
-        console.log("res ni addcomment: " + JSON.stringify(res.data));
         if (res.data === 1) {
           getComment();
           setNewComment('');
@@ -54,7 +54,6 @@ export default function JobDetails() {
       formData.append("operation", "getComment");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log(JSON.stringify(res.data));
       if (res.data !== 0) {
         setComment(res.data);
       }
@@ -72,7 +71,6 @@ export default function JobDetails() {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getJobDetails");
       const res = await axios({ url: url, data: formData, method: "post" });
-      // console.log("res ni details: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         setDetails(res.data);
         setIsLoading(false);
@@ -82,13 +80,25 @@ export default function JobDetails() {
     }
   }, [compId])
   
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+    const monthNames = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    const month = monthNames[date.getMonth()];
+    const day = date.getDate();
+    const formattedDate = `${month} ${day}`;
+    return formattedDate;
+  }
 
   useEffect(() => {
+    setIsPersonnel(localStorage.getItem("userLevel") === "90" ? true : false);
     getJobDetails();
     getComment(); 
     const interval = setInterval(() => {getComment()}, 2000);
     return () => clearInterval(interval);
-  }, [compId, getComment, getJobDetails]);
+  }, [compId, getComment, getJobDetails, isPersonnel]);
 
   return (
     <>
@@ -162,13 +172,19 @@ export default function JobDetails() {
                 </Row>
               </Form>
             </Card.Body>
-            {localStorage.getItem("userLevel") !== "" && details.joStatus_id === 2 ?
-              <Card.Footer className='text-center'>
-                <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>Mark as done</Button>
-              </Card.Footer>  : <></>
+            {
+                isPersonnel && parseInt(details.joStatus_id, 10) === 2 ? (
+                <Card.Footer className='text-center'>
+                  <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>
+                    Mark as done
+                  </Button>
+                </Card.Footer>
+              ) : (
+                <></>
+              )
             }
           </Card>
-          <Container>
+          <Container fluid>
             <Card className='mt-3' border='secondary'>
               <Card.Body>
                 <Form className='mb-5'>
@@ -186,16 +202,16 @@ export default function JobDetails() {
                 :
                   <Container>
                     {comment.map((comments, index) => (
-                    <Card className='mb-2 ' key={index} border='secondary'>
+                    <Card className='mb-2' key={index} border='secondary'>
                       <Card.Body>
                             <p className='text-success'>{comments.full_name}</p>
                             <p>{comments.comment_commentText}</p>
+                            <p className='text-secondary text-end '>{formatDate(comments.comment_date)}</p>
                       </Card.Body>
                     </Card>
                     ))}
                   </Container>
                 }
-
               </Card.Body>
             </Card>
           </Container>

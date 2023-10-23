@@ -60,8 +60,6 @@ function JobOrderModal(props) {
     };
     const detail = { jobPersonnelId: jobPersonnelId };
     const jsonData = { master: master, detail: detail };
-    console.log('JSON Data:', jsonData);
-
     // Validate the form before submitting
     if (!validateForm()) {
       return;

@@ -8,8 +8,8 @@ import AlertScript from './AlertScript';
 
 
 export default function Login() {
-	if(localStorage.getItem("url") !== "http://192.168.1.5/gsd/api/") {
-		localStorage.setItem("url", "http://192.168.1.5/gsd/api/");
+	if(localStorage.getItem("url") !== "http://localhost/gsd/api/") {
+		localStorage.setItem("url", "http://localhost/gsd/api/");
 		// localStorage.setItem("url", "http://www.shareatext.com/gsd/api/");
 	}
 	
@@ -48,7 +48,6 @@ export default function Login() {
 			if(res.data !== 0){
 				localStorage.setItem("isLoggedIn", "1");
 				getAlert("success", "Success!");
-				console.log("ressss : " + res.data.user_level);
 				if(res.data.user_level === 100){
 					localStorage.setItem("adminLoggedIn", "true");
 					setTimeout(() => {navigateTo("/admin/dashboard");}, 1500);
@@ -72,14 +71,14 @@ export default function Login() {
 			alert("There was an unexpected error: " + err);
 		})
 	}
-	const handleRequestPermission = () => {
-    Notification.requestPermission().then(permission => setPermission(permission));
-  };
+
+	function requestPermission(){
+		Notification.requestPermission().then(permission => setPermission(permission));
+	}
 
 	useEffect(() => {
-		alert("Permission: " + permission);
 		if(permission !== "granted"){
-			handleRequestPermission();
+			requestPermission();
 		}
 		if(localStorage.getItem("adminLoggedIn") === "true"){
 			navigateTo("/admin/dashboard");

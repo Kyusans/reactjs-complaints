@@ -23,13 +23,10 @@ export default function ConfirmModal(props) {
     const url = localStorage.getItem("url") + "personnel.php";
     const jsonData = {compId: compId};
     const formData = new FormData();
-    console.log("url: " + url);
-    console.log("jsonData: " + JSON.stringify(jsonData));
     formData.append("operation", "jobDone");
     formData.append("json", JSON.stringify(jsonData));
     axios({url: url, data: formData, method: "post"})
     .then((res) =>{
-      console.log("res ni jobdone: " + JSON.stringify(res.data))
       if(res.data === 1){
         getAlert("success","Job Complete!");
         setIsJobComplete(true);
