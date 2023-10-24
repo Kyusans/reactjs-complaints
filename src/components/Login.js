@@ -5,6 +5,7 @@ import cocLogo from "./images/coclogo.jpg";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AlertScript from './AlertScript';
+import NotificationComponent from './NotificationComponent';
 
 
 export default function Login() {
@@ -73,7 +74,15 @@ export default function Login() {
 	}
 
 	function requestPermission(){
-		Notification.requestPermission().then(permission => setPermission(permission));
+		Notification.requestPermission().then(permission => {
+			setPermission(permission);
+			if(permission === "granted"){
+				NotificationComponent.pushManager.subscribe({
+					userVisibleOnly: true,
+					// applicationServerKey: 
+				})
+			}
+		});
 	}
 
 	useEffect(() => {
@@ -90,7 +99,7 @@ export default function Login() {
 	}, [navigateTo, permission])
 	return (
 		<>
-			<Container fluid="md" className='centered'>
+			<Container className='centered'>
 				<Card className="card-thin" border='success'>
 					<Card.Body>
 						<Container className='text-center'>	

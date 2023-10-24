@@ -4,3 +4,9 @@ export function handleShowNotification() {
     window.open("http://192.168.1.5:3000/admin/dashboard");
   };
 }
+function NotificationComponent() {
+  return (
+    <></>
+  )
+}
+export default NotificationComponent
