@@ -6,7 +6,9 @@ export function handleShowNotification() {
 }
 function NotificationComponent() {
   return (
-    <></>
+    <>
+      notify
+    </>
   )
 }
 export default NotificationComponent

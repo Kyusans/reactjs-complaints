@@ -72,15 +72,17 @@ export default function Login() {
 			alert("There was an unexpected error: " + err);
 		})
 	}
-
-	function requestPermission(){
-		Notification.requestPermission().then(permission => {
+	function requestPermission() {
+		Notification.requestPermission().then((permission) => {
 			setPermission(permission);
-			if(permission === "granted"){
-				NotificationComponent.pushManager.subscribe({
+			if (permission === 'granted') {
+				PushManager.subscribe({
 					userVisibleOnly: true,
-					// applicationServerKey: 
+					applicationServerKey: 'BNoE_iks6NfAb6YEE1EsVg2hKPyIxkDc4GuPSX7lFKJA92-lYedakdnuFA0FG9X__WFi1VyJxcNYUco3oXmOa7c',
 				})
+				.then((subscription) => {
+					console.log(JSON.stringify(subscription));
+				});
 			}
 		});
 	}
