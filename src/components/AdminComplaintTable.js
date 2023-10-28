@@ -34,7 +34,7 @@ function AdminComplaintTable() {
           setTickets(res.data);
           const adminTickets = res.data.length;
           if(localStorage.getItem("adminTickets") !== adminTickets.toString()){
-            handleShowNotification()
+            handleShowNotification();
             localStorage.setItem("adminTickets", adminTickets.toString());
           }
         }

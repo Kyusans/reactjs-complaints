@@ -28,7 +28,6 @@ function LocationModal(props) {
   };
 
   const getLocation = (id) => {
-    console.log("id: " + id)
     const url = localStorage.getItem("url") + "admin.php";
     const jsonData = { categoryId: id };
     const formData = new FormData();
@@ -36,7 +35,6 @@ function LocationModal(props) {
     formData.append("operation", "getLocations");
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
-        console.log("res.data: " + JSON.stringify(res.data))
         if (res.data !== 0) {
           setLocationName(res.data);
           setLocationCategoryTitle(res.data[0].locCateg_name);
