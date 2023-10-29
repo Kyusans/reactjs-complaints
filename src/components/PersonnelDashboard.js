@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Container, Spinner, Table } from 'react-bootstrap';
 import "./css/site.css";
 import { useNavigate } from 'react-router-dom';
-import { handleShowNotification } from './NotificationComponent';
+// import { handleShowNotification } from './NotificationComponent';
 
 export default function PersonnelDashboard() {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,11 +21,11 @@ export default function PersonnelDashboard() {
       const res = await axios({ url: url, data: formData, method: "post" });
       if (res.data !== 0) {
         setTicket(res.data);
-        const personnelTickets = res.data.length;
-        if(localStorage.getItem("personnelTickets") !== personnelTickets.toString()){
-          handleShowNotification();
-          localStorage.setItem("personnelTickets", personnelTickets);
-        }
+        // const personnelTickets = res.data.length;
+        // if(localStorage.getItem("personnelTickets") !== personnelTickets.toString()){
+        //   handleShowNotification();
+        //   localStorage.setItem("personnelTickets", personnelTickets);
+        // }
         setIsLoading(false);
       }
     } catch (error) {

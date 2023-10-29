@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Pagination, Table } from "react-bootstrap";
 import JobOrderModal from "./JobOrderModal";
-import {handleShowNotification} from "./NotificationComponent";
+// import {handleShowNotification} from "./NotificationComponent";
 
 function AdminComplaintTable() {
   const navigateTo = useNavigate();
@@ -32,11 +32,11 @@ function AdminComplaintTable() {
       .then((res) => {
         if (res.data !== 0) {
           setTickets(res.data);
-          const adminTickets = res.data.length;
-          if(localStorage.getItem("adminTickets") !== adminTickets.toString()){
-            handleShowNotification();
-            localStorage.setItem("adminTickets", adminTickets.toString());
-          }
+          // const adminTickets = res.data.length;
+          // if(localStorage.getItem("adminTickets") !== adminTickets.toString()){
+          //   handleShowNotification();
+          //   localStorage.setItem("adminTickets", adminTickets.toString());
+          // }
         }
       })
       .catch((err) => {

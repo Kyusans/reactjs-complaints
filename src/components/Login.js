@@ -32,6 +32,7 @@ export default function Login() {
 	}
 
 	const login = () =>{
+		const permission = Notification.permission;
 		const url = localStorage.getItem("url") + "users.php";
 		const jsonData = {
 			userId: userId,
@@ -52,12 +53,16 @@ export default function Login() {
 				if(res.data.user_level === 100){
 					localStorage.setItem("userId", res.data.user_id);
 					localStorage.setItem("adminLoggedIn", "true");
-					requestPermission();
+					if(permission !== "granted"){
+						requestPermission();
+					}
 					setTimeout(() => {navigateTo("/admin/dashboard");}, 1500);
 				}else if(res.data.user_level === 90){
 					localStorage.setItem("userId", res.data.user_id);
 					localStorage.setItem("userLevel", res.data.user_level);
-					requestPermission();
+					if(permission !== "granted"){
+						requestPermission();
+					}
 					setTimeout(() => {navigateTo("/personnel/dashboard")}, 1500);
 				}else{
 					setTimeout(() => {
