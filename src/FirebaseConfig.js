@@ -1,7 +1,6 @@
 import axios from "axios";
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import { useEffect } from "react";
+import { getMessaging, getToken } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC2EcEP_oXG71Onmbcd01yx5hKplD0zNRg",
@@ -16,21 +15,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-function MyComponent() {
-  const app = initializeApp(firebaseConfig);
-  const messaging = getMessaging(app);
-
-  useEffect(() => {
-    onMessage(messaging, (message) => {
-      const { title, body } = message.notification;
-
-      const notification = new Notification(title, { body: body });
-      notification.onclick = () => {
-        window.open("http://192.168.1.5:3000/admin/dashboard");
-      };
-    });
-  }, [messaging]); 
-}
 export const requestPermission = () =>{
   console.log("Requesting permission...");
   Notification.requestPermission().then((permission) => {
@@ -52,7 +36,13 @@ export const requestPermission = () =>{
   });
 }
 
-
+export const onMessageListener = () =>{
+  new Promise((resolve) =>{
+    messaging.onMessage((payload) =>{
+      resolve(payload);
+    })
+  })
+}
 
 const insertToken = async (currentToken) => {
   try{
@@ -75,7 +65,14 @@ const insertToken = async (currentToken) => {
   }
 }
 
-export default MyComponent;
+// messaging.onBackgroundMessage(function (payload) {
+//   console.log("Received background message ", payload);
+//   self.registration.update();
+//   if (!payload.notification && payload.data.title) {
+//     const notificationTitle = payload.data.title;
+//     self.registration.showNotification(notificationTitle, webOptions);
+//   }
+// });
 
 // import axios from 'axios';
 // import { initializeApp } from 'firebase/app';
