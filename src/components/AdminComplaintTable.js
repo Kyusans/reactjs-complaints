@@ -4,6 +4,7 @@ import axios from "axios";
 import { Container, Pagination, Table } from "react-bootstrap";
 import JobOrderModal from "./JobOrderModal";
 import "./css/site.css";
+import { formatDate } from "./JobDetails";
 
 function AdminComplaintTable() {
   const navigateTo = useNavigate();
@@ -58,18 +59,6 @@ function AdminComplaintTable() {
     const lastPage = Math.ceil(tickets.length / ticketsPerPage);
     setCurrentPage(lastPage);
   };
-
-  function formatDate(inputDate) {
-    const date = new Date(inputDate);
-    const monthNames = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-    ];
-    const month = monthNames[date.getMonth()];
-    const day = date.getDate();
-    const formattedDate = `${month} ${day}`;
-    return formattedDate;
-  }
 
   useEffect(() => {
     if (localStorage.getItem("adminLoggedIn") !== "true") {

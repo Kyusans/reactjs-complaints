@@ -4,6 +4,7 @@ import { Button, Col, Container, Row, Table } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import ComplaintForm from './ComplaintForm';
 import "./css/site.css";
+import { formatDate } from './JobDetails';
 
 function Dashboard() {
   const navigateTo = useNavigate();
@@ -40,18 +41,6 @@ function Dashboard() {
     }else{
       navigateTo(`/job/details/${id}`);
     }
-  }
-
-  function formatDate(inputDate) {
-    const date = new Date(inputDate);
-    const monthNames = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
-    const month = monthNames[date.getMonth()];
-    const day = date.getDate();
-    const formattedDate = `${month} ${day}`;
-    return formattedDate;
   }
 
   useEffect(() => {

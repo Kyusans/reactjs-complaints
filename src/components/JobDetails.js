@@ -7,6 +7,43 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import "./css/site.css";
 import ConfirmModal from './ConfirmModal';
 
+export function formatDate(inputDate) {
+  const date = new Date(inputDate);
+  const currentDate = new Date();
+  const timeDifference = Math.floor((currentDate - date) / 1000); // Time difference in seconds
+
+  if (timeDifference < 60) {
+    // Less than a minute ago
+    return 'Just now';
+  } else if (timeDifference < 3600) {
+    // Less than an hour ago
+    return `${Math.floor(timeDifference / 60)} minute${Math.floor(timeDifference / 60) > 1 ? 's' : ''} ago`;
+  } else if (
+    date.getDate() === currentDate.getDate() &&
+    date.getMonth() === currentDate.getMonth() &&
+    date.getFullYear() === currentDate.getFullYear()
+  ) {
+    // Today
+    return `${Math.floor(timeDifference / 3600)} hour${Math.floor(timeDifference / 3600) > 1 ? 's' : ''} ago`;
+  } else if (
+    date.getDate() === currentDate.getDate() - 1 &&
+    date.getMonth() === currentDate.getMonth() &&
+    date.getFullYear() === currentDate.getFullYear()
+  ) {
+    // Yesterday
+    return 'Yesterday';
+  } else {
+    // A specific date format for other dates
+    const monthNames = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    const month = monthNames[date.getMonth()];
+    const day = date.getDate();
+    return `${month} ${day}`;
+  }
+}
+
 export default function JobDetails() {
   const { compId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -82,18 +119,6 @@ export default function JobDetails() {
     }
   }, [compId])
   
-  function formatDate(inputDate) {
-    const date = new Date(inputDate);
-    const monthNames = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
-    const month = monthNames[date.getMonth()];
-    const day = date.getDate();
-    const formattedDate = `${month} ${day}`;
-    return formattedDate;
-  }
-
   useEffect(() => {
     setIsPersonnel(localStorage.getItem("userLevel") === "90" ? true : false);
     getJobDetails();

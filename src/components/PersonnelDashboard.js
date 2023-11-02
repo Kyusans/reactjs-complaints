@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Container, Spinner, Table } from 'react-bootstrap';
 import "./css/site.css";
 import { useNavigate } from 'react-router-dom';
+import { formatDate } from './JobDetails';
 
 export default function PersonnelDashboard() {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,18 +26,6 @@ export default function PersonnelDashboard() {
     } catch (error) {
       alert("There was an unexpected error: " + error);
     }
-  }
-
-  function formatDate(inputDate) {
-    const date = new Date(inputDate);
-    const monthNames = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
-    const month = monthNames[date.getMonth()];
-    const day = date.getDate();
-    const formattedDate = `${month} ${day}`;
-    return formattedDate;
   }
 
   const handleNavigate = (id) =>{
