@@ -20,11 +20,6 @@ export default function PersonnelDashboard() {
       const res = await axios({ url: url, data: formData, method: "post" });
       if (res.data !== 0) {
         setTicket(res.data);
-        // const personnelTickets = res.data.length;
-        // if(localStorage.getItem("personnelTickets") !== personnelTickets.toString()){
-        //   handleShowNotification();
-        //   localStorage.setItem("personnelTickets", personnelTickets);
-        // }
         setIsLoading(false);
       }
     } catch (error) {

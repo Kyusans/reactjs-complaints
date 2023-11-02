@@ -70,9 +70,9 @@ function Dashboard() {
     <>
       {localStorage.getItem("isLoggedIn") === "1" ? 
         (
-          <Container className="mt-3">
+          <Container className="mt-3 scrollable-container">
             <Row className='mb-2 mt-2'>
-              <Col className='text-end'>
+              <Col>
                 <Button className='btn btn-success' onClick={openComplaintModal}>Add Complaint</Button>
               </Col>
             </Row>

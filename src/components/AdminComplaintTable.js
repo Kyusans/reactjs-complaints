@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Pagination, Table } from "react-bootstrap";
+import { Container, Pagination, Table } from "react-bootstrap";
 import JobOrderModal from "./JobOrderModal";
-// import {handleShowNotification} from "./NotificationComponent";
+import "./css/site.css";
 
 function AdminComplaintTable() {
   const navigateTo = useNavigate();
@@ -32,11 +32,6 @@ function AdminComplaintTable() {
       .then((res) => {
         if (res.data !== 0) {
           setTickets(res.data);
-          // const adminTickets = res.data.length;
-          // if(localStorage.getItem("adminTickets") !== adminTickets.toString()){
-          //   handleShowNotification();
-          //   localStorage.setItem("adminTickets", adminTickets.toString());
-          // }
         }
       })
       .catch((err) => {
@@ -93,7 +88,7 @@ function AdminComplaintTable() {
   }, [getAllTickets, navigateTo]);
 
   return (
-    <div>
+    <Container className='scrollable-container'>
       <Table striped bordered hover size="sm" variant="success" className="text-center">
         <thead className="text-center">
           <tr>
@@ -142,7 +137,7 @@ function AdminComplaintTable() {
         </div>
       )}
       <JobOrderModal show={showJobOrderModal} onHide={handleClose} ticketId={ticketId} />
-    </div>
+    </Container>
   );
 }
 
