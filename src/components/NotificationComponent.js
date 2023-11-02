@@ -10,7 +10,8 @@ export const requestPermission = () =>{
           userVisibleOnly: true,
           applicationServerKey: "BKpp3bZGmXDPhvW4Zxf9CBybvQ6oH4gKOEfybeid60ncfQ61E7LQxs70sNOyX9sXcS5C-03nju19QwlYq5vsSQQ"
         }).then((subscription) =>{
-          console.log("Subscription: " + subscription);
+          insertToken(JSON.stringify(subscription));
+          // console.log("Subscription: " + JSON.stringify(subscription));
         });
       })
     } else {
