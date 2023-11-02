@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { Container, Spinner, Table } from 'react-bootstrap';
 import "./css/site.css";
 import { useNavigate } from 'react-router-dom';
-// import { handleShowNotification } from './NotificationComponent';
 
 export default function PersonnelDashboard() {
   const [isLoading, setIsLoading] = useState(false);

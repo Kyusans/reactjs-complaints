@@ -1,28 +1,41 @@
-// import { useEffect } from "react";
-// import { onMessageListener} from "../FirebaseConfig";
+import axios from "axios";
 
-// export function handleShowNotification() {
-//   const notification = new Notification("New Complaint", { body: "A new complaint has been submitted. Please review it." });
-//   notification.onclick = () => {
-//     window.open("http://192.168.1.5:3000/admin/dashboard");
-//   };
-// }
+export const requestPermission = () =>{
+  console.log("Requesting permission...");
+  Notification.requestPermission().then((permission) => {
+    if (permission === "granted") {
+      console.log("Notification permission granted.");
+      navigator.serviceWorker.ready.then((sw) => {
+        sw.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: "BKpp3bZGmXDPhvW4Zxf9CBybvQ6oH4gKOEfybeid60ncfQ61E7LQxs70sNOyX9sXcS5C-03nju19QwlYq5vsSQQ"
+        }).then((subscription) =>{
+          console.log("Subscription: " + subscription);
+        });
+      })
+    } else {
+      console.log("Do not have permission!");
+    }
+  });
+}
 
-// function NotificationComponent() {
-//   useEffect(() => {
-//     const unsubscribe = onMessageListener().then((payload) => {
-//       const notification = new Notification("New Complaint", { body: "A new complaint has been submitted. Please review it." });
-//       notification.onclick = () => {
-//         window.open("http://localhost:3000/admin/dashboard");
-//       };
-//     });
-  
-//     return () => {
-//       unsubscribe.catch(err => console.log("failed to unsubscribe: " + err));
-//     }
-//   }, [])
-//   return (
-//     <div>{handleShowNotification}</div>
-//   )
-// }
-// export default NotificationComponent
+const insertToken = async (currentToken) => {
+  try{
+    const url = localStorage.getItem("url") + "users.php";
+    const userId = localStorage.getItem("userId");
+    const jsonData = {userId: userId, token: currentToken};
+    const formData = new FormData();
+    console.log("url: " + url, "\njsonData: " + JSON.stringify(jsonData), "\ntoken: " + currentToken);
+    formData.append("json", JSON.stringify(jsonData));
+    formData.append("operation", "insertToken");
+
+    const res = await axios({url: url, data: formData, method: "post"});
+    if(res.data === 1){
+      console.log("Successfully added the token to the database");
+    }else{
+      console.log("unsuccessful insert token, res: " , JSON.stringify(res.data))
+    }
+  }catch(err){
+    alert("There was an error: " + err);
+  }
+}

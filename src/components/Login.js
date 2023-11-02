@@ -5,9 +5,7 @@ import cocLogo from "./images/coclogo.jpg";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AlertScript from './AlertScript';
-import { requestPermission } from '../FirebaseConfig';
-// import NotificationComponent from './NotificationComponent';
-
+import { requestPermission } from './NotificationComponent';
 
 export default function Login() {
 	if(localStorage.getItem("url") !== "http://192.168.1.7/gsd/api/") {
@@ -80,44 +78,6 @@ export default function Login() {
 		})
 	}
 
-	// function sendSubscriptionToServer(subscription) {
-	// 	const url = localStorage.getItem("url") + 'users.php'; 
-	// 	const jsonData = {subscription: subscription}
-	// 	const formData = new FormData();
-	// 	formData.append("json", JSON.stringify(jsonData));
-	// 	formData.append("operation", "sendNotification");
-	// 	axios({url: url, data: formData, formData: jsonData})
-	// 	.then((res)=>{
-	// 		console.log("res ni send subscription: " + res);
-	// 	})
-	// 	.catch((err)=>{
-	// 		alert("There was an error sending the notification: " + err);
-	// 	})
-	// }
-
-	// const requestPermission = useCallback(() =>{
-	// 	Notification.requestPermission().then((permission) => {
-	// 		setPermission(permission);
-	// 		if (permission === 'granted') {
-	// 			getMessaging
-	// 				.getToken({
-	// 					vapidKey: 'BEqUmBJbzkKg3aeldL4K98XmxX6SF2qMhsJ93W2ZRFMYU6l6oRMykHAXlVondJ9N40bV5be34lwcPDj0do91d20',
-	// 				})
-	// 				.then((currentToken) => {
-	// 					if (currentToken) {
-	// 						// Send this token to your server and associate it with the user.
-	// 						sendSubscriptionToServer(currentToken);
-	// 					} else {
-	// 						console.log('No registration token available.');
-	// 					}
-	// 				})
-	// 				.catch((err) => {
-	// 					console.log('An error occurred while retrieving token:', err);
-	// 				});
-	// 		}
-	// 	});
-	// }, [])
-
 	useEffect(() => {
 		if(localStorage.getItem("adminLoggedIn") === "true"){
 			navigateTo("/admin/dashboard");
@@ -126,7 +86,8 @@ export default function Login() {
 		}else if(localStorage.getItem("userLevel") === "80"){
 			navigateTo("/user/dashboard")
 		}
-	}, [navigateTo])
+	}, [navigateTo]);
+
 	return (
 		<>
 			<Container className='centered'>
