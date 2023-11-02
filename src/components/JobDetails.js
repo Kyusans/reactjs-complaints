@@ -186,7 +186,7 @@ export default function JobDetails() {
                   </Col>
                   <Col>
                     <FloatingLabel controlId="createDate" label="Date Created">
-                      <Form.Control type="text" value={details.job_createDate} readOnly />
+                      <Form.Control type="text" value={formatDate(details.job_createDate)} readOnly />
                     </FloatingLabel>
                   </Col>
                 </Row>

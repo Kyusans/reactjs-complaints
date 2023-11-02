@@ -78,7 +78,7 @@ function AdminComplaintTable() {
 
   return (
     <Container className='scrollable-container'>
-      <Table striped bordered hover size="sm" variant="success" className="text-center">
+      <Table striped bordered hover variant="success" className="text-center border-1">
         <thead className="text-center">
           <tr>
             <th className="green-header">Subject</th>
@@ -91,7 +91,7 @@ function AdminComplaintTable() {
           {displayedTickets.map((ticket, index) => (
             <tr
               key={index}
-              className="ticket-cell"
+              className="ticket-cell border-1"
               onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}
             >
               <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>{ticket.comp_subject}</td>

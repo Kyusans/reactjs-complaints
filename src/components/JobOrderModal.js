@@ -46,41 +46,39 @@ function JobOrderModal(props) {
       });
   }
 
-  const submitJobOrder = () => {
+  const submitJobOrder = async () => {
+    setIsLoading(true);
     const url = localStorage.getItem("url") + "admin.php";
     const userId = localStorage.getItem("userId");
     const master = {
-      ticketNumber: ticketNumber,
-      jobCreatedBy: userId,
-      subject: subject,
-      description: description,
-      locationCategory: locationCategory,
-      location: location,
-      priority: jobPriority
+      ticketNumber: ticketNumber, jobCreatedBy: userId, subject: subject, description: description,
+      locationCategory: locationCategory,location: location, priority: jobPriority
     };
     const detail = { jobPersonnelId: jobPersonnelId };
     const jsonData = { master: master, detail: detail };
-    // Validate the form before submitting
     if (!validateForm()) {
       return;
     }
-
+  
     const formData = new FormData();
     formData.append("operation", "submitJobOrder");
     formData.append("json", JSON.stringify(jsonData));
-    axios({ url: url, data: formData, method: "post" })
-      .then((res) => {
-        if (res.data === 1) {
-          getAlert("success", "Success");
-          setTimeout(() => {
-            handleHide();
-          }, 1500);
-        }
-      })
-      .catch((err) => {
-        getAlert("danger", "There was an unexpected error: " + err);
-      })
-  }
+  
+    try {
+      const res = await axios.post(url, formData);
+      console.log("res ni sumbitJobOrder: " + JSON.stringify(res.data));
+      if (res.data === 1) {
+        getAlert("success", "Success");
+        setTimeout(() => {
+          handleHide();
+        }, 1500);
+      }
+      setIsLoading(false);
+    } catch (err) {
+      getAlert("danger", "There was an unexpected error: " + err);
+    }
+  };
+  
 
   const addJobPersonnel = (e) => {
     const newPersonnelValue = e.target.value;
@@ -133,6 +131,7 @@ function JobOrderModal(props) {
     setJobPersonnel([]);
     setPriorities([]);
     setJobPersonnelId([]);
+    setJobPriority("");
     onHide();
   }
 
