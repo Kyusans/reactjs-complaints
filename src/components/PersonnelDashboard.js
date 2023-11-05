@@ -46,14 +46,14 @@ export default function PersonnelDashboard() {
         </Container>
         :
         <div className='mt-3'>
-          <Table bordered striped hover variant='success' className='border-1'>
+          <Table bordered striped hover variant='dark' className='border-1'>
             <thead>
               <tr>
-                <th className="green-header">Subject</th>
-                <th className="green-header">Description</th>
-                <th className="green-header">Priority</th>
-                <th className="green-header">Status</th>
-                <th className="green-header">Date</th>
+                <th className="gray-header">Subject</th>
+                <th className="gray-header">Description</th>
+                <th className="gray-header">Priority</th>
+                <th className="gray-header">Status</th>
+                <th className="gray-header">Date</th>
               </tr>
             </thead>
             <tbody>
@@ -66,7 +66,7 @@ export default function PersonnelDashboard() {
                       : tickets.job_description}
                   </td>
                   <td className={`${tickets.priority_name === "High" ? "text-danger" : `${tickets.priority_name === "Medium" ? "text-warning" : ""}`}`}>{tickets.priority_name}</td>
-                  <td className={tickets.joStatus_name === "On-Going" ? "text-dark" : "text-success"}>{tickets.joStatus_name}</td>
+                  <td className={tickets.joStatus_name === "On-Going" ? "text-light" : "text-success"}>{tickets.joStatus_name}</td>
                   <td className={`ticket-date`}>{formatDate(tickets.job_createDate)}</td>
                 </tr>
               ))}

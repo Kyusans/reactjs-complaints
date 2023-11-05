@@ -78,13 +78,13 @@ function AdminComplaintTable() {
 
   return (
     <Container className='scrollable-container'>
-      <Table striped bordered hover variant="success" className="text-center border-1">
+      <Table striped bordered hover variant="dark" className="text-center border-1">
         <thead className="text-center">
           <tr>
-            <th className="green-header">Subject</th>
-            <th className="green-header">Description</th>
-            <th className="green-header">Status</th>
-            <th className="green-header">Date</th>
+            <th className="gray-header">Subject</th>
+            <th className="gray-header">Description</th>
+            <th className="gray-header">Status</th>
+            <th className="gray-header">Date</th>
           </tr>
         </thead>
         <tbody>
@@ -100,7 +100,9 @@ function AdminComplaintTable() {
                   ? `${ticket.comp_description.slice(0, 50)}...`
                   : ticket.comp_description}
               </td>
-              <td className={`${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""} ${ticket.joStatus_name === "Completed" ? "text-success" : `${ticket.joStatus_name === "On-Going" ? "text-secondary":""}`}`}>{ticket.joStatus_name}</td>
+              <td className={`${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""} ${ticket.joStatus_name === "Completed" ? "text-success" : ticket.joStatus_name === "On-Going" ? "text-warning" : ""} text-outline`}>
+                {ticket.joStatus_name}
+              </td>
               <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>{formatDate(ticket.comp_date)}</td>
             </tr>
           ))}

@@ -34,7 +34,7 @@
 
 .site-body {
     /* background-color: #181a1b; */
-    background-color: rgb(173, 173, 173);
+    background-color: rgb(145, 145, 145);
 }
 
 .fatter-text {
@@ -181,5 +181,9 @@
 
 .scrollable-container {
     overflow-x: auto;
+}
+
+.gray-header {
+    background-color: #1a1a1d !important;
+    color: white !important; 
   }
-  

@@ -65,7 +65,7 @@ function Dashboard() {
                 <Button className='btn btn-success' onClick={openComplaintModal}>Add Complaint</Button>
               </Col>
             </Row>
-            <Table striped bordered hover size='sm' variant='success' className='border-2 text-center'>
+            <Table striped bordered hover variant='success' className='border-2 text-center'>
               <thead>
                 <tr>
                   <th className="green-header">Subject</th>
@@ -94,7 +94,6 @@ function Dashboard() {
                   </tr>
                 )}
               </tbody>
-
             </Table>
           </Container>
         ):
