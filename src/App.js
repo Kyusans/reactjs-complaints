@@ -15,7 +15,7 @@ function App() {
   }
   return (
     <>
-      <Router>
+      <Router basename='/gsd'>
         <Routes>
           <Route path="/" element={<Login /> } />
           <Route path="*" element={<MainLayoutRoutes />}/>

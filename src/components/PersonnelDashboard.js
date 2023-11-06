@@ -58,7 +58,7 @@ export default function PersonnelDashboard() {
             </thead>
             <tbody>
               {ticket.map((tickets, index) => (
-                <tr key={index} className={`ticket-cell border-1`} onClick={() => handleNavigate(tickets.job_complaintId)}>
+                <tr key={index} className={`ticket-cell`} onClick={() => handleNavigate(tickets.job_complaintId)}>
                   <td>{tickets.job_title}</td>
                   <td>
                     {tickets.job_description.length > 50
