@@ -1,5 +1,6 @@
 {
-  "name": "my-app",
+  "name": "gsd",
+  "homepage": "https://coc-studentinfo.net/gsd",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
