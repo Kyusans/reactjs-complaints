@@ -34,7 +34,7 @@ export default function PersonnelDashboard() {
 
   useEffect(() => {
     setIsLoading(true);
-    const intervalId = setInterval(() => {getJobTicket()}, 2000);
+    const intervalId = setInterval(() => {getJobTicket()}, 5000);
     return () => clearInterval(intervalId);
   }, [])
 
@@ -46,7 +46,7 @@ export default function PersonnelDashboard() {
         </Container>
         :
         <div className='mt-3'>
-          <Table bordered striped hover variant='success' className='border-1'>
+          <Table bordered responsive striped hover variant='success' className='border-1'>
             <thead>
               <tr>
                 <th className="green-header">Subject</th>

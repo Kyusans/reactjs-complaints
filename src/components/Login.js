@@ -10,7 +10,7 @@ import { requestPermission } from './NotificationComponent';
 export default function Login() {
 	if(localStorage.getItem("url") !== "https://coc-studentinfo.net/gsd/api/") {
 		localStorage.setItem("url", "https://coc-studentinfo.net/gsd/api/");
-		// localStorage.setItem("url", "http://www.shareatext.com/gsd/api/");
+		// 	if(localStorage.getItem("url") !== "https://coc-studentinfo.net/gsd/api/") {
 	}
 
 	const [userId, setUserId] = useState("");

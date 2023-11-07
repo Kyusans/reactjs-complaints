@@ -70,7 +70,7 @@ function AdminComplaintTable() {
 
       const interval = setInterval(() => {
         getAllTickets();
-      }, 2000);
+      }, 5000);
 
       return () => clearInterval(interval);
     }
@@ -78,7 +78,7 @@ function AdminComplaintTable() {
 
   return (
     <Container className='scrollable-container'>
-      <Table striped bordered hover variant="success" size="sm" className="text-center border-1">
+      <Table striped bordered hover responsive variant="success" size="sm" className="text-center border-1">
         <thead className="text-center">
           <tr>
             <th className="green-header">Subject</th>

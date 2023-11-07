@@ -50,7 +50,7 @@ function Dashboard() {
       }, 1500);
     }else{
       getComplaints();
-      const intervalId = setInterval(() => {getComplaints()}, 2000);
+      const intervalId = setInterval(() => {getComplaints()}, 5000);
       return () => clearInterval(intervalId);
     }
   }, [navigateTo])
@@ -65,7 +65,7 @@ function Dashboard() {
                 <Button className='btn btn-success' onClick={openComplaintModal}>Add Complaint</Button>
               </Col>
             </Row>
-            <Table striped bordered hover variant='success' className='border-1 text-center'>
+            <Table striped bordered hover responsive variant='success' className='border-1 text-center'>
               <thead>
                 <tr>
                   <th className="green-header">Subject</th>

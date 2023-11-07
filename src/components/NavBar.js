@@ -18,7 +18,7 @@ function NavBar() {
           </NavLink>
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end">
-          <NavLink style={{ color: "white", marginRight: "10px" }} href="/" onClick={handleSignout}>
+          <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd" onClick={handleSignout}>
             Signout
           </NavLink>
         </Navbar.Collapse>
