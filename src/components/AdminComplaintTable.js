@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Button, Container, Pagination, Spinner, Table } from "react-bootstrap";
@@ -32,7 +32,6 @@ function AdminComplaintTable() {
       const formData = new FormData();
       formData.append("operation", "getAllTickets");
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("Ticket na call")
       if (res.data !== 0) {
         setTickets(res.data);
       }else{
@@ -65,7 +64,6 @@ function AdminComplaintTable() {
   };
 
   const getTicketsByStatus = useCallback(async (status) =>{
-
     setIsLoading(true);
     if(status === 0){
       getAllTickets();
@@ -78,7 +76,6 @@ function AdminComplaintTable() {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getTicketsByStatus");
       const res = await axios({url: url, data: formData, method: "post"});
-      console.log(JSON.stringify(res.data));
       if(res.data !== 0){
         setTickets(res.data);
       }else{
@@ -103,9 +100,9 @@ function AdminComplaintTable() {
         :
         <Container className='scrollable-container'>
           <div className="d-flex flex-wrap">
-            <Button onClick={() => getTicketsByStatus(0)} className="mx-0 mb-2">All Ticket</Button>
+            <Button onClick={() => getTicketsByStatus(0)} className="mb-2">All Ticket</Button>
             <Button onClick={() => getTicketsByStatus(1)} className="btn-dark mx-1 mb-2">Pending</Button>
-            <Button onClick={() => getTicketsByStatus(2)} className="btn-warning mx-0 mb-2">On-Going</Button>
+            <Button onClick={() => getTicketsByStatus(2)} className="btn-warning mb-2">On-Going</Button>
             <Button onClick={() => getTicketsByStatus(3)} className="btn-success mx-1 mb-2">Completed</Button>
           </div>
           <Table striped bordered hover responsive variant="success" size="sm" className="border-1">

@@ -1,21 +1,16 @@
 import axios from "axios";
 
 export const requestPermission = () =>{
-  console.log("Requesting permission...");
   Notification.requestPermission().then((permission) => {
     if (permission === "granted") {
-      console.log("Notification permission granted.");
       navigator.serviceWorker.ready.then((sw) => {
         sw.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: "BKpp3bZGmXDPhvW4Zxf9CBybvQ6oH4gKOEfybeid60ncfQ61E7LQxs70sNOyX9sXcS5C-03nju19QwlYq5vsSQQ"
         }).then((subscription) =>{
           insertToken(JSON.stringify(subscription));
-          // console.log("Subscription: " + JSON.stringify(subscription));
         });
       })
-    } else {
-      console.log("Do not have permission!");
     }
   });
 }

@@ -6,19 +6,15 @@ import { useEffect } from 'react';
 
 function App() {
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('/gsd/service-worker.js')
-    .then((registration) =>{
-      console.log("Service Worker registration with scope: " + registration.scope);
-    })
-    .catch((err) =>{
-      console.error("Service Worker registration failed: " + err);
-    })
+    navigator.serviceWorker.register('/gsd/service-worker.js');
   }
-  // useEffect(() =>{
-  //   if (window.location.protocol === 'http:') {
-  //     window.location.href = `https://${window.location.host}${window.location.pathname}`;
-  //   }
-  // },[])
+  
+  useEffect(() =>{
+    if (window.location.protocol === 'http:') {
+      window.location.href = `https://${window.location.host}${window.location.pathname}`;
+    }
+  },[])
+
   return (
     <>
       <Router basename='/gsd'>

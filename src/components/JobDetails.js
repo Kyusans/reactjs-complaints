@@ -104,12 +104,10 @@ export default function JobDetails() {
     try {
       const url = localStorage.getItem("url") + "admin.php";
       const jsonData = { compId: compId };
-      console.log("compId: " + compId);
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getJobDetails");
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res ni getJobDetails: ", JSON.stringify(res.data));
       if (res.data !== 0) {
         setDetails(res.data);
         setIsLoading(false);
