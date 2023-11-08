@@ -142,12 +142,14 @@ export default function JobDetails() {
               </Button>
               <h3 className='text-center mt-3'>Job details</h3>
               <Form>
-                <Row className='mt-5'>
+                <Row className='mt-3'>
                   <Col>
                     <FloatingLabel controlId="subject" label="Subject">
                       <Form.Control type="text" value={details.comp_subject} readOnly />
                     </FloatingLabel>
                   </Col>
+                </Row>
+                <Row className='mt-3'>
                   <Col>
                     <FloatingLabel controlId="status" label="Status">
                       <Form.Control type="text" value={details.joStatus_name} readOnly />
@@ -160,6 +162,8 @@ export default function JobDetails() {
                       <Form.Control type="text" value={details.locCateg_name} readOnly />
                     </FloatingLabel>
                   </Col>
+                </Row>
+                <Row className='mt-3'>
                   <Col>
                     <FloatingLabel controlId="location" label="Location">
                       <Form.Control type="text" value={details.location_name} readOnly />
@@ -172,6 +176,8 @@ export default function JobDetails() {
                       <Form.Control type="text" value={details.priority_name} readOnly />
                     </FloatingLabel>
                   </Col>
+                </Row>
+                <Row className='mt-3'>
                   <Col>
                     <FloatingLabel controlId="complaintBy" label="Complaint By">
                       <Form.Control type="text" value={details.fac_name} readOnly />
@@ -184,6 +190,8 @@ export default function JobDetails() {
                       <Form.Control type="text" value={details.user_full_name} readOnly />
                     </FloatingLabel>
                   </Col>
+                </Row>
+                <Row className='mt-3'>
                   <Col>
                     <FloatingLabel controlId="createDate" label="Date Created">
                       <Form.Control type="text" value={formatDate(details.job_createDate)} readOnly />

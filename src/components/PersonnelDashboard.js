@@ -39,41 +39,37 @@ export default function PersonnelDashboard() {
   }, [])
 
   return (
-    <Container className='scrollable-container'>
+    <>
       {isLoading ?
         <Container className='text-center mt-3'>
           <Spinner animation='border' variant='success' />
         </Container>
         :
-        <div className='mt-3'>
-          <Table bordered responsive striped hover variant='success' className='border-1'>
-            <thead>
-              <tr>
-                <th className="green-header">Subject</th>
-                <th className="green-header">Description</th>
-                <th className="green-header">Priority</th>
-                <th className="green-header">Status</th>
-                <th className="green-header">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ticket.map((tickets, index) => (
-                <tr key={index} className={`ticket-cell`} onClick={() => handleNavigate(tickets.job_complaintId)}>
-                  <td>{tickets.job_title}</td>
-                  <td>
-                    {tickets.job_description.length > 50
-                      ? `${tickets.job_description.slice(0, 50)}...`
-                      : tickets.job_description}
-                  </td>
-                  <td className={`${tickets.priority_name === "High" ? "text-danger" : `${tickets.priority_name === "Medium" ? "text-warning" : ""}`}`}>{tickets.priority_name}</td>
-                  <td className={tickets.joStatus_name === "On-Going" ? "" : "text-success"}>{tickets.joStatus_name}</td>
-                  <td className={`ticket-date`}>{formatDate(tickets.job_createDate)}</td>
+        <Container className='scrollable-container'>
+          <div className='mt-3'>
+            <Table bordered responsive striped hover size="sm" variant='success' className='border-1'>
+              <thead>
+                <tr>
+                  <th className="green-header">Subject</th>
+                  <th className="green-header">Priority</th>
+                  <th className="green-header">Status</th>
+                  <th className="green-header">Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
+              </thead>
+              <tbody>
+                {ticket.map((tickets, index) => (
+                  <tr key={index} className={`ticket-cell`} onClick={() => handleNavigate(tickets.job_complaintId)}>
+                    <td>{tickets.job_title}</td>
+                    <td className={`${tickets.priority_name === "High" ? "text-danger" : `${tickets.priority_name === "Medium" ? "text-warning" : ""}`}`}>{tickets.priority_name}</td>
+                    <td className={tickets.joStatus_name === "On-Going" ? "" : "text-success"}>{tickets.joStatus_name}</td>
+                    <td className={`ticket-date`}>{formatDate(tickets.job_createDate)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        </Container>
       }
-    </Container>
+    </>
   )
 }
