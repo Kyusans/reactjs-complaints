@@ -46,7 +46,7 @@ function Dashboard() {
   useEffect(() => {
     if(localStorage.getItem("isLoggedIn") !== "1"){
       setTimeout(() => {
-        navigateTo("/");
+        navigateTo("/gsd");
       }, 1500);
     }else{
       getComplaints();
@@ -69,7 +69,6 @@ function Dashboard() {
               <thead>
                 <tr>
                   <th className="green-header">Subject</th>
-                  <th className="green-header">Description</th>
                   <th className="green-header">Date</th>
                 </tr>
               </thead>
@@ -78,11 +77,6 @@ function Dashboard() {
                   tickets.map((ticket, index) => (
                     <tr key={index} className='ticket-cell' onClick={() => handleNavigate(ticket.comp_id, ticket.comp_status)}>
                         <td>{ticket.comp_subject}</td>
-                        <td className="ticket-description">
-                          {ticket.comp_description.length > 50
-                              ? `${ticket.comp_description.slice(0, 50)}...`
-                              : ticket.comp_description}
-                        </td>
                         <td className='ticket-date'>{formatDate(ticket.comp_date)}</td>
                     </tr>
                   ))

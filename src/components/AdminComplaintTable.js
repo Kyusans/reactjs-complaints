@@ -82,7 +82,6 @@ function AdminComplaintTable() {
         <thead className="text-center">
           <tr>
             <th className="green-header">Subject</th>
-            <th className="green-header">Description</th>
             <th className="green-header">Status</th>
             <th className="green-header">Date</th>
           </tr>
@@ -95,11 +94,6 @@ function AdminComplaintTable() {
               onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}
             >
               <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>{ticket.comp_subject}</td>
-              <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>
-                {ticket.comp_description.length > 50
-                  ? `${ticket.comp_description.slice(0, 50)}...`
-                  : ticket.comp_description}
-              </td>
               <td className={`${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""} ${ticket.joStatus_name === "Completed" ? "text-success" : ticket.joStatus_name === "On-Going" ? "text-warning" : ""} text-outline`}>
                 {ticket.joStatus_name}
               </td>

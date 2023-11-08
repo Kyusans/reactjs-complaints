@@ -123,7 +123,7 @@ export default function JobDetails() {
     setIsPersonnel(localStorage.getItem("userLevel") === "90" ? true : false);
     getJobDetails();
     getComment(); 
-    const interval = setInterval(() => {getComment()}, 2000);
+    const interval = setInterval(() => {getComment()}, 5000);
     return () => clearInterval(interval);
   }, [compId, getComment, getJobDetails, isPersonnel]);
 

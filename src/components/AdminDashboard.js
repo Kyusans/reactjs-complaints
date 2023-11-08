@@ -8,7 +8,7 @@ export default function AdminDashboard() {
   const navigateTo = useNavigate();
   useEffect(()=>{
     if(localStorage.getItem("adminLoggedIn") !== "true"){
-      navigateTo("/")
+      navigateTo(-1);
     }
   }, [navigateTo])
   return (

@@ -14,11 +14,11 @@ function App() {
       console.error("Service Worker registration failed: " + err);
     })
   }
-  useEffect(() =>{
-    if (window.location.protocol === 'http:') {
-      window.location.href = `https://${window.location.host}${window.location.pathname}`;
-    }
-  },[])
+  // useEffect(() =>{
+  //   if (window.location.protocol === 'http:') {
+  //     window.location.href = `https://${window.location.host}${window.location.pathname}`;
+  //   }
+  // },[])
   return (
     <>
       <Router basename='/gsd'>

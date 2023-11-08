@@ -17,7 +17,7 @@ const AdminNavbar = () => {
             <NavLink style={{ color: "white", marginRight: "10px" }} href="/admin/addlocation/">Location</NavLink>
           </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
-            <NavLink onClick={handleSignout} style={{ color: "white", marginRight: "10px" }} href="/">Signout</NavLink>
+            <NavLink onClick={handleSignout} style={{ color: "white", marginRight: "10px" }} href="/gsd">Signout</NavLink>
           </Navbar.Collapse>
         </Container>
       </Navbar>
