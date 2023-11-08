@@ -63,9 +63,11 @@ export default function Login() {
 					}
 					setTimeout(() => {navigateTo("/personnel/dashboard")}, 1500);
 				}else{
+					localStorage.setItem("facultyLoggedIn", "true");
+					localStorage.setItem("userId", res.data.fac_id);
+					localStorage.setItem("facCode", res.data.fac_code);
+					localStorage.setItem("userLevel", "80"); 	
 					setTimeout(() => {
-						localStorage.setItem("userId", res.data.fac_id);
-						localStorage.setItem("userLevel", "80"); 	
 						navigateTo("/user/dashboard")
 					}, 1500);
 				}

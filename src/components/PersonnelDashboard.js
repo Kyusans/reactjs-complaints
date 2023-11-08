@@ -70,7 +70,7 @@ export default function PersonnelDashboard() {
         </Container>
         :
         <Container className='scrollable-container'>
-          <div className="d-flex flex-wrap">
+          <div className="d-flex flex-wrap mt-2">
             <Button onClick={() => getTicketsByStatus(0)} className="mx-1 mb-2">All Ticket</Button>
             <Button onClick={() => getTicketsByStatus(2)} className="btn-warning mb-2">On-Going</Button>
             <Button onClick={() => getTicketsByStatus(3)} className="btn-success mx-1 mb-2">Completed</Button>

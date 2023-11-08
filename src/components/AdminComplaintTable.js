@@ -16,7 +16,10 @@ function AdminComplaintTable() {
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
   const showPagination = tickets.length > ticketsPerPage;
 
-  const handleClose = () => setShowJobOrderModal(false);
+  const handleClose = () => {
+    getAllTickets();
+    setShowJobOrderModal(false)
+  };
   const handleShow = (id, status) => {
     if (status === 1) {
       setTicketId(id);

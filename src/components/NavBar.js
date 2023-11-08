@@ -5,6 +5,7 @@ function NavBar() {
     localStorage.setItem("userId", "");
     localStorage.setItem("userLevel", "");
     localStorage.setItem("isLoggedIn", "");
+    localStorage.setItem("facultyLoggedIn", "");
   }
 
   return (
