@@ -12,8 +12,7 @@ export function formatDate(inputDate) {
   const currentDate = new Date();
   const timeDifference = Math.floor((currentDate - date) / 1000); // Time difference in seconds
 
-  if (timeDifference < 60) {
-    // Less than a minute ago
+  if (timeDifference < 120) {
     return 'Just now';
   } else if (timeDifference < 3600) {
     // Less than an hour ago
@@ -65,22 +64,25 @@ export default function JobDetails() {
   };
 
   const addComment = () => {
-    const url = localStorage.getItem("url") + "users.php";
-    const userId = localStorage.getItem("facultyLoggedIn") === "true" ? localStorage.getItem("facCode") : localStorage.getItem("userId");
-    const jsonData = { compId: compId, userId: userId, commentText: newComment };
-    const formData = new FormData();
-    formData.append("operation", "addComment");
-    formData.append("json", JSON.stringify(jsonData));
-    axios({ url: url, data: formData, method: "post" })
-      .then((res) => {
-        if (res.data === 1) {
-          getComment();
-          setNewComment('');
-        }
-      })
-      .catch((err) => {
-        alert("Error: " + err);
-      });
+    console.log("new comment: ", newComment);
+    if(newComment !== ""){
+      const url = localStorage.getItem("url") + "users.php";
+      const userId = localStorage.getItem("facultyLoggedIn") === "true" ? localStorage.getItem("facCode") : localStorage.getItem("userId");
+      const jsonData = { compId: compId, userId: userId, commentText: newComment };
+      const formData = new FormData();
+      formData.append("operation", "addComment");
+      formData.append("json", JSON.stringify(jsonData));
+      axios({ url: url, data: formData, method: "post" })
+        .then((res) => {
+          if (res.data === 1) {
+            getComment();
+            setNewComment('');
+          }
+        })
+        .catch((err) => {
+          alert("Error: " + err);
+        });
+    }
   }
 
   const getComment = useCallback(async () => {
@@ -91,6 +93,7 @@ export default function JobDetails() {
       formData.append("operation", "getComment");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("comment axios: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         setComment(res.data);
       }
@@ -132,7 +135,7 @@ export default function JobDetails() {
           <Spinner animation='border' variant='success' />
         </Container>
         :
-        <Container className='mt-3'>
+        <div className='mt-3'>
           <Card border='secondary'>
             <Card.Body>
               <Button variant='outline-danger button-m' onClick={() => handleBackButtonClick()}>
@@ -156,13 +159,6 @@ export default function JobDetails() {
                 </Row>
                 <Row className='mt-3'>
                   <Col>
-                    <FloatingLabel controlId="locationCategory" label="Location Category">
-                      <Form.Control type="text" value={details.locCateg_name} readOnly />
-                    </FloatingLabel>
-                  </Col>
-                </Row>
-                <Row className='mt-3'>
-                  <Col>
                     <FloatingLabel controlId="location" label="Location">
                       <Form.Control type="text" value={details.location_name} readOnly />
                     </FloatingLabel>
@@ -177,7 +173,7 @@ export default function JobDetails() {
                 </Row>
                 <Row className='mt-3'>
                   <Col>
-                    <FloatingLabel controlId="complaintBy" label="Complaint By">
+                    <FloatingLabel controlId="Submitted By" label="Submitted By">
                       <Form.Control type="text" value={details.fac_name} readOnly />
                     </FloatingLabel>
                   </Col>
@@ -217,38 +213,37 @@ export default function JobDetails() {
               )
             }
           </Card>
-          <Container fluid>
-            <Card className='mt-3' border='secondary'>
-              <Card.Body>
-                <Form className='mb-5'>
-                  <FloatingLabel label="Add a comment..">
-                    <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required/>
-                  </FloatingLabel>
-                  <Container className='mt-3'>
-                    <Button variant='outline-primary' onClick={addComment}>Submit</Button>
-                  </Container>
-                </Form>
-                {comment.length <= 0 ? 
-                  <Container className='text-secondary text-center'>
-                    <p>There is no comment yet..</p>
-                  </Container>
-                :
-                  <Container>
-                    {comment.map((comments, index) => (
-                    <Card className='mb-2' key={index} border='secondary'>
-                      <Card.Body>
-                            <p className='text-success'>{comments.full_name}</p>
-                            <p>{comments.comment_commentText}</p>
-                            <p className='text-secondary text-end '>{formatDate(comments.comment_date)}</p>
-                      </Card.Body>
-                    </Card>
-                    ))}
-                  </Container>
-                }
-              </Card.Body>
-            </Card>
-          </Container>
-        </Container>
+          <Card className='mt-3' border='secondary'>
+            <Card.Body>
+              <Form className='mb-5'>
+                <FloatingLabel label="Add a comment..">
+                  <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required/>
+                </FloatingLabel>
+                <div className='mt-3'>
+                  <Button variant='outline-primary' onClick={addComment}>Submit</Button>
+                </div>
+              </Form>
+              {comment.length <= 0 ? 
+                <Container className='text-secondary text-center'>
+                  <p>There is no comment yet..</p>
+                </Container>
+              :
+              <div>
+                {comment.map((comments, index) => (
+                  <Card border='success mb-3'>
+                    <Card.Body className={`${comments.isCurrentUser ? 'text-end' : ''}`} key={index}>
+                      {/* Display user avatar here */}
+                      <p className={`text-${comments.isCurrentUser ? 'success' : 'primary'}`}>{comments.full_name}</p>
+                      <p>{comments.comment_commentText}</p>
+                      <p className='text-secondary text-end'>{formatDate(comments.comment_date)}</p>
+                    </Card.Body>
+                  </Card>
+                ))}
+              </div>
+              }
+            </Card.Body>
+          </Card>
+        </div>
       }
       <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id}/>
     </>

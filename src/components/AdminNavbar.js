@@ -13,8 +13,8 @@ const AdminNavbar = () => {
           <Navbar.Brand className="brand">GSD</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <NavLink style={{ color: "white", marginRight: "10px" }} href="/admin/dashboard/">Home</NavLink>
-            <NavLink style={{ color: "white", marginRight: "10px" }} href="/admin/addlocation/">Location</NavLink>
+            <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/admin/dashboard/">Home</NavLink>
+            <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/admin/addlocation/">Location</NavLink>
           </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
             <NavLink onClick={handleSignout} style={{ color: "white", marginRight: "10px" }} href="/gsd">Signout</NavLink>

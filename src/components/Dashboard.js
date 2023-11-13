@@ -65,7 +65,7 @@ function Dashboard() {
                 <Button className='btn btn-success' onClick={openComplaintModal}>Add Complaint</Button>
               </Col>
             </Row>
-            <Table striped bordered hover responsive variant='success' className='border-1 text-center'>
+            <Table striped bordered hover responsive variant='success' className='border-1'>
               <thead>
                 <tr>
                   <th className="green-header">Subject</th>
