@@ -50,6 +50,7 @@ export default function Login() {
 				getAlert("success", "Success!");
 				if(res.data.user_level === 100){
 					localStorage.setItem("userId", res.data.user_id);
+					localStorage.setItem("userCommentId", res.data.user_id);
 					localStorage.setItem("adminLoggedIn", "true");
 					if(permission !== "granted"){
 						requestPermission();
@@ -58,6 +59,7 @@ export default function Login() {
 				}else if(res.data.user_level === 90){
 					localStorage.setItem("userId", res.data.user_id);
 					localStorage.setItem("userLevel", res.data.user_level);
+					localStorage.setItem("userCommentId", res.data.user_id);
 					if(permission !== "granted"){
 						requestPermission();
 					}
@@ -66,6 +68,7 @@ export default function Login() {
 					localStorage.setItem("facultyLoggedIn", "true");
 					localStorage.setItem("userId", res.data.fac_id);
 					localStorage.setItem("facCode", res.data.fac_code);
+					localStorage.setItem("userCommentId", res.data.fac_code);
 					localStorage.setItem("userLevel", "80"); 	
 					setTimeout(() => {
 						navigateTo("/user/dashboard")

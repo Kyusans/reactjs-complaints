@@ -5,6 +5,7 @@ const AdminNavbar = () => {
     localStorage.setItem("adminLoggedIn", "false");
     localStorage.setItem("userId", "");
 		localStorage.setItem("userLevel", "");
+    localStorage.setItem("userCommentId", "");
   }
   return ( 
     <>

@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import "./css/site.css";
 import ConfirmModal from './ConfirmModal';
+import MessageList from './MessageList';
 
 export function formatDate(inputDate) {
   const date = new Date(inputDate);
@@ -230,14 +231,19 @@ export default function JobDetails() {
               :
               <div>
                 {comment.map((comments, index) => (
-                  <Card border='success mb-3'>
-                    <Card.Body className={`${comments.isCurrentUser ? 'text-end' : ''}`} key={index}>
-                      {/* Display user avatar here */}
-                      <p className={`text-${comments.isCurrentUser ? 'success' : 'primary'}`}>{comments.full_name}</p>
-                      <p>{comments.comment_commentText}</p>
-                      <p className='text-secondary text-end'>{formatDate(comments.comment_date)}</p>
-                    </Card.Body>
-                  </Card>
+                  <Row key={index}>
+                    <Col xs={12} md={4}>
+                      <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} date={formatDate(comments.comment_date)} />
+                    </Col>
+                  </Row>
+                  // <Card border='success mb-3'>
+                  //   <Card.Body className={`${comments.isCurrentUser ? 'text-end' : ''}`} key={index}>
+                  //     {/* Display user avatar here */}
+                  //     <p className={`text-${comments.isCurrentUser ? 'success' : 'primary'}`}>{comments.full_name}</p>
+                  //     <p>{comments.comment_commentText}</p>
+                  //     <p className='text-secondary text-end'>{formatDate(comments.comment_date)}</p>
+                  //   </Card.Body>
+                  // </Card>
                 ))}
               </div>
               }
