@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Container, Form, Spinner, Row, Col, FloatingLabel, Button } from 'react-bootstrap';
+import { Card, Container, Form, Spinner, Row, Col, FloatingLabel, Button, ListGroup } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -48,6 +48,7 @@ export default function JobDetails() {
   const { compId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
+  const [assignedPersonnel, setAssignedPersonnel] = useState([]);
   const [comment, setComment] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -113,6 +114,7 @@ export default function JobDetails() {
       formData.append("operation", "getJobDetails");
       const res = await axios({ url: url, data: formData, method: "post" });
       if (res.data !== 0) {
+        getAssignedPersonnel(res.data.job_id);
         setDetails(res.data);
         setIsLoading(false);
       }
@@ -120,6 +122,23 @@ export default function JobDetails() {
       alert("There was an unexpected error: " + err);
     }
   }, [compId])
+
+  const getAssignedPersonnel = async (jobId) =>{
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const jsonData = {jobId: jobId};
+      const formData = new FormData();
+      formData.append("json", JSON.stringify(jsonData));
+      formData.append("operation", "getAssignedPersonnel");
+      const res = await axios({url: url, data: formData, method: "post"});
+      console.log("res ni personnel: " + JSON.stringify(res.data));
+      if(res.data !== 0){
+        setAssignedPersonnel(res.data);
+      }  
+    } catch (error) {
+      alert("There was an error occured: " + error.message);
+    }
+  }
   
   useEffect(() => {
     setIsPersonnel(localStorage.getItem("userLevel") === "90" ? true : false);
@@ -201,6 +220,18 @@ export default function JobDetails() {
                   </Col>
                 </Row>
               </Form>
+
+            <Row className='mt-3'>
+              <Col xs={12} md={6}>
+                <ListGroup>
+                  <ListGroup.Item className='green-header'>Assigned Personnel</ListGroup.Item>
+                  {assignedPersonnel.map((person, index) => (
+                    <ListGroup.Item key={index}>{`${index + 1}. ${person.user_full_name}`}</ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </Col>
+            </Row>
+
             </Card.Body>
             {
                 isPersonnel && parseInt(details.joStatus_id, 10) === 2 ? (
@@ -236,14 +267,6 @@ export default function JobDetails() {
                       <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} date={formatDate(comments.comment_date)} />
                     </Col>
                   </Row>
-                  // <Card border='success mb-3'>
-                  //   <Card.Body className={`${comments.isCurrentUser ? 'text-end' : ''}`} key={index}>
-                  //     {/* Display user avatar here */}
-                  //     <p className={`text-${comments.isCurrentUser ? 'success' : 'primary'}`}>{comments.full_name}</p>
-                  //     <p>{comments.comment_commentText}</p>
-                  //     <p className='text-secondary text-end'>{formatDate(comments.comment_date)}</p>
-                  //   </Card.Body>
-                  // </Card>
                 ))}
               </div>
               }
