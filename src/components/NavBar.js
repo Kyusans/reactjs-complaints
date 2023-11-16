@@ -1,5 +1,4 @@
 import { NavLink, Navbar, Container, NavDropdown } from "react-bootstrap";
-import passwordManagerInstance from "./PasswordManager";
 
 function NavBar() {
   const userFullName = localStorage.getItem("userFullName");
@@ -10,7 +9,6 @@ function NavBar() {
     localStorage.setItem("facultyLoggedIn", "");
     localStorage.setItem("facCode", "");
     localStorage.setItem("userCommentId", "");
-    passwordManagerInstance.setPassword("");
 
   }
 

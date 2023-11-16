@@ -6,12 +6,11 @@ function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [validated, setValidated] = useState(false);
-
   const handleSubmit = (e) => {
     const form = e.currentTarget;
 
     if(form.checkValidity()) {
-      
+
     }
   }
 

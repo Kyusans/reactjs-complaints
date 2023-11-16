@@ -6,7 +6,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AlertScript from './AlertScript';
 import { requestPermission } from './NotificationComponent';
-import passwordManagerInstance from './PasswordManager';
 
 export default function Login() {
 	if(localStorage.getItem("url") !== "http://localhost/gsd/api/") {
@@ -53,8 +52,7 @@ export default function Login() {
 					localStorage.setItem("userId", res.data.user_id);
 					localStorage.setItem("userCommentId", res.data.user_id);
 					localStorage.setItem("adminLoggedIn", "true");
-					localStorage.setItem("userFullName", res.data.user_full_name)
-					passwordManagerInstance.setPassword(res.data.user_password);
+					localStorage.setItem("userFullName", res.data.user_full_name);
 					if(permission !== "granted"){
 						requestPermission();
 					}
@@ -63,7 +61,6 @@ export default function Login() {
 					localStorage.setItem("userId", res.data.user_id);
 					localStorage.setItem("userFullName", res.data.user_full_name)
 					localStorage.setItem("userLevel", res.data.user_level);
-					passwordManagerInstance.setPassword(res.data.user_password);
 					localStorage.setItem("userCommentId", res.data.user_id);
 					if(permission !== "granted"){
 						requestPermission();
@@ -75,7 +72,6 @@ export default function Login() {
 					localStorage.setItem("userFullName", res.data.fac_name)
 					localStorage.setItem("facCode", res.data.fac_code);
 					localStorage.setItem("userCommentId", res.data.fac_code);
-					passwordManagerInstance.setPassword(res.data.fac_password);
 					localStorage.setItem("userLevel", "80"); 	
 					setTimeout(() => {
 						navigateTo("/user/dashboard")
