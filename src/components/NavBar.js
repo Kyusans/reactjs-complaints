@@ -1,4 +1,5 @@
 import { NavLink, Navbar, Container, NavDropdown } from "react-bootstrap";
+import passwordManagerInstance from "./PasswordManager";
 
 function NavBar() {
   const userFullName = localStorage.getItem("userFullName");
@@ -9,6 +10,8 @@ function NavBar() {
     localStorage.setItem("facultyLoggedIn", "");
     localStorage.setItem("facCode", "");
     localStorage.setItem("userCommentId", "");
+    passwordManagerInstance.setPassword("");
+
   }
 
   return (
@@ -23,7 +26,7 @@ function NavBar() {
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end">
           <NavDropdown title={userFullName} style={{ color: "white"}}>
-            <NavDropdown.Item>Change Password</NavDropdown.Item>
+            <NavDropdown.Item href="/gsd/account/password">Change Password</NavDropdown.Item>
             <NavDropdown.Item href="/gsd" onClick={handleSignout}>Signout</NavDropdown.Item>
           </NavDropdown>
         </Navbar.Collapse>

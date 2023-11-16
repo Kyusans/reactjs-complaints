@@ -7,6 +7,7 @@ import AdminNavbar from './components/AdminNavbar'
 import AdminAddLocation from './components/AdminAddLocation'
 import JobDetails from './components/JobDetails'
 import PersonnelDashboard from './components/PersonnelDashboard'
+import ChangePassword from './components/ChangePassword'
 
 function MainLayoutRoutes() {
   return (
@@ -18,6 +19,7 @@ function MainLayoutRoutes() {
         <Route path="/admin/addlocation" element={<AdminAddLocation />} />
         <Route path="/job/details/:compId" element={<JobDetails />} />
         <Route path="/personnel/dashboard" element={<PersonnelDashboard />} />
+        <Route path="/account/password" element={<ChangePassword />} />
       </Routes>
     </div>
   )

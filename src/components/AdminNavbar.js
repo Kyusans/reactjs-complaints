@@ -1,4 +1,5 @@
 import { Container, NavLink, Navbar } from "react-bootstrap";
+import passwordManagerInstance from "./PasswordManager";
 
 const AdminNavbar = () => {
   const handleSignout = () =>{
@@ -6,6 +7,7 @@ const AdminNavbar = () => {
     localStorage.setItem("userId", "");
 		localStorage.setItem("userLevel", "");
     localStorage.setItem("userCommentId", "");
+    passwordManagerInstance.setPassword("");
   }
   return ( 
     <>
