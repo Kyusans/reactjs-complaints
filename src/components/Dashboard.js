@@ -10,7 +10,6 @@ function Dashboard() {
   const navigateTo = useNavigate();
   const [tickets, setTickets] = useState([]);
   const [showComplaintModal, setShowComplaintModal] = useState(false);
-  
   const openComplaintModal = () => {setShowComplaintModal(true);}
 
   const closeComplaintModal = () => {
@@ -69,6 +68,7 @@ function Dashboard() {
               <thead>
                 <tr>
                   <th className="green-header">Subject</th>
+                  <th className="green-header">Status</th>
                   <th className="green-header">Date</th>
                 </tr>
               </thead>
@@ -77,6 +77,7 @@ function Dashboard() {
                   tickets.map((ticket, index) => (
                     <tr key={index} className='ticket-cell' onClick={() => handleNavigate(ticket.comp_id, ticket.comp_status)}>
                         <td>{ticket.comp_subject}</td>
+                        <td>{ticket.comp_status === 1 ? "Pending" : ticket.comp_status === 2 ? "On-Going" : "Completed"}</td>
                         <td className='ticket-date'>{formatDate(ticket.comp_date)}</td>
                     </tr>
                   ))

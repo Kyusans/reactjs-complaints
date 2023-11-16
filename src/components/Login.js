@@ -52,12 +52,14 @@ export default function Login() {
 					localStorage.setItem("userId", res.data.user_id);
 					localStorage.setItem("userCommentId", res.data.user_id);
 					localStorage.setItem("adminLoggedIn", "true");
+					localStorage.setItem("userFullName", res.data.user_full_name)
 					if(permission !== "granted"){
 						requestPermission();
 					}
 					setTimeout(() => {navigateTo("/admin/dashboard");}, 1500);
 				}else if(res.data.user_level === 90){
 					localStorage.setItem("userId", res.data.user_id);
+					localStorage.setItem("userFullName", res.data.user_full_name)
 					localStorage.setItem("userLevel", res.data.user_level);
 					localStorage.setItem("userCommentId", res.data.user_id);
 					if(permission !== "granted"){
@@ -67,6 +69,7 @@ export default function Login() {
 				}else{
 					localStorage.setItem("facultyLoggedIn", "true");
 					localStorage.setItem("userId", res.data.fac_id);
+					localStorage.setItem("userFullName", res.data.fac_name)
 					localStorage.setItem("facCode", res.data.fac_code);
 					localStorage.setItem("userCommentId", res.data.fac_code);
 					localStorage.setItem("userLevel", "80"); 	

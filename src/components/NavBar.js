@@ -1,6 +1,7 @@
-import { NavLink, Navbar, Container } from "react-bootstrap";
+import { NavLink, Navbar, Container, NavDropdown } from "react-bootstrap";
 
 function NavBar() {
+  const userFullName = localStorage.getItem("userFullName");
   const handleSignout = () => {
     localStorage.setItem("userId", "");
     localStorage.setItem("userLevel", "");
@@ -16,14 +17,15 @@ function NavBar() {
         <Navbar.Brand className="brand">GSD</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <NavLink style={{ color: "white", marginRight: "10px" }} href="/user/dashboard/">
+          <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/user/dashboard/">
             Home
           </NavLink>
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end">
-          <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd" onClick={handleSignout}>
-            Signout
-          </NavLink>
+          <NavDropdown title={userFullName} style={{ color: "white"}}>
+            <NavDropdown.Item>Change Password</NavDropdown.Item>
+            <NavDropdown.Item href="/gsd" onClick={handleSignout}>Signout</NavDropdown.Item>
+          </NavDropdown>
         </Navbar.Collapse>
       </Container>
     </Navbar>
