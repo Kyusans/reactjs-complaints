@@ -1,10 +1,10 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { Row, Col, FloatingLabel, Form, Modal, Button } from 'react-bootstrap'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Button, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap'
 import AlertScript from './AlertScript';
 
-function ComplaintForm(props) {
-  const {show, onHide} = props;
+function UpdateTicketModal(props) {
+  const {show, onHide, compId} = props;
   const [locationId, setLocationId] = useState("");
   const [locationCategoryId, setLocationCategoryId] = useState("");
   const [subject, setSubject] = useState("");
@@ -12,7 +12,8 @@ function ComplaintForm(props) {
   const [locationCategory, setLocationCategory] = useState([]);
   const [location, setLocation] = useState([]);
   const [validated, setValidated] = useState(false);
-  //for alert
+
+    //for alert
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertVariant, setAlertVariant] = useState("");
 	const [alertMessage, setAlertMessage] = useState("");
@@ -23,32 +24,25 @@ function ComplaintForm(props) {
 		setAlertMessage(messageAlert);
 	}
 
-  const addComplaint = () => {
-    const url = localStorage.getItem("url") + "users.php";
-    const clientId = localStorage.getItem("userId");
-    const jsonData = {
-      subject: subject,
-      clientId: clientId,
-      locationId: locationId,
-      locationCategoryId: locationCategoryId,
-      description: description
-    };
-    const formData = new FormData();
-    formData.append("json", JSON.stringify(jsonData));
-    formData.append("operation", "addComplaint");
-    axios({ url: url, data: formData, method: "post" })
-     .then((res) => {
-        if (res.data !== 0) {
-          getAlert("success", "Success");
-          setTimeout(() => {
-            handleClose();
-          }, 1500);
-        }
-      })
-     .catch((err) => {
-        getAlert("There was an unexpected error: " + err);
-      });
-  }
+  const getSelectedComplaint = useCallback(async () =>{
+    try {
+      const url = localStorage.getItem("url") + "users.php";
+      const jsonData = {compId: compId};
+      const formData = new FormData();
+      formData.append("json", JSON.stringify(jsonData));
+      formData.append("operation", "getSelectedComplaint");
+      const res = await axios({url: url, data: formData, method:"post"});
+      if(res.data !== 0){
+        setLocationId(res.data.comp_locationId);
+        setLocationCategoryId(res.data.comp_locationCategoryId);
+        setSubject(res.data.comp_subject);
+        setDescription(res.data.comp_description);
+      }
+    } catch (error) {
+      
+    }
+  },[compId])
+
   const getLocation = (id) => {
     const url = localStorage.getItem("url") + "admin.php";
     const jsonData = { categoryId: id };
@@ -75,15 +69,22 @@ function ComplaintForm(props) {
     setShowAlert(false);
     onHide();
   }
+
 	const formValidation = (e) =>{
 		const form = e.currentTarget;
     e.preventDefault();
     e.stopPropagation();
 		if(form.checkValidity() === true){
-      addComplaint();
+      //updateComplaint();
 		}
 		setValidated(true);
 	}
+
+  useEffect(() => {
+    getSelectedComplaint();
+  }, [getSelectedComplaint]);
+  
+
   useEffect(() => {
     if(show){
       const getLocationCategory = async () => {
@@ -105,16 +106,16 @@ function ComplaintForm(props) {
       };
       getLocationCategory();
       if(locationCategoryId !== ""){
-        setLocationId("");
+        // setLocationId("");
         getLocation(locationCategoryId);
       }
     }
-  }, [locationCategoryId, show])
-  
+  }, [locationCategoryId, show]);
+
   return (
     <>
       <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>Ticket Form</Modal.Header>
+        <Modal.Header closeButton>Update Ticket Form</Modal.Header>
         <Modal.Body>
           <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
           <Form noValidate validated={validated} onSubmit={formValidation}>
@@ -176,4 +177,4 @@ function ComplaintForm(props) {
   )
 }
 
-export default ComplaintForm
+export default UpdateTicketModal

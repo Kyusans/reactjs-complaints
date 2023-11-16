@@ -5,17 +5,22 @@ import { useNavigate } from 'react-router-dom';
 import ComplaintForm from './ComplaintForm';
 import "./css/site.css";
 import { formatDate } from './JobDetails';
+import UpdateTicketModal from './UpdateTicketModal';
 
 function Dashboard() {
   const navigateTo = useNavigate();
   const [tickets, setTickets] = useState([]);
+  const [compId, setCompId] = useState(0);
   const [showComplaintModal, setShowComplaintModal] = useState(false);
   const openComplaintModal = () => {setShowComplaintModal(true);}
-
   const closeComplaintModal = () => {
     getComplaints();
     setShowComplaintModal(false);
   }
+
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const openUpdateModal = () => {setShowUpdateModal(true)};
+  const closeUpdateModal = () => {setShowUpdateModal(false)};
 
   const getComplaints = () => {
     const url = localStorage.getItem("url") + "users.php";
@@ -36,7 +41,8 @@ function Dashboard() {
 
   const handleNavigate = (id, status) =>{
     if(status === 1){
-      alert("Ticket is still on pending");
+      setCompId(id);
+      openUpdateModal();
     }else{
       navigateTo(`/job/details/${id}`);
     }
@@ -61,7 +67,7 @@ function Dashboard() {
           <Container className="mt-3 scrollable-container">
             <Row className='mb-2 mt-2'>
               <Col>
-                <Button className='btn btn-success' onClick={openComplaintModal}>Add Complaint</Button>
+                <Button className='btn btn-success' onClick={openComplaintModal}>Add Ticket</Button>
               </Col>
             </Row>
             <Table striped bordered hover responsive variant='success' className='border-1'>
@@ -95,6 +101,7 @@ function Dashboard() {
         <h3 className='text-center'>You need to login first</h3>
       }
       <ComplaintForm show={showComplaintModal} onHide={closeComplaintModal} />
+      <UpdateTicketModal show={showUpdateModal} onHide={closeUpdateModal} compId={compId} />
     </>
   )
 }
