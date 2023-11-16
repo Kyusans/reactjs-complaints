@@ -5,6 +5,7 @@ import AlertScript from './AlertScript';
 
 function UpdateTicketModal(props) {
   const {show, onHide, compId} = props;
+  const [isLoading, setIsLoading] = useState(false);
   const [locationId, setLocationId] = useState("");
   const [locationCategoryId, setLocationCategoryId] = useState("");
   const [subject, setSubject] = useState("");
@@ -24,6 +25,39 @@ function UpdateTicketModal(props) {
 		setAlertMessage(messageAlert);
 	}
 
+  const updateTicket = () => {
+    const url = localStorage.getItem("url") + "users.php";
+    const jsonData = {
+      subject: subject,
+      compId: compId,
+      locationId: locationId,
+      locationCategoryId: locationCategoryId,
+      description: description
+    };
+    console.log("jsonData: " + JSON.stringify(jsonData));
+    const formData = new FormData();
+    formData.append("json", JSON.stringify(jsonData));
+    formData.append("operation", "updateTicket");
+    axios({ url: url, data: formData, method: "post" })
+     .then((res) => {
+        console.log("res ni update: " + JSON.stringify(res.data))
+        if (res.data !== 0) {
+          getAlert("success", "Success");
+          setTimeout(() => {
+            handleClose();
+          }, 1500);
+        }else{
+          getAlert("success", "No changes made");
+          setTimeout(() => {
+            handleClose();
+          }, 1500);
+        }
+      })
+     .catch((err) => {
+        getAlert("There was an unexpected error: " + err);
+      });
+  }
+
   const getSelectedComplaint = useCallback(async () =>{
     try {
       const url = localStorage.getItem("url") + "users.php";
@@ -42,6 +76,24 @@ function UpdateTicketModal(props) {
       
     }
   },[compId])
+
+  const getLocationCategory = useCallback(async () => {
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const formData = new FormData();
+      formData.append("operation", "getLocationCategory");
+      const response = await axios({
+        url: url,
+        data: formData,
+        method: "post"
+      });
+      if (response.data !== 0) {
+        setLocationCategory(response.data);
+      }
+    } catch (error) {
+      getAlert("danger", "There was an unexpected error: " + error);
+    }
+  },[]);
 
   const getLocation = (id) => {
     const url = localStorage.getItem("url") + "admin.php";
@@ -75,42 +127,25 @@ function UpdateTicketModal(props) {
     e.preventDefault();
     e.stopPropagation();
 		if(form.checkValidity() === true){
-      //updateComplaint();
+      updateTicket();
 		}
 		setValidated(true);
 	}
 
   useEffect(() => {
-    getSelectedComplaint();
-  }, [getSelectedComplaint]);
+    getLocationCategory();
+    if(locationCategoryId !== ""){
+      // setLocationId("");
+      getLocation(locationCategoryId);
+    }
+  }, [getLocationCategory, locationCategoryId]);
   
 
   useEffect(() => {
     if(show){
-      const getLocationCategory = async () => {
-        try {
-          const url = localStorage.getItem("url") + "admin.php";
-          const formData = new FormData();
-          formData.append("operation", "getLocationCategory");
-          const response = await axios({
-            url: url,
-            data: formData,
-            method: "post"
-          });
-          if (response.data !== 0) {
-            setLocationCategory(response.data);
-          }
-        } catch (error) {
-          getAlert("danger", "There was an unexpected error: " + error);
-        }
-      };
-      getLocationCategory();
-      if(locationCategoryId !== ""){
-        // setLocationId("");
-        getLocation(locationCategoryId);
-      }
+      getSelectedComplaint();
     }
-  }, [locationCategoryId, show]);
+  }, [getSelectedComplaint, show]);
 
   return (
     <>
