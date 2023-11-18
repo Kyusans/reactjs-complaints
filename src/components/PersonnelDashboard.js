@@ -7,6 +7,7 @@ import { formatDate } from './JobDetails';
 
 export default function PersonnelDashboard() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isOnGoing, setIsOnGoing] = useState(true);
   const [ticket, setTicket] = useState([]);
   const navigateTo = useNavigate();
 
@@ -28,11 +29,40 @@ export default function PersonnelDashboard() {
     }
   }
 
+  const getSelectedStatus = async (priority) => {
+    setIsLoading(true);
+    try {
+      const url = localStorage.getItem("url") + "personnel.php";
+      const userId = localStorage.getItem("userId");
+      const jsonData = { priority: priority, userId: userId }
+      const formData = new FormData();
+      formData.append("operation", "getSelectedStatus");
+      formData.append("json", JSON.stringify(jsonData));
+      const res = await axios({ url: url, data: formData, method: "post" });
+      if (res.data !== 0) {
+        setTicket(res.data);
+        setIsLoading(false);
+      }else{
+        alert("No ticket found");
+        setIsLoading(false);
+      }
+    } catch (error) {
+      alert("There was an unexpected error: " + error);
+    }
+  }
+
+
   const getTicketsByStatus = useCallback(async (status) =>{
     setIsLoading(true);
-    if(status === 0){
+    if(status === 2){
+      setIsOnGoing(true);
+    }else if(status === 0){
+      setIsOnGoing(false);
       getJobTicket();
+    }else{
+      setIsOnGoing(false);
     }
+
     try {
       setTicket([]);
       const url = localStorage.getItem("url") + "personnel.php";
@@ -75,8 +105,16 @@ export default function PersonnelDashboard() {
             <Button onClick={() => getTicketsByStatus(2)} className="btn-warning mb-2">On-Going</Button>
             <Button onClick={() => getTicketsByStatus(3)} className="btn-success mx-1 mb-2">Completed</Button>
           </div>
+          {isOnGoing ? 
+            <div className='d-flex flex-wrap mt-2 '>
+              <Button onClick={() => getSelectedStatus(3)} className="btn-dark mx-1 mb-2">Low</Button>
+              <Button onClick={() => getSelectedStatus(2)} className="btn-warning mb-2">Medium</Button>
+              <Button onClick={() => getSelectedStatus(1)} className="btn-danger mx-1 mb-2">High</Button>
+            </div>:
+            <></>
+          }
           <div>
-            <Table bordered responsive striped hover size="sm" variant='success' className='border-1'>
+            <Table bordered responsive striped hover variant='success' className='border-1'>
               <thead>
                 <tr>
                   <th className="green-header">Subject</th>

@@ -110,7 +110,7 @@ function AdminComplaintTable() {
             <Button onClick={() => getTicketsByStatus(2)} className="btn-warning mb-2">On-Going</Button>
             <Button onClick={() => getTicketsByStatus(3)} className="btn-success mx-1 mb-2">Completed</Button>
           </div>
-          <Table striped bordered hover responsive variant="success" size="sm" className="border-1">
+          <Table striped bordered hover responsive variant="success" className="border-1">
             <thead>
               <tr>
                 <th className="green-header">Subject</th>
