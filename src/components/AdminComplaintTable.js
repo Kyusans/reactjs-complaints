@@ -8,6 +8,7 @@ import { formatDate } from "./JobDetails";
 
 function AdminComplaintTable() {
   const navigateTo = useNavigate();
+  const [pageStatus, setPageStatus] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
   const [ticketId, setTicketId] = useState("");
@@ -17,7 +18,7 @@ function AdminComplaintTable() {
   const showPagination = tickets.length > ticketsPerPage;
 
   const handleClose = () => {
-    getAllTickets();
+    getTicketsByStatus(pageStatus);
     setShowJobOrderModal(false)
   };
   const handleShow = (id, status) => {
@@ -68,6 +69,7 @@ function AdminComplaintTable() {
 
   const getTicketsByStatus = useCallback(async (status) =>{
     setIsLoading(true);
+    setPageStatus(status);
     if(status === 0){
       getAllTickets();
     }

@@ -57,6 +57,7 @@ function JobOrderModal(props) {
     const detail = { jobPersonnelId: jobPersonnelId };
     const jsonData = { master: master, detail: detail };
     if (!validateForm()) {
+      setIsLoading(false);
       return;
     }
   

@@ -1,12 +1,14 @@
-import { Container, NavLink, Navbar } from "react-bootstrap";
+import { Container, NavDropdown, NavLink, Navbar } from "react-bootstrap";
 
 const AdminNavbar = () => {
+  const userFullName = localStorage.getItem("userFullName");
   const handleSignout = () =>{
     localStorage.setItem("adminLoggedIn", "false");
     localStorage.setItem("userId", "");
 		localStorage.setItem("userLevel", "");
     localStorage.setItem("userCommentId", "");
   }
+
   return ( 
     <>
       <Navbar className="nav-background" expand="lg" text="light">
@@ -18,8 +20,11 @@ const AdminNavbar = () => {
             <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/admin/addlocation/">Location</NavLink>
           </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
-            <NavLink onClick={handleSignout} style={{ color: "white", marginRight: "10px" }} href="/gsd">Signout</NavLink>
-          </Navbar.Collapse>
+          <NavDropdown title={userFullName} style={{ color: "white"}}>
+            <NavDropdown.Item href="/gsd/account/password">Change Password</NavDropdown.Item>
+            <NavDropdown.Item href="/gsd" onClick={handleSignout}>Signout</NavDropdown.Item>
+          </NavDropdown>
+        </Navbar.Collapse>
         </Container>
       </Navbar>
     </>

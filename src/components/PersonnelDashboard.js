@@ -59,8 +59,8 @@ export default function PersonnelDashboard() {
 
   useEffect(() => {
     setIsLoading(true);
-    getJobTicket();
-  }, [])
+    getTicketsByStatus(2);
+  }, [getTicketsByStatus])
 
   return (
     <>
