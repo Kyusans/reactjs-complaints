@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import "./css/site.css";
 import { Button, Card, Container, FloatingLabel, Form } from 'react-bootstrap';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import AlertScript from './AlertScript';
 
 function ChangePassword() {
   const [currentPass, setCurrentPass] = useState("");
@@ -10,6 +12,20 @@ function ChangePassword() {
   // const [isCurrentPassword, setIsCurrentPassword] = useState(true);
   const [validated, setValidated] = useState(false);
   const [showInvalidCurrent, setShowInvalidCurrent] = useState(false);
+
+  const navigateTo = useNavigate();
+
+  	//for alert
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertVariant, setAlertVariant] = useState("");
+	const [alertMessage, setAlertMessage] = useState("");
+
+
+	function getAlert(variantAlert, messageAlert){
+		setShowAlert(true);
+		setAlertVariant(variantAlert);
+		setAlertMessage(messageAlert);
+	}
 
   const getCurrentPassword = useCallback(async () => {
     try {
@@ -29,6 +45,30 @@ function ChangePassword() {
     }
   },[]);
   
+  const changePassword = () =>{
+    const userId = localStorage.getItem("facultyLoggedIn") === "true" ? localStorage.getItem("facCode") : localStorage.getItem("userId");
+    const url = localStorage.getItem("url") + "users.php";
+    const jsonData = { userId: userId, password: newPassword };
+    const formData = new FormData();
+    formData.append("json", JSON.stringify(jsonData));
+    formData.append("operation", "changePassword");
+    axios({url: url, data: formData, method: "post"})
+    .then((res) =>{
+      if(res.data !== 0){
+        setTimeout(()=>{
+          navigateTo(-1);
+        }, 1000);
+        getAlert("success", "Success!");
+      }else{
+        getAlert("danger", "New password is same as current.");
+        setNewPassword("");
+      }
+    })
+    .catch((err) =>{
+      getAlert("danger","There was an error: " + err);
+     
+    })
+  }
 
   const handleSubmit = (e) => {
     const form = e.currentTarget;
@@ -44,7 +84,7 @@ function ChangePassword() {
     }else if(form.checkValidity() === true) {
       e.preventDefault();
       e.stopPropagation();
-      alert("Success!");
+      changePassword();
     }
 
     setValidated(true);
@@ -58,6 +98,7 @@ function ChangePassword() {
     <Container className='centered'>
     <Card className="card-thin" border='success'>
       <Card.Body>
+        <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Form.Group className='mt-3 mb-3 fatter-text centered-label'>
             <FloatingLabel label="Current Password">
