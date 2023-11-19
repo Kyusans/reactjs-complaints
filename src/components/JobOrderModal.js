@@ -19,6 +19,7 @@ function JobOrderModal(props) {
   const [jobPersonnelId, setJobPersonnelId] = useState([]);
   const [priorityValidation, setPriorityValidation] = useState(null);
   const [personnelValidation, setPersonnelValidation] = useState(null);
+  const [additionalComment, setAdditionalComment] = useState("");
 
   // for alert
   const [showAlert, setShowAlert] = useState(false);
@@ -52,7 +53,7 @@ function JobOrderModal(props) {
     const userId = localStorage.getItem("userId");
     const master = {
       ticketNumber: ticketNumber, jobCreatedBy: userId, subject: subject, description: description,
-      locationCategory: locationCategory,location: location, priority: jobPriority
+      locationCategory: locationCategory,location: location, priority: jobPriority, additionalComment: additionalComment === "" ? null : additionalComment,
     };
     const detail = { jobPersonnelId: jobPersonnelId };
     const jsonData = { master: master, detail: detail };
@@ -196,48 +197,6 @@ function JobOrderModal(props) {
                 )}
                 <Row className='mb-3'>
                   <Col>
-                    Ticket number:
-                    <Form.Control type="text" placeholder={ticketNumber} readOnly />
-                  </Col>
-                  <Col>
-                    Complaint by:
-                    <Form.Control type="text" placeholder={facultyName} readOnly />
-                  </Col>
-                </Row>
-
-                <Row className='mb-3'>
-                  <Col>
-                    Subject:
-                    <Form.Control type="text" placeholder={subject} readOnly />
-                  </Col>
-                  <Col>
-                    Location Category:
-                    <Form.Control type="text" placeholder={locationCategory} readOnly />
-                  </Col>
-                </Row>
-
-                <Row className='mb-3'>
-                  <Col>
-                    Location:
-                    <Form.Control type="text" placeholder={location} readOnly />
-                  </Col>
-                </Row>
-
-                <Row className='mb-3'>
-                  <FloatingLabel label="Description">
-                    <Form.Control
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder='Description'
-                      style={{ height: '150px' }}
-                      as='textarea'
-                      required
-                    />
-                  </FloatingLabel>
-                </Row>
-
-                <Row className='mb-3'>
-                  <Col>
                     <FloatingLabel label="Select Priority">
                       <Form.Select
                         value={jobPriority}
@@ -269,6 +228,56 @@ function JobOrderModal(props) {
                     </FloatingLabel>
                   </Col>
                 </Row>
+
+                <Row className='mb-3'>
+                  <Col>
+                    Submitted by:
+                    <Form.Control type="text" placeholder={facultyName} readOnly />
+                  </Col>
+                </Row>
+
+                <Row className='mb-3'>
+                  <Col>
+                    Subject:
+                    <Form.Control type="text" placeholder={subject} readOnly />
+                  </Col>
+                </Row>
+
+                <Row className='mb-3'>
+                  <Col>
+                    Location:
+                    <Form.Control type="text" placeholder={location} readOnly />
+                  </Col>
+                </Row>
+
+                <Row className='mb-3'>
+                  <Container>
+                    <FloatingLabel label="Description">
+                      <Form.Control
+                        value={description}
+                        placeholder='Description'
+                        style={{ height: '150px' }}
+                        as='textarea'
+                        readOnly
+                      />
+                    </FloatingLabel>
+                  </Container>
+                </Row>
+
+                <Row>
+                  <Container>
+                    <FloatingLabel label="Additional Comment (optional)">
+                      <Form.Control
+                        value={additionalComment}
+                        onChange={(e) => setAdditionalComment(e.target.value)}
+                        placeholder='Additional Comment (optional)'
+                        style={{ height: '75px' }}
+                        as='textarea'
+                      />
+                    </FloatingLabel>
+                  </Container>
+                </Row>
+                
                 <Row className="mt-3">
                   <Col>
                     <ListGroup>
