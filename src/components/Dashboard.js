@@ -55,7 +55,7 @@ function Dashboard() {
       }, 1500);
     }else{
       getComplaints();
-      const intervalId = setInterval(() => {getComplaints()}, 5000);
+      const intervalId = setInterval(() => {getComplaints()}, 10000);
       return () => clearInterval(intervalId);
     }
   }, [navigateTo])

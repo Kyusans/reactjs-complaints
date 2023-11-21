@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Login from './components/Login';
 import MainLayoutRoutes from './MainLayoutRoutes';
+import ReportModule from './components/ReportModule';
 // import { useEffect } from 'react';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       <Router basename='/gsd'>
         <Routes>
           <Route path="/" element={<Login /> } />
+          <Route path='/report' element={<ReportModule />} />
           <Route path="*" element={<MainLayoutRoutes />}/>
         </Routes>
       </Router>
