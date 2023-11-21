@@ -8,6 +8,7 @@ import AdminAddLocation from './components/AdminAddLocation'
 import JobDetails from './components/JobDetails'
 import PersonnelDashboard from './components/PersonnelDashboard'
 import ChangePassword from './components/ChangePassword'
+import ReportModule from './components/ReportModule'
 
 function MainLayoutRoutes() {
   return (
@@ -20,6 +21,7 @@ function MainLayoutRoutes() {
         <Route path="/job/details/:compId" element={<JobDetails />} />
         <Route path="/personnel/dashboard" element={<PersonnelDashboard />} />
         <Route path="/account/password" element={<ChangePassword />} />
+        <Route path='/report' element={<ReportModule />} />
       </Routes>
     </div>
   )
