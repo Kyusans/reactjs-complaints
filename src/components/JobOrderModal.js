@@ -68,12 +68,13 @@ function JobOrderModal(props) {
   
     try {
       const res = await axios.post(url, formData);
+      console.log("res ni sumbit: " + JSON.stringify(res.data));
       if (res.data === 1) {
         getAlert("success", "Success");
-        setTimeout(() => {
-          handleHide();
-        }, 1500);
       }
+      setTimeout(() => {
+        handleHide();
+      }, 1500);
       setIsLoading(false);
     } catch (err) {
       getAlert("danger", "There was an unexpected error: " + err);

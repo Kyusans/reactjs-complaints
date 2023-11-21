@@ -155,7 +155,7 @@ export default function JobDetails() {
           <Spinner animation='border' variant='success' />
         </Container>
         :
-        <div className='mt-3'>
+        <div>
           <Card border='secondary'>
             <Card.Body>
               <Button variant='outline-danger button-m' onClick={() => handleBackButtonClick()}>

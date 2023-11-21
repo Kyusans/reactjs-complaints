@@ -68,6 +68,7 @@ function AdminComplaintTable() {
   };
 
   const getTicketsByStatus = useCallback(async (status) =>{
+    handleFirstPage();
     setIsLoading(true);
     setPageStatus(status);
     if(status === 0){
