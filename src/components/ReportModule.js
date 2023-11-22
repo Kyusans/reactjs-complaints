@@ -8,9 +8,9 @@ function ReportModule() {
     <>
       <Card>
         <Card.Header>
-          <Button>Download PDF</Button>
+          <Button onClick={() => toPDF()}>Download PDF</Button>
         </Card.Header>
-        <Card.Body>
+        <Card.Body ref={targetRef}>
           <ReportTable />
         </Card.Body>
       </Card>
