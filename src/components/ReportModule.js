@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Col, Container, FloatingLabel, Form, Row, Spinner, Table } from 'react-bootstrap';
 import axios from 'axios';
 import AlertScript from './AlertScript';
@@ -6,7 +6,7 @@ import AlertScript from './AlertScript';
 function ReportModule() {
   
   const [tickets, setTickets] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -32,14 +32,17 @@ function ReportModule() {
     return `${month} ${day}`;
   }
 
-  const getTicketsByDate = useCallback(async () => {
+  const getTicketsByDate =async () => {
+    setTickets([]);
+    setShowAlert(false);
     try {
       const url = localStorage.getItem("url") + "admin.php";
       const jsonData = {startDate : startDate, endDate : endDate}
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData))
-      formData.append("operation", "getAllTickets");
+      formData.append("operation", "getTicketsByDate");
       const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("res: ni getTicketsByDate", JSON.stringify(res.data));
       if (res.data !== 0) {
         setTickets(res.data);
       }else{
@@ -49,12 +52,7 @@ function ReportModule() {
     } catch (err) {
       getAlert("danger","There was an unexpected error: " + err);
     }
-  }, [endDate, startDate]);
-
-  useEffect(() => {
-    getTicketsByDate();
-  }, [getTicketsByDate])
-  
+  };
 
   return (
     <>
@@ -72,28 +70,29 @@ function ReportModule() {
                 <Row className='d-flex align-items-start'>
                   <Col xs={12} md={4} className='mb-2'>
                     <FloatingLabel controlId="startDateLabel" label="Start Date">
-                      <Form.Control type='date' />
+                      <Form.Control type='date' value={startDate} onChange={(e) => setStartDate(e.target.value)} />
                     </FloatingLabel>
                   </Col>
                   <Col xs={12} md={4} className='mb-2'>
                     <FloatingLabel controlId="endDateLabel" label="End Date">
-                      <Form.Control type='date' />
+                      <Form.Control type='date' value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                     </FloatingLabel>
                   </Col>
                   <Col xs={12} md={4} className='d-flex align-items-end'>
-                    <Button className='button-m button-large'>Filter</Button>
+                    <Button onClick={getTicketsByDate} className='button-m button-large'>Filter</Button>
                   </Col>
                 </Row>
               </Form>
             </Container>
-
 
               <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
               <Table striped bordered hover responsive variant="success" className="border-1">
                 <thead>
                   <tr>
                     <th className="green-header">Subject</th>
-                    <th className="green-header">Status</th>
+                    <th className="green-header">Location</th>
+                    <th className="green-header">Personnel</th>
+                    <th className="green-header">Submitted by</th>
                     <th className="green-header">Date</th>
                   </tr>
                 </thead>
@@ -102,10 +101,10 @@ function ReportModule() {
                     tickets.map((ticket, index) => (
                       <tr key={index}>
                         <td>{ticket.comp_subject}</td>
-                        <td className={`${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""} ${ticket.joStatus_name === "Completed" ? "text-success" : ticket.joStatus_name === "On-Going" ? "text-warning" : ""} text-outline`}>
-                          {ticket.joStatus_name}
-                        </td>
-                        <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>{formatDates(ticket.comp_date)}</td>
+                        <td>{ticket.location_name}</td>
+                        <td>{ticket.user_full_name}</td>
+                        <td>{ticket.fac_name}</td>
+                        <td>{formatDates(ticket.comp_date)}</td>
                       </tr>
                     ))
                   ) : (
@@ -116,7 +115,6 @@ function ReportModule() {
                 </tbody>
               </Table>
             </Card.Body>
-
           </Card>
         </>
       }
