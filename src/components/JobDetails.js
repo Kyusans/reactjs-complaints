@@ -111,6 +111,7 @@ export default function JobDetails() {
       formData.append("operation", "getJobDetails");
       const res = await axios({ url: url, data: formData, method: "post" });
       if (res.data !== 0) {
+        console.log("joStatus: " + JSON.stringify(res.data.joStatus_name))
         if(res.data.joStatus_name === "Completed"){
           setIsCompleted(true);
         }
@@ -245,7 +246,7 @@ export default function JobDetails() {
           </Card>
           <Card className='mt-3' border='secondary'>
             <Card.Body>
-              {!isCompleted ? "" :
+              {!isCompleted ?
                 (<Form className='mb-5'>
                   <FloatingLabel label="Add a comment..">
                     <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required/>
@@ -253,7 +254,7 @@ export default function JobDetails() {
                   <div className='mt-3'>
                     <Button variant='outline-primary' onClick={addComment}>Submit</Button>
                   </div>
-                </Form>)}
+                </Form>): null}
               {comment.length <= 0 ? 
                 <Container className='text-secondary text-center'>
                   <p>There is no comment yet..</p>
