@@ -11,29 +11,25 @@ import MessageList from './MessageList';
 export function formatDate(inputDate) {
   const date = new Date(inputDate);
   const currentDate = new Date();
-  const timeDifference = Math.floor((currentDate - date) / 1000); // Time difference in seconds
+  const timeDifference = Math.floor((currentDate - date) / 1000);
 
   if (timeDifference < 120) {
     return 'Just now';
   } else if (timeDifference < 3600) {
-    // Less than an hour ago
     return `${Math.floor(timeDifference / 60)} minute${Math.floor(timeDifference / 60) > 1 ? 's' : ''} ago`;
   } else if (
     date.getDate() === currentDate.getDate() &&
     date.getMonth() === currentDate.getMonth() &&
     date.getFullYear() === currentDate.getFullYear()
   ) {
-    // Today
     return `${Math.floor(timeDifference / 3600)} hour${Math.floor(timeDifference / 3600) > 1 ? 's' : ''} ago`;
   } else if (
     date.getDate() === currentDate.getDate() - 1 &&
     date.getMonth() === currentDate.getMonth() &&
     date.getFullYear() === currentDate.getFullYear()
   ) {
-    // Yesterday
     return 'Yesterday';
   } else {
-    // A specific date format for other dates
     const monthNames = [
       "Jan", "Feb", "Mar", "Apr", "May", "Jun",
       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -144,8 +140,6 @@ export default function JobDetails() {
     setIsPersonnel(localStorage.getItem("userLevel") === "90" ? true : false);
     getJobDetails();
     getComment(); 
-    const interval = setInterval(() => {getComment()}, 5000);
-    return () => clearInterval(interval);
   }, [compId, getComment, getJobDetails, isPersonnel]);
 
   return (
@@ -200,7 +194,7 @@ export default function JobDetails() {
                 </Row>
                 <Row className='mt-3'>
                   <Col>
-                    <FloatingLabel controlId="user" label="Job Created By">
+                    <FloatingLabel controlId="user" label="Job Order Created By">
                       <Form.Control type="text" value={details.user_full_name} readOnly />
                     </FloatingLabel>
                   </Col>
