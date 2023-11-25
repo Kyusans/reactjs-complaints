@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Card, Col, Container, FloatingLabel, Form, Row, Spinner, Table } from "react-bootstrap";
 import { usePDF } from "react-to-pdf";
+import * as XLSX from 'xlsx';
 import axios from "axios";
 import AlertScript from "./AlertScript";
 
@@ -54,6 +55,16 @@ function ReportModule() {
     }
   };
   const { toPDF, targetRef } = usePDF({ filename: 'page.pdf' });
+  const exportToExcel = () => {
+    try {
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(tickets);
+      XLSX.utils.book_append_sheet(wb, ws, "Tickets");
+      XLSX.writeFile(wb, "tickets.xlsx");
+    } catch (error) {
+      console.error("Error exporting to Excel:", error);
+    }
+  };
   return (
     <>
       {isLoading ?
@@ -64,7 +75,8 @@ function ReportModule() {
         <> 
           <Card>
             <Card.Header>
-              <Button onClick={() => toPDF}>Get PDF</Button>
+              <Button onClick={() => toPDF()}>Get PDF</Button>
+              <Button onClick={exportToExcel} className="ms-1">Export to Excel</Button>
             </Card.Header>
             <Card.Body>
               
@@ -90,34 +102,36 @@ function ReportModule() {
 
               <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
               <div ref={targetRef}>
-                <Table bordered hover responsive variant="light" className="border-1">
-                  <thead>
-                    <tr>
-                      <th>Subject</th>
-                      <th>Location</th>
-                      <th>Personnel</th>
-                      <th>Submitted by</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Array.isArray(tickets) ? (
-                      tickets.map((ticket, index) => (
-                        <tr key={index}>
-                          <td>{ticket.comp_subject}</td>
-                          <td>{ticket.location_name}</td>
-                          <td>{ticket.personnel_names}</td>
-                          <td>{ticket.fac_name}</td>
-                          <td>{formatDates(ticket.comp_date)}</td>
-                        </tr>
-                      ))
-                    ) : (
+                <Container className="mt-3">
+                  <Table bordered hover responsive variant="light" className="border-1 mx-auto">
+                    <thead>
                       <tr>
-                        <td colSpan="3">No tickets to display.</td>
+                        <th>Subject</th>
+                        <th>Location</th>
+                        <th>Personnel</th>
+                        <th>Submitted by</th>
+                        <th>Date</th>
                       </tr>
-                    )}
-                  </tbody>
-                </Table>
+                    </thead>
+                    <tbody>
+                      {Array.isArray(tickets) ? (
+                        tickets.map((ticket, index) => (
+                          <tr key={index}>
+                            <td>{ticket.comp_subject}</td>
+                            <td>{ticket.location_name}</td>
+                            <td>{ticket.personnel_names}</td>
+                            <td>{ticket.fac_name}</td>
+                            <td>{formatDates(ticket.comp_date)}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="3">No tickets to display.</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </Table>
+                </Container>
               </div>
             </Card.Body>
           </Card>
