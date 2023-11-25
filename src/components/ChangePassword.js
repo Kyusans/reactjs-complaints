@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react';
 import "./css/site.css";
 import { Button, Card, Container, FloatingLabel, Form } from 'react-bootstrap';
 import axios from 'axios';
@@ -9,12 +9,12 @@ function ChangePassword() {
   const [currentPass, setCurrentPass] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  // const [isCurrentPassword, setIsCurrentPassword] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [validated, setValidated] = useState(false);
   const [showInvalidCurrent, setShowInvalidCurrent] = useState(false);
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
 
   const navigateTo = useNavigate();
-
   	//for alert
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertVariant, setAlertVariant] = useState("");
@@ -37,15 +37,14 @@ function ChangePassword() {
       formData.append("json", JSON.stringify(jsonData));
       const response = await axios({url: url, data: formData, method: 'post'});
       if (response.data !== 0) {
-        setShowInvalidCurrent(false);
         setCurrentPass(localStorage.getItem("facultyLoggedIn") === "true" ? response.data.fac_password : response.data.user_password);
       }
     } catch (error) {
       alert("There was an error: " + error);
     }
-  },[]);
-  
-  const changePassword = () =>{
+  }, []);
+
+  const changePassword = () => {
     const userId = localStorage.getItem("facultyLoggedIn") === "true" ? localStorage.getItem("facCode") : localStorage.getItem("userId");
     const url = localStorage.getItem("url") + "users.php";
     const jsonData = { userId: userId, password: newPassword };
@@ -53,74 +52,85 @@ function ChangePassword() {
     formData.append("json", JSON.stringify(jsonData));
     formData.append("operation", "changePassword");
     axios({url: url, data: formData, method: "post"})
-    .then((res) =>{
-      if(res.data !== 0){
-        setTimeout(()=>{
-          navigateTo(-1);
-        }, 1000);
-        getAlert("success", "Success!");
-      }else{
-        getAlert("danger", "New password is same as current.");
-        setNewPassword("");
-      }
-    })
-    .catch((err) =>{
-      getAlert("danger","There was an error: " + err);
-     
-    })
+      .then((res) => {
+        if (res.data !== 0) {
+          setTimeout(() => {
+            navigateTo(-1);
+          }, 1000);
+          getAlert("success", "Success!");
+        } else {
+          getAlert("danger", "New password is the same as the current password.");
+          setNewPassword("");
+        }
+      })
+      .catch((err) => {
+        getAlert("danger", "There was an error: " + err);
+      });
   }
 
   const handleSubmit = (e) => {
+    setShowInvalidCurrent(false)
+    setPasswordsMatch(true);
+    e.preventDefault();
+    e.stopPropagation();
     const form = e.currentTarget;
     getCurrentPassword();
-    if(currentPass !== currentPassword){
+    if(newPassword !== confirmPassword && currentPass !== currentPassword){
       setCurrentPassword("");
-      setTimeout(() => {setShowInvalidCurrent(true);}, 1000);
-      e.preventDefault();
-      e.stopPropagation();
-    }else if(form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-    }else if(form.checkValidity() === true) {
-      e.preventDefault();
-      e.stopPropagation();
+      setShowInvalidCurrent(true);
+      setConfirmPassword("");
+      setPasswordsMatch(false);
+    } else if (currentPass !== currentPassword) {
+      setCurrentPassword("");
+      setShowInvalidCurrent(true);
+    } else if (newPassword !== confirmPassword) {
+      setConfirmPassword("");
+      setPasswordsMatch(false);
+    } else if (form.checkValidity()) {
       changePassword();
     }
 
     setValidated(true);
   }
+
   useEffect(() => {
     getCurrentPassword();
-  },[getCurrentPassword])
-  
+  }, [getCurrentPassword])
 
   return (
     <Container className='centered'>
-    <Card className="card-thin" border='success'>
-      <Card.Body>
-        <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          <Form.Group className='mt-3 mb-3 fatter-text centered-label'>
-            <FloatingLabel label="Current Password">
-              <Form.Control type='password' value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder='Current Password' autoFocus required/>
-            </FloatingLabel>
-            {showInvalidCurrent && <Form.Text className='text-danger'>Invalid current password</Form.Text>}
-          </Form.Group>
-          <Form.Group className='mb-4 fatter-text centered-label'>
-            <FloatingLabel label="New Password">
-              <Form.Control type='password' value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder='New Password' required/>
-            </FloatingLabel>
-          </Form.Group>
+      <Card className="card-thin" border='success'>
+        <Card.Body>
+          <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
+          <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Form.Group className='mb-4 fatter-text centered-label'>
+              <FloatingLabel label="Current Password">
+                <Form.Control type='password' value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder='Current Password' required/>
+              </FloatingLabel>
+              {showInvalidCurrent && <Form.Text className='text-danger'>Invalid current password</Form.Text>}
+            </Form.Group>
 
-          <Container className='text-center'>
-            <Button type="submit" className='button-large btn-lg' variant='outline-success' >Change Password</Button>
-          </Container>
-        </Form>
-      </Card.Body>
-    </Card>
-  </Container>
+            <Form.Group className='mb-4 fatter-text centered-label'>
+              <FloatingLabel label="New Password">
+                <Form.Control type='password' value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder='New Password' required/>
+              </FloatingLabel>
+            </Form.Group>
+
+            <Form.Group className='mb-4 fatter-text centered-label'>
+              <FloatingLabel label="Confirm Password">
+                <Form.Control type='password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder='Confirm Password' required/>
+              </FloatingLabel>
+              {!passwordsMatch && <Form.Text className='text-danger'>Passwords do not match</Form.Text>}
+            </Form.Group>
+
+            <Container className='text-center'>
+              <Button type="submit" className='button-large btn-lg' variant='outline-success'>Change Password</Button>
+            </Container>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
   )
 }
 
-
-export default ChangePassword
+export default ChangePassword;
