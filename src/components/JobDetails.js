@@ -50,6 +50,7 @@ export default function JobDetails() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isPersonnel, setIsPersonnel] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const isAdmin = localStorage.getItem("adminLoggedIn") === "true" ? true : false;
 
   const openConfirmModal = () =>{setShowConfirmModal(true);}
   const closeConfirmModal = () =>{
@@ -139,6 +140,25 @@ export default function JobDetails() {
     } catch (error) {
       alert("There was an error occured: " + error.message);
     }
+  }
+
+  const reopenJob = () =>{
+    const url = localStorage.getItem("url") + "admin.php";
+    const jsonData = {compId: compId};
+    const formData = new FormData();
+    formData.append("operation", "reopenJob");
+    formData.append("json", JSON.stringify(jsonData));
+    axios({url: url, data: formData, method: "post"})
+    .then((res) =>{
+      if(res.data === 1){
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      }
+    })
+    .catch((err) =>{
+      alert("There was an unexpected error: " + err);
+    })
   }
   
   useEffect(() => {
@@ -232,17 +252,15 @@ export default function JobDetails() {
             </Row>
 
             </Card.Body>
-            {
+              <Card.Footer className='text-center'>
+              {
                 isPersonnel && parseInt(details.joStatus_id, 10) === 2 ? (
-                <Card.Footer className='text-center'>
-                  <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>
-                    Mark as done
-                  </Button>
-                </Card.Footer>
-              ) : (
-                <></>
-              )
-            }
+                  <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>Mark as done</Button>
+                ) : (isAdmin && isCompleted) ? (
+                  <Button className='mt-2' variant='outline-success' onClick={reopenJob}>Reopen Job</Button>
+                ) : null
+              }
+            </Card.Footer>
           </Card>
           <Card className='mt-3' border='secondary'>
             <Card.Body>
