@@ -188,49 +188,26 @@ export default function JobDetails() {
                       <Form.Control type="text" value={details.comp_subject} readOnly />
                     </FloatingLabel>
                   </Col>
-                </Row>
-                <Row className='mt-3'>
-                  <Col>
-                    <FloatingLabel controlId="status" label="Status">
-                      <Form.Control type="text" value={details.joStatus_name} readOnly />
-                    </FloatingLabel>
-                  </Col>
-                </Row>
-                <Row className='mt-3'>
                   <Col>
                     <FloatingLabel controlId="location" label="Location">
                       <Form.Control type="text" value={details.location_name} readOnly />
                     </FloatingLabel>
                   </Col>
                 </Row>
-                <Row className='mt-3'>
-                  <Col>
-                    <FloatingLabel controlId="priority" label="Priority">
-                      <Form.Control type="text" value={details.priority_name} readOnly />
-                    </FloatingLabel>
-                  </Col>
-                </Row>
+
                 <Row className='mt-3'>
                   <Col>
                     <FloatingLabel controlId="Submitted By" label="Submitted By">
                       <Form.Control type="text" value={details.fac_name} readOnly />
                     </FloatingLabel>
                   </Col>
-                </Row>
-                <Row className='mt-3'>
                   <Col>
                     <FloatingLabel controlId="user" label="Job Order Created By">
                       <Form.Control type="text" value={details.user_full_name} readOnly />
                     </FloatingLabel>
                   </Col>
                 </Row>
-                <Row className='mt-3'>
-                  <Col>
-                    <FloatingLabel controlId="createDate" label="Date Created">
-                      <Form.Control type="text" value={formatDate(details.job_createDate)} readOnly />
-                    </FloatingLabel>
-                  </Col>
-                </Row>
+
                 <Row className='mt-3'>
                   <Col>
                     <FloatingLabel controlId="description" label="Description">
@@ -238,18 +215,40 @@ export default function JobDetails() {
                     </FloatingLabel>
                   </Col>
                 </Row>
+
+                <Row className='mt-3'>
+                  <Col>
+                    <FloatingLabel controlId="status" label="Status">
+                      <Form.Control type="text" value={details.joStatus_name} readOnly />
+                    </FloatingLabel>
+                  </Col>
+                  <Col>
+                    <FloatingLabel controlId="priority" label="Priority">
+                      <Form.Control type="text" value={details.priority_name} readOnly />
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+
+                <Row className='mt-3'>
+                  <Col>
+                    <FloatingLabel controlId="createDate" label="Job Order Date Created">
+                      <Form.Control type="text" value={formatDate(details.job_createDate)} readOnly />
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+
               </Form>
 
-            <Row className='mt-3'>
-              <Col xs={12} md={6}>
-                <ListGroup>
-                  <ListGroup.Item className='green-header'>Assigned Personnel</ListGroup.Item>
-                  {assignedPersonnel.map((person, index) => (
-                    <ListGroup.Item key={index}>{`${index + 1}. ${person.user_full_name}`}</ListGroup.Item>
-                  ))}
-                </ListGroup>
-              </Col>
-            </Row>
+              <Row className='mt-3'>
+                <Col xs={12} md={6}>
+                  <ListGroup>
+                    <ListGroup.Item className='green-header'>Assigned Personnel</ListGroup.Item>
+                    {assignedPersonnel.map((person, index) => (
+                      <ListGroup.Item key={index}>{`${index + 1}. ${person.user_full_name}`}</ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </Col>
+              </Row>
 
             </Card.Body>
               <Card.Footer className='text-center'>
