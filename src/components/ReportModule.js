@@ -54,26 +54,8 @@ function ReportModule() {
     }
   };
   const { toPDF, targetRef } = usePDF({ filename: 'page.pdf' });
-
-  const handleGetPDF = async () => {
-    const pdfData = await toPDF();
-    const blob = new Blob([pdfData], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-  };
-
   return (
     <>
-      {/* <Card>
-        <Card.Header>
-          <Button onClick={handleGetPDF}>Get PDF</Button>
-        </Card.Header>
-        <Card.Body ref={targetRef}>
-          <ReportTable />
-        </Card.Body>
-      </Card> */}
-
-
       {isLoading ?
         <Container className='text-center mt-3'>
           <Spinner animation='border' variant='success' />
@@ -82,7 +64,7 @@ function ReportModule() {
         <> 
           <Card>
             <Card.Header>
-              <Button onClick={handleGetPDF}>Get PDF</Button>
+              <Button onClick={() => toPDF}>Get PDF</Button>
             </Card.Header>
             <Card.Body>
               
@@ -108,14 +90,14 @@ function ReportModule() {
 
               <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
               <div ref={targetRef}>
-                <Table striped bordered hover responsive variant="success" className="border-1">
+                <Table bordered hover responsive variant="light" className="border-1">
                   <thead>
                     <tr>
-                      <th className="green-header">Subject</th>
-                      <th className="green-header">Location</th>
-                      <th className="green-header">Personnel</th>
-                      <th className="green-header">Submitted by</th>
-                      <th className="green-header">Date</th>
+                      <th>Subject</th>
+                      <th>Location</th>
+                      <th>Personnel</th>
+                      <th>Submitted by</th>
+                      <th>Date</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -124,7 +106,7 @@ function ReportModule() {
                         <tr key={index}>
                           <td>{ticket.comp_subject}</td>
                           <td>{ticket.location_name}</td>
-                          <td>{ticket.user_full_name}</td>
+                          <td>{ticket.personnel_names}</td>
                           <td>{ticket.fac_name}</td>
                           <td>{formatDates(ticket.comp_date)}</td>
                         </tr>
