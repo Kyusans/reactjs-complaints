@@ -168,7 +168,7 @@ function LocationModal(props) {
         }
       </Modal.Body>
       <Modal.Footer>
-        <Button variant='outline-danger' onClick={handleClose}>Close</Button>
+        <Button className='btn-danger' onClick={handleClose}>Close</Button>
       </Modal.Footer>
     </Modal>
   );

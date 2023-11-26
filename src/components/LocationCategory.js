@@ -1,5 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 import { Button, Card, Col, Container, FloatingLabel, Form } from 'react-bootstrap';
 import AlertScript from './AlertScript';
 
@@ -20,9 +22,7 @@ function LocationCategory() {
 	}
   const submitLocationCategory = () =>{
     const url = localStorage.getItem("url") + "admin.php";
-    const jsonData = {
-      locationCategory : locationCategoryText
-    }
+    const jsonData = {locationCategory : locationCategoryText}
     const formData = new FormData();
     formData.append("json", JSON.stringify(jsonData));
     formData.append("operation", "addLocationCategory");
@@ -35,8 +35,10 @@ function LocationCategory() {
       if(res.data !== 0){
         getAlert("success", "Success!");
         setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+          setValidated(false);
+          setShowAlert(false);
+          setLocationCategoryText("");
+        }, 1500)
       }
     })
     .catch((err)=>{
