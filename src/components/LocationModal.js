@@ -1,12 +1,26 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Card, Container, Dropdown, ListGroup, Modal } from 'react-bootstrap';
+import { Button, Container, Dropdown, Modal, Table } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import UpdateLocation from './UpdateLocation';
 
 function LocationModal(props) {
   const { show, onHide } = props;
   const [locationCategoryTitle, setLocationCategoryTitle] = useState("Select Category");
   const [locationCategory, setLocationCategory] = useState([]);
   const [locationName, setLocationName] = useState([]);
+  const [locationId, setLocationId] = useState(0);
+  const [updateLocationIndex, setUpdateLocationIndex] = useState(null);
+
+  const handleUpdateClick = (index) => {
+    setUpdateLocationIndex(index);
+  };
+
+  const handleCancelClick = () => {
+    getLocation(locationId);
+    setUpdateLocationIndex(null);
+  };
 
   useEffect(() => {
     getLocationCategory();
@@ -29,12 +43,14 @@ function LocationModal(props) {
 
   const getLocation = (id) => {
     const url = localStorage.getItem("url") + "admin.php";
+    setLocationId(id);
     const jsonData = { categoryId: id };
     const formData = new FormData();
     formData.append("json", JSON.stringify(jsonData));
     formData.append("operation", "getLocations");
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
+        console.log("res ni getLocations", JSON.stringify(res.data));
         if (res.data !== 0) {
           setLocationName(res.data);
           setLocationCategoryTitle(res.data[0].locCateg_name);
@@ -50,11 +66,12 @@ function LocationModal(props) {
    
   function handleClose(){
     setLocationCategoryTitle("Select Category");
+    setUpdateLocationIndex(null)
     onHide();
   }
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose} backdrop="static" fullscreen>
       <Modal.Header closeButton>
         <Container className='text-center'>
           <Dropdown onSelect={(category) => getLocation(category)}>
@@ -70,25 +87,37 @@ function LocationModal(props) {
         </Container>
       </Modal.Header>
       <Modal.Body>
-        <Container>
-
-          {locationCategoryTitle === "Select Category" ? <></>:
-            <Card border='secondary' className='mt-3'>
-              <Card.Header className="green-header text-center"><h3>{locationCategoryTitle}</h3></Card.Header>
-              <Card.Body>
-                <ListGroup as="ol" numbered>
-                  {locationName.map((name, index) => (
-                    <ListGroup.Item key={index} as="li" className="border-dark">
-                      {name.location_name}
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              </Card.Body>
-            </Card>
-          }
-
-        </Container>
+        {locationCategoryTitle === "Select Category" ? <></>:
+          <>
+            <div className="d-flex align-items-center justify-content-center">
+              <h3 className='text-center'>{locationCategoryTitle}</h3>
+              <FontAwesomeIcon icon={faEdit} className="ms-2"/>
+            </div>
+            <Table bordered striped variant='success' size='sm' className='text-center'>
+              <thead>
+                <tr>
+                  <th>Location Name</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {locationName.map((name, index) => (
+                  <tr key={index}>
+                    <td>{updateLocationIndex === index ? <UpdateLocation locationName={name.location_name} onCancel={handleCancelClick} id={name.location_id}/> : name.location_name}</td>
+                    <td>
+                      <Button variant='outline-primary' className='mb-2' onClick={() => handleUpdateClick(index)}>Update</Button>
+                      <Button variant='outline-danger' className='ms-1 mb-2'>Delete</Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </>
+        }
       </Modal.Body>
+      <Modal.Footer>
+        <Button variant='outline-danger' onClick={handleClose}>Close</Button>
+      </Modal.Footer>
     </Modal>
   );
 }
