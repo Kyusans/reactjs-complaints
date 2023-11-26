@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Dropdown, Modal, Table } from 'react-bootstrap';
+import { Button, Container, Dropdown, Modal, Spinner, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import UpdateLocation from './UpdateLocation';
 
 function LocationModal(props) {
@@ -12,6 +12,7 @@ function LocationModal(props) {
   const [locationName, setLocationName] = useState([]);
   const [locationId, setLocationId] = useState(0);
   const [updateLocationIndex, setUpdateLocationIndex] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleUpdateClick = (index) => {
     setUpdateLocationIndex(index);
@@ -41,30 +42,61 @@ function LocationModal(props) {
       });
   };
 
-  const getLocation = (id) => {
-    const url = localStorage.getItem("url") + "admin.php";
-    setLocationId(id);
-    const jsonData = { categoryId: id };
-    const formData = new FormData();
-    formData.append("json", JSON.stringify(jsonData));
-    formData.append("operation", "getLocations");
-    axios({ url: url, data: formData, method: "post" })
-      .then((res) => {
-        console.log("res ni getLocations", JSON.stringify(res.data));
-        if (res.data !== 0) {
-          setLocationName(res.data);
-          setLocationCategoryTitle(res.data[0].locCateg_name);
-        }else{
-          setLocationCategoryTitle("No location found");
-          setLocationName([]);
-        }
-      })
-      .catch((err) => {
-        alert("There was an unexpected error: " + err);
-      });
+  const getLocation = async (id) => {
+    setIsLoading(true);
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      setLocationId(id);
+      const jsonData = { categoryId: id };
+      const formData = new FormData();
+      formData.append("json", JSON.stringify(jsonData));
+      formData.append("operation", "getLocations");
+
+      const response = await axios.post(url, formData);
+      console.log("res ni getLocations", JSON.stringify(response.data));
+
+      if (response.data !== 0) {
+        setLocationName(response.data);
+        setLocationCategoryTitle(response.data[0].locCateg_name);
+      } else {
+        setLocationCategoryTitle("No location found");
+        setLocationName([]);
+      }
+      setIsLoading(false)
+    } catch (err) {
+      alert("There was an unexpected error: " + err);
+    }
   };
-   
-  function handleClose(){
+
+  const deleteLocation = async (id) => {
+    setIsLoading(true);
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const jsonData = { locationId: id };
+      const formData = new FormData();
+      formData.append("json", JSON.stringify(jsonData));
+      formData.append("operation", "deleteLocation");
+  
+      const response = await axios.post(url, formData);
+      if (response.data !== 0) {
+        const updatedLocations = locationName.filter(location => location.location_id !== id);
+        setLocationName(updatedLocations);
+      }
+      setIsLoading(false);
+    } catch (err) {
+      alert("There was an unexpected error: " + err);
+    }
+  };
+  
+
+  const handleDelete = (name, id) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete " + name + "?");
+    if(isConfirmed){
+      deleteLocation(id)
+    }
+  }
+
+  function handleClose() {
     setLocationCategoryTitle("Select Category");
     setUpdateLocationIndex(null)
     onHide();
@@ -87,31 +119,41 @@ function LocationModal(props) {
         </Container>
       </Modal.Header>
       <Modal.Body>
-        {locationCategoryTitle === "Select Category" ? <></>:
+        {locationCategoryTitle === "Select Category" ? <></> :
           <>
-            <div className="d-flex align-items-center justify-content-center">
-              <h3 className='text-center'>{locationCategoryTitle}</h3>
-              <FontAwesomeIcon icon={faEdit} className="ms-2"/>
-            </div>
-            <Table bordered striped variant='success' size='sm' className='text-center'>
-              <thead>
-                <tr>
-                  <th>Location Name</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {locationName.map((name, index) => (
-                  <tr key={index}>
-                    <td>{updateLocationIndex === index ? <UpdateLocation locationName={name.location_name} onCancel={handleCancelClick} id={name.location_id}/> : name.location_name}</td>
-                    <td>
-                      <Button variant='outline-primary' className='mb-2' onClick={() => handleUpdateClick(index)}>Update</Button>
-                      <Button variant='outline-danger' className='ms-1 mb-2'>Delete</Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+            {isLoading ?
+              <Container className='text-center'>
+                <Spinner animation='border' variant='success'/>
+              </Container>
+              :
+              <div>
+                <div className="d-flex align-items-center justify-content-center">
+                  <h3 className='text-center'>{locationCategoryTitle}</h3>
+                  <FontAwesomeIcon icon={faEdit} className="ms-2" />
+                </div>
+                <Table bordered striped variant='success' size='sm' className='text-center'>
+                  <thead>
+                    <tr>
+                      <th>Location Name</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {locationName.map((name, index) => (
+                      <tr key={index}>
+                        <td>
+                          {updateLocationIndex === index ? <UpdateLocation locationName={name.location_name} onCancel={handleCancelClick} id={name.location_id} /> : name.location_name}
+                        </td>
+                        <td>
+                          <Button className='mb-2' onClick={() => handleUpdateClick(index)}><FontAwesomeIcon icon={faEdit} /> Edit</Button>
+                          <Button className='btn-danger ms-1 mb-2' onClick={() => handleDelete(name.location_name, name.location_id)}><FontAwesomeIcon icon={faTrash} /> Delete</Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            }
           </>
         }
       </Modal.Body>
