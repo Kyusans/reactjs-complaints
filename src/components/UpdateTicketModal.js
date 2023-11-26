@@ -153,7 +153,7 @@ function UpdateTicketModal(props) {
 
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} backdrop="static">
         <Modal.Header closeButton>Update Ticket Form</Modal.Header>
         <Modal.Body>
           <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />

@@ -185,7 +185,7 @@ function JobOrderModal(props) {
 
   return (
     <div>
-      <Modal show={show} onHide={handleHide} size='lg'>
+      <Modal show={show} onHide={handleHide} size='lg' backdrop="static">
         {!isLoading ?
           <>
             <Modal.Header closeButton><h3>Job order creation</h3></Modal.Header>

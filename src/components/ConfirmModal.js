@@ -47,7 +47,7 @@ export default function ConfirmModal(props) {
 
   return (
     <>
-      <Modal show={show} onHide={handleHide} centered>
+      <Modal show={show} onHide={handleHide} centered backdrop="static">
         <Modal.Header><h4>Confirmation</h4></Modal.Header>
         <Modal.Body>
           {!isJobComplete ? 

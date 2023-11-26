@@ -104,7 +104,7 @@ function LocationModal(props) {
   }
 
   return (
-    <Modal show={show} onHide={handleClose} backdrop="static" fullscreen>
+    <Modal show={show} onHide={handleClose} fullscreen>
       <Modal.Header closeButton>
         <Container className='text-center'>
           <Dropdown onSelect={(category) => getLocation(category)}>
