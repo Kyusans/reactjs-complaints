@@ -190,3 +190,16 @@
 .clickable {
     cursor: pointer;
 }
+
+.pending {
+    color: black;
+  }
+  
+  .ongoing {
+    color: rgb(195, 195, 0);
+  }
+  
+  .completed {
+    color: green;
+  }
+  

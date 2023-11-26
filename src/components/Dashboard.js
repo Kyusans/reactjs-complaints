@@ -1,5 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock, faPlay, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import ComplaintForm from './ComplaintForm';
@@ -12,19 +14,19 @@ function Dashboard() {
   const [tickets, setTickets] = useState([]);
   const [compId, setCompId] = useState(0);
   const [showComplaintModal, setShowComplaintModal] = useState(false);
-  const openComplaintModal = () => {setShowComplaintModal(true);}
+  const openComplaintModal = () => { setShowComplaintModal(true); }
   const closeComplaintModal = () => {
     getComplaints();
     setShowComplaintModal(false);
   }
 
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const openUpdateModal = () => {setShowUpdateModal(true)};
-  const closeUpdateModal = () => {setShowUpdateModal(false)};
+  const openUpdateModal = () => { setShowUpdateModal(true) };
+  const closeUpdateModal = () => { setShowUpdateModal(false) };
 
   const getComplaints = () => {
     const url = localStorage.getItem("url") + "users.php";
-    const jsonData = {userId: localStorage.getItem("userId")};
+    const jsonData = { userId: localStorage.getItem("userId") };
     const formData = new FormData();
     formData.append("operation", "getComplaints");
     formData.append("json", JSON.stringify(jsonData));
@@ -39,28 +41,28 @@ function Dashboard() {
       });
   };
 
-  const handleNavigate = (id, status) =>{
-    if(status === 1){
+  const handleNavigate = (id, status) => {
+    if (status === 1) {
       setCompId(id);
       openUpdateModal();
-    }else{
+    } else {
       navigateTo(`/job/details/${id}`);
     }
   }
 
   useEffect(() => {
-    if(localStorage.getItem("isLoggedIn") !== "1"){
+    if (localStorage.getItem("isLoggedIn") !== "1") {
       setTimeout(() => {
         navigateTo("/gsd");
       }, 1500);
-    }else{
+    } else {
       getComplaints();
     }
   }, [navigateTo])
-  
+
   return (
     <>
-      {localStorage.getItem("isLoggedIn") === "1" ? 
+      {localStorage.getItem("isLoggedIn") === "1" ?
         (
           <Container className="mt-3 scrollable-container">
             <Row className='mb-2 mt-2'>
@@ -80,22 +82,40 @@ function Dashboard() {
                 {Array.isArray(tickets) && tickets.length > 0 ? (
                   tickets.map((ticket, index) => (
                     <tr key={index} className='ticket-cell' onClick={() => handleNavigate(ticket.comp_id, ticket.comp_status)}>
-                        <td>{ticket.comp_subject}</td>
-                        <td>{ticket.comp_status === 1 ? "Pending" : ticket.comp_status === 2 ? "On-Going" : "Completed"}</td>
-                        <td className='ticket-date'>{formatDate(ticket.comp_date)}</td>
+                      <td>{ticket.comp_subject}</td>
+                      <td>
+                        {ticket.comp_status === 1 ? (
+                          <span>
+                            <FontAwesomeIcon icon={faClock} className="me-2 pending" />
+                            Pending
+                          </span>
+                        ) : ticket.comp_status === 2 ? (
+                          <span>
+                            <FontAwesomeIcon icon={faPlay} className="me-2 ongoing" />
+                            On-Going
+                          </span>
+                        ) : (
+                          <span>
+                            <FontAwesomeIcon icon={faCheck} className="me-2 completed" />
+                            Completed
+                          </span>
+                        )}
+                      </td>
+                      <td className='ticket-date'>{formatDate(ticket.comp_date)}</td>
                     </tr>
+
                   ))
                 ) : (
                   <tr>
-                    <td/>
+                    <td />
                     <td className="text-center ticket-description">No tickets found</td>
-                    <td/>
+                    <td />
                   </tr>
                 )}
               </tbody>
             </Table>
           </Container>
-        ):
+        ) :
         <h3 className='text-center'>You need to login first</h3>
       }
       <ComplaintForm show={showComplaintModal} onHide={closeComplaintModal} />

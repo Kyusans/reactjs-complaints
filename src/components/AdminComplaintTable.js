@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback} from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Button, Container, Pagination, Spinner, Table } from "react-bootstrap";
 import JobOrderModal from "./JobOrderModal";
 import "./css/site.css";
 import { formatDate } from "./JobDetails";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faClock, faPlay, faThList } from "@fortawesome/free-solid-svg-icons";
 
 function AdminComplaintTable() {
   const navigateTo = useNavigate();
@@ -38,7 +40,7 @@ function AdminComplaintTable() {
       const res = await axios({ url: url, data: formData, method: "post" });
       if (res.data !== 0) {
         setTickets(res.data);
-      }else{
+      } else {
         //no ticket found
       }
       setIsLoading(false);
@@ -57,7 +59,7 @@ function AdminComplaintTable() {
     setCurrentPage(currentPage + 1);
   };
   const handlePreviousPage = () => {
-    setCurrentPage(currentPage -1);
+    setCurrentPage(currentPage - 1);
   }
   const handleFirstPage = () => {
     setCurrentPage(1);
@@ -67,31 +69,31 @@ function AdminComplaintTable() {
     setCurrentPage(lastPage);
   };
 
-  const getTicketsByStatus = useCallback(async (status) =>{
+  const getTicketsByStatus = useCallback(async (status) => {
     handleFirstPage();
     setIsLoading(true);
     setPageStatus(status);
-    if(status === 0){
+    if (status === 0) {
       getAllTickets();
     }
     try {
       setTickets([]);
       const url = localStorage.getItem("url") + "admin.php";
-      const jsonData = {compStatus: status};
+      const jsonData = { compStatus: status };
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getTicketsByStatus");
-      const res = await axios({url: url, data: formData, method: "post"});
-      if(res.data !== 0){
+      const res = await axios({ url: url, data: formData, method: "post" });
+      if (res.data !== 0) {
         setTickets(res.data);
-      }else{
+      } else {
         // no tickets found
       }
       setIsLoading(false);
     } catch (error) {
       alert("There was an error: " + error.message);
     }
-  },[getAllTickets])
+  }, [getAllTickets])
 
   useEffect(() => {
     getAllTickets();
@@ -99,18 +101,19 @@ function AdminComplaintTable() {
 
   return (
     <>
+      <div className="d-flex flex-wrap">
+        <Button onClick={() => getTicketsByStatus(0)} className="mb-2"><FontAwesomeIcon icon={faThList} className="me-2" />All Ticket</Button>
+        <Button onClick={() => getTicketsByStatus(1)} className="btn-dark mx-1 mb-2"><FontAwesomeIcon icon={faClock} className="me-2" />Pending</Button>
+        <Button onClick={() => getTicketsByStatus(2)} className="btn-warning mb-2"><FontAwesomeIcon icon={faPlay} className="me-2" />On-Going</Button>
+        <Button onClick={() => getTicketsByStatus(3)} className="btn-success mx-1 mb-2"><FontAwesomeIcon icon={faCheck} className="me-2" />Completed</Button>
+      </div>
       {isLoading ?
         <Container className='text-center mt-3'>
           <Spinner animation='border' variant='success' />
-        </Container> 
+        </Container>
         :
         <Container className='scrollable-container'>
-          <div className="d-flex flex-wrap">
-            <Button onClick={() => getTicketsByStatus(0)} className="mb-2">All Ticket</Button>
-            <Button onClick={() => getTicketsByStatus(1)} className="btn-dark mx-1 mb-2">Pending</Button>
-            <Button onClick={() => getTicketsByStatus(2)} className="btn-warning mb-2">On-Going</Button>
-            <Button onClick={() => getTicketsByStatus(3)} className="btn-success mx-1 mb-2">Completed</Button>
-          </div>
+
           <Table striped bordered hover responsive variant="success" className="border-1">
             <thead>
               <tr>
@@ -127,11 +130,24 @@ function AdminComplaintTable() {
                     className="ticket-cell"
                     onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}
                   >
-                    <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>{ticket.comp_subject}</td>
-                    <td className={`${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""} ${ticket.joStatus_name === "Completed" ? "text-success" : ticket.joStatus_name === "On-Going" ? "text-warning" : ""} text-outline`}>
-                      {ticket.joStatus_name}
+                    <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>
+                      {ticket.comp_subject}
                     </td>
-                    <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>{formatDate(ticket.comp_date)}</td>
+                    <td
+                      className="ticket-status"
+                    >
+                      {ticket.joStatus_name === "Pending" ? (
+                        <span><FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending</span>
+                      ) : ticket.joStatus_name === "On-Going" ? (
+                        <span><FontAwesomeIcon icon={faPlay} className="me-2 text-warning"/>On-Going</span>
+                      ) : (
+                        <span><FontAwesomeIcon icon={faCheck} className="me-2 text-success"/>Completed</span>
+                      )}
+                    </td>
+
+                    <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>
+                      {formatDate(ticket.comp_date)}
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -145,8 +161,8 @@ function AdminComplaintTable() {
           {showPagination && (
             <div className="d-flex justify-content-end mt-2">
               <Pagination>
-                <Pagination.First onClick={handleFirstPage}/>
-                <Pagination.Prev onClick={handlePreviousPage}/>
+                <Pagination.First onClick={handleFirstPage} />
+                <Pagination.Prev onClick={handlePreviousPage} />
                 {Array.from({ length: Math.ceil(tickets.length / ticketsPerPage) }, (_, index) => (
                   <Pagination.Item
                     key={index}
@@ -157,7 +173,7 @@ function AdminComplaintTable() {
                   </Pagination.Item>
                 ))}
                 <Pagination.Next onClick={handleNextPage} />
-                <Pagination.Last onClick={handleLastPage}/>
+                <Pagination.Last onClick={handleLastPage} />
               </Pagination>
             </div>
           )}
