@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSync } from '@fortawesome/free-solid-svg-icons';
+import { faCheck  } from '@fortawesome/free-solid-svg-icons';
 import { Button, Card, Col, Container, FloatingLabel, Form } from 'react-bootstrap';
 import AlertScript from './AlertScript';
 
@@ -77,7 +77,9 @@ function LocationCategory() {
                     </FloatingLabel>
                   </Form.Group>
                   <Container className='mt-3'>
-                    <Button type="submit" variant='outline-success'>Submit</Button>
+                    <Button type="submit" variant='outline-success'>
+                      <FontAwesomeIcon icon={faCheck} /> Submit
+                    </Button>
                   </Container>
                 </Form>
               </Card.Body>

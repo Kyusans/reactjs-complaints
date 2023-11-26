@@ -4,7 +4,7 @@ import { Card, Form, FloatingLabel, Container, Button, Spinner } from 'react-boo
 import AlertScript from './AlertScript';
 import LocationModal from './LocationModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSync } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faEye, faSync } from '@fortawesome/free-solid-svg-icons';
 
 function Location() {
   const [location, setLocation] = useState("");
@@ -142,8 +142,12 @@ function Location() {
                     </FloatingLabel>
                   </Form.Group>
                   <Container className="mt-3">
-                    <Button type="submit" variant="outline-success">Submit</Button>{" "}
-                    <Button variant='outline-secondary' onClick={openLocationModal}>See all location</Button>
+                   <Button type="submit" variant='outline-success'>
+                      <FontAwesomeIcon icon={faCheck} /> Submit
+                    </Button>
+                    <Button className='ms-1' variant='outline-secondary' onClick={openLocationModal}>
+                     <FontAwesomeIcon icon={faEye}/> See all location
+                    </Button>
                   </Container>
                 </Form>
               </div>
