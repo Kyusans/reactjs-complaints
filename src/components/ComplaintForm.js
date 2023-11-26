@@ -4,7 +4,7 @@ import { Row, Col, FloatingLabel, Form, Modal, Button } from 'react-bootstrap'
 import AlertScript from './AlertScript';
 
 function ComplaintForm(props) {
-  const {show, onHide} = props;
+  const { show, onHide } = props;
   const [locationId, setLocationId] = useState("");
   const [locationCategoryId, setLocationCategoryId] = useState("");
   const [subject, setSubject] = useState("");
@@ -13,15 +13,15 @@ function ComplaintForm(props) {
   const [location, setLocation] = useState([]);
   const [validated, setValidated] = useState(false);
   //for alert
-	const [showAlert, setShowAlert] = useState(false);
-	const [alertVariant, setAlertVariant] = useState("");
-	const [alertMessage, setAlertMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
 
-	function getAlert(variantAlert, messageAlert){
-		setShowAlert(true);
-		setAlertVariant(variantAlert);
-		setAlertMessage(messageAlert);
-	}
+  function getAlert(variantAlert, messageAlert) {
+    setShowAlert(true);
+    setAlertVariant(variantAlert);
+    setAlertMessage(messageAlert);
+  }
 
   const addComplaint = () => {
     const url = localStorage.getItem("url") + "users.php";
@@ -37,7 +37,7 @@ function ComplaintForm(props) {
     formData.append("json", JSON.stringify(jsonData));
     formData.append("operation", "addComplaint");
     axios({ url: url, data: formData, method: "post" })
-     .then((res) => {
+      .then((res) => {
         if (res.data !== 0) {
           getAlert("success", "Success");
           setTimeout(() => {
@@ -45,7 +45,7 @@ function ComplaintForm(props) {
           }, 1500);
         }
       })
-     .catch((err) => {
+      .catch((err) => {
         getAlert("There was an unexpected error: " + err);
       });
   }
@@ -66,7 +66,7 @@ function ComplaintForm(props) {
       });
   };
 
-  function handleClose(){
+  function handleClose() {
     setValidated(false);
     setSubject("");
     setLocationId("");
@@ -75,17 +75,17 @@ function ComplaintForm(props) {
     setShowAlert(false);
     onHide();
   }
-	const formValidation = (e) =>{
-		const form = e.currentTarget;
+  const formValidation = (e) => {
+    const form = e.currentTarget;
     e.preventDefault();
     e.stopPropagation();
-		if(form.checkValidity() === true){
+    if (form.checkValidity() === true) {
       addComplaint();
-		}
-		setValidated(true);
-	}
+    }
+    setValidated(true);
+  }
   useEffect(() => {
-    if(show){
+    if (show) {
       const getLocationCategory = async () => {
         try {
           const url = localStorage.getItem("url") + "admin.php";
@@ -104,13 +104,13 @@ function ComplaintForm(props) {
         }
       };
       getLocationCategory();
-      if(locationCategoryId !== ""){
+      if (locationCategoryId !== "") {
         setLocationId("");
         getLocation(locationCategoryId);
       }
     }
   }, [locationCategoryId, show])
-  
+
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -118,29 +118,10 @@ function ComplaintForm(props) {
         <Modal.Body>
           <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
           <Form noValidate validated={validated} onSubmit={formValidation}>
-            <Form.Group className='mb-3'>
-              <FloatingLabel label="Subject">
-                <Form.Control type='text' value={subject} onChange={(e) => setSubject(e.target.value)} placeholder='Subject' autoFocus required/>
-                <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
-              </FloatingLabel>
-            </Form.Group>
-            <Form.Group className='mb-3'>
-              <FloatingLabel label="Description">
-                <Form.Control
-                  value={description} 
-                  onChange={(e) => setDescription(e.target.value)} 
-                  placeholder='Description' 
-                  style={{ height: '100px' }}
-                  as='textarea'
-                  required
-                />
-                <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
-              </FloatingLabel>
-            </Form.Group>
             <Row className='g2'>
               <Form.Group as={Col} className='mb-4'>
                 <FloatingLabel label="Location Category">
-                  <Form.Select value={locationCategoryId} onChange={e=>setLocationCategoryId(e.target.value)} required>
+                  <Form.Select value={locationCategoryId} onChange={e => setLocationCategoryId(e.target.value)} required>
                     <option disabled={locationCategoryId !== "" ? true : false} value="">Open this select menu</option>
                     {locationCategory.map((locationCateg, index) => (
                       <option key={index} value={locationCateg.locCateg_id}>{locationCateg.locCateg_name}</option>
@@ -165,6 +146,25 @@ function ComplaintForm(props) {
                 )}
               </Form.Group>
             </Row>
+            <Form.Group className='mb-3'>
+              <FloatingLabel label="Subject">
+                <Form.Control type='text' value={subject} onChange={(e) => setSubject(e.target.value)} placeholder='Subject' autoFocus required />
+                <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
+              </FloatingLabel>
+            </Form.Group>
+            <Form.Group className='mb-3'>
+              <FloatingLabel label="Description">
+                <Form.Control
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder='Description'
+                  style={{ height: '100px' }}
+                  as='textarea'
+                  required
+                />
+                <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
+              </FloatingLabel>
+            </Form.Group>
             <Modal.Footer>
               <Button variant='outline-danger' onClick={handleClose}>Close</Button>
               <Button variant='outline-success' type='submit'>Submit</Button>
