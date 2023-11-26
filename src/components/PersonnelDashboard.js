@@ -6,12 +6,24 @@ import { useNavigate } from 'react-router-dom';
 import { formatDate } from './JobDetails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRight, faArrowUp, faCheck, faPlay, faThList } from '@fortawesome/free-solid-svg-icons';
+import AlertScript from './AlertScript';
 
 export default function PersonnelDashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnGoing, setIsOnGoing] = useState(true);
   const [ticket, setTicket] = useState([]);
   const navigateTo = useNavigate();
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+
+
+  function getAlert(variantAlert, messageAlert) {
+    setShowAlert(true);
+    setAlertVariant(variantAlert);
+    setAlertMessage(messageAlert);
+  }
 
   const getJobTicket = async () => {
     try {
@@ -53,7 +65,6 @@ export default function PersonnelDashboard() {
     }
   }
 
-
   const getTicketsByStatus = useCallback(async (status) => {
     setIsLoading(true);
     if (status === 2) {
@@ -77,7 +88,7 @@ export default function PersonnelDashboard() {
       if (res.data !== 0) {
         setTicket(res.data);
       } else {
-        // no tickets found
+        getAlert("danger", "No ticket found");
       }
       setIsLoading(false);
     } catch (error) {
@@ -104,7 +115,7 @@ export default function PersonnelDashboard() {
 
           <Dropdown.Menu>
             <Dropdown.Item onClick={() => getTicketsByStatus(0)}><FontAwesomeIcon icon={faThList} className="me-2" />All Ticket</Dropdown.Item>
-            <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning"><FontAwesomeIcon icon={faPlay} className="me-2 text-warning"/>On-going</Dropdown.Item>
+            <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning"><FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-going</Dropdown.Item>
             <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success"><FontAwesomeIcon icon={faCheck} className="me-2" />Completed</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
@@ -129,6 +140,7 @@ export default function PersonnelDashboard() {
         :
         <Container className='scrollable-container'>
           <div>
+            <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
             <Table bordered responsive striped hover variant='success' className='border-1'>
               <thead>
                 <tr>
