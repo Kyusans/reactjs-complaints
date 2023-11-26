@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Col, Container, FloatingLabel, Form, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
 import "./css/site.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 function JobOrderModal(props) {
   const { show, onHide, ticketId } = props;
@@ -293,8 +295,12 @@ function JobOrderModal(props) {
                 </Row>
               </Modal.Body>
               <Modal.Footer>
-                <Button variant='outline-secondary' onClick={() => handleHide()}>Close</Button>
-                <Button variant='outline-success' onClick={() => submitJobOrder()}>Submit</Button>
+                <Button variant='outline-secondary' onClick={() => handleHide()}>
+                  <FontAwesomeIcon icon={faTimes} /> Close
+                </Button>
+                <Button variant='outline-success' onClick={() => submitJobOrder()}>
+                  <FontAwesomeIcon icon={faCheck} /> Submit
+                </Button>
               </Modal.Footer>
             </Form>
           </>

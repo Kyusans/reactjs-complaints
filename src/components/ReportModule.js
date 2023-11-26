@@ -4,6 +4,8 @@ import { usePDF } from "react-to-pdf";
 import * as XLSX from 'xlsx';
 import axios from "axios";
 import AlertScript from "./AlertScript";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileExcel, faFilePdf, faFilter } from "@fortawesome/free-solid-svg-icons";
 
 function ReportModule() {
   const [tickets, setTickets] = useState([]);
@@ -12,17 +14,17 @@ function ReportModule() {
   const [endDate, setEndDate] = useState("");
 
   //for alert
-	const [showAlert, setShowAlert] = useState(false);
-	const [alertVariant, setAlertVariant] = useState("");
-	const [alertMessage, setAlertMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
 
-	function getAlert(variantAlert, messageAlert){
-		setShowAlert(true);
-		setAlertVariant(variantAlert);
-		setAlertMessage(messageAlert);
-	}
+  function getAlert(variantAlert, messageAlert) {
+    setShowAlert(true);
+    setAlertVariant(variantAlert);
+    setAlertMessage(messageAlert);
+  }
 
-  const formatDates = (inputDate) =>{
+  const formatDates = (inputDate) => {
     const date = new Date(inputDate);
     const monthNames = [
       "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -33,12 +35,12 @@ function ReportModule() {
     return `${month} ${day}`;
   }
 
-  const getTicketsByDate =async () => {
+  const getTicketsByDate = async () => {
     setTickets([]);
     setShowAlert(false);
     try {
       const url = localStorage.getItem("url") + "admin.php";
-      const jsonData = {startDate : startDate, endDate : endDate}
+      const jsonData = { startDate: startDate, endDate: endDate }
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData))
       formData.append("operation", "getTicketsByDate");
@@ -46,12 +48,12 @@ function ReportModule() {
       console.log("res: ni getTicketsByDate", JSON.stringify(res.data));
       if (res.data !== 0) {
         setTickets(res.data);
-      }else{
+      } else {
         getAlert("danger", "No tickets found");
       }
       setIsLoading(false);
     } catch (err) {
-      getAlert("danger","There was an unexpected error: " + err);
+      getAlert("danger", "There was an unexpected error: " + err);
     }
   };
   const { toPDF, targetRef } = usePDF({ filename: 'page.pdf' });
@@ -70,16 +72,20 @@ function ReportModule() {
       {isLoading ?
         <Container className='text-center mt-3'>
           <Spinner animation='border' variant='success' />
-        </Container> 
-      :
-        <> 
+        </Container>
+        :
+        <>
           <Card>
             <Card.Header>
-              <Button onClick={() => toPDF()}>Get PDF</Button>
-              <Button onClick={exportToExcel} className="ms-1">Export to Excel</Button>
+              <Button variant="outline-primary" onClick={() => toPDF()}>
+                <FontAwesomeIcon icon={faFilePdf} /> Get PDF
+              </Button>
+              <Button variant="outline-success" onClick={exportToExcel} className="ms-1">
+                <FontAwesomeIcon icon={faFileExcel} /> Export to Excel
+              </Button>
             </Card.Header>
             <Card.Body>
-              
+
               <Container className="mt-3 mb-2">
                 <Form>
                   <Row className='d-flex align-items-start'>
@@ -94,7 +100,9 @@ function ReportModule() {
                       </FloatingLabel>
                     </Col>
                     <Col xs={12} md={4} className='d-flex align-items-end'>
-                      <Button onClick={getTicketsByDate} className='button-m button-large'>Filter</Button>
+                      <Button variant="outline-primary" onClick={getTicketsByDate} className='button-m button-large'>
+                        <FontAwesomeIcon icon={faFilter} /> Filter
+                      </Button>
                     </Col>
                   </Row>
                 </Form>
