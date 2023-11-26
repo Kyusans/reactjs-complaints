@@ -4,14 +4,17 @@ import { Button, Container, Dropdown, Modal, Spinner, Table } from 'react-bootst
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import UpdateLocation from './UpdateLocation';
+import UpdateLocationCategory from './UpdateLocationCategory';
 
 function LocationModal(props) {
   const { show, onHide } = props;
   const [locationCategoryTitle, setLocationCategoryTitle] = useState("Select Category");
+  const [locationCategoryId, setLocationCategoryId] = useState(0);
   const [locationCategory, setLocationCategory] = useState([]);
   const [locationName, setLocationName] = useState([]);
   const [locationId, setLocationId] = useState(0);
   const [updateLocationIndex, setUpdateLocationIndex] = useState(null);
+  const [updateLocationCateg, setUpdateLocationCateg] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleUpdateClick = (index) => {
@@ -21,6 +24,7 @@ function LocationModal(props) {
   const handleCancelClick = () => {
     getLocation(locationId);
     setUpdateLocationIndex(null);
+    setUpdateLocationCateg(false);
   };
 
   useEffect(() => {
@@ -51,13 +55,11 @@ function LocationModal(props) {
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getLocations");
-
       const response = await axios.post(url, formData);
-      console.log("res ni getLocations", JSON.stringify(response.data));
-
       if (response.data !== 0) {
         setLocationName(response.data);
         setLocationCategoryTitle(response.data[0].locCateg_name);
+        setLocationCategoryId(response.data[0].locCateg_id);
       } else {
         setLocationCategoryTitle("No location found");
         setLocationName([]);
@@ -76,7 +78,7 @@ function LocationModal(props) {
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "deleteLocation");
-  
+
       const response = await axios.post(url, formData);
       if (response.data !== 0) {
         const updatedLocations = locationName.filter(location => location.location_id !== id);
@@ -87,11 +89,10 @@ function LocationModal(props) {
       alert("There was an unexpected error: " + err);
     }
   };
-  
 
   const handleDelete = (name, id) => {
     const isConfirmed = window.confirm("Are you sure you want to delete " + name + "?");
-    if(isConfirmed){
+    if (isConfirmed) {
       deleteLocation(id)
     }
   }
@@ -123,14 +124,18 @@ function LocationModal(props) {
           <>
             {isLoading ?
               <Container className='text-center'>
-                <Spinner animation='border' variant='success'/>
+                <Spinner animation='border' variant='success' />
               </Container>
               :
               <div>
-                <div className="d-flex align-items-center justify-content-center">
-                  <h3 className='text-center'>{locationCategoryTitle}</h3>
-                  <FontAwesomeIcon icon={faEdit} className="ms-2" />
-                </div>
+                {updateLocationCateg ? 
+                  <UpdateLocationCategory locationCategName={locationCategoryTitle} onCancel={handleCancelClick} id={locationCategoryId} /> 
+                :
+                  <div className="d-flex align-items-center justify-content-center">
+                    <h3 className='text-center'>{locationCategoryTitle}</h3>
+                    <FontAwesomeIcon icon={faEdit} className="ms-2 clickable" onClick={() => setUpdateLocationCateg(true)}/>
+                  </div>
+                }
                 <Table bordered striped variant='success' size='sm' className='text-center'>
                   <thead>
                     <tr>
@@ -142,11 +147,16 @@ function LocationModal(props) {
                     {locationName.map((name, index) => (
                       <tr key={index}>
                         <td>
-                          {updateLocationIndex === index ? <UpdateLocation locationName={name.location_name} onCancel={handleCancelClick} id={name.location_id} /> : name.location_name}
+                          {updateLocationIndex === index ?
+                            <UpdateLocation locationName={name.location_name} onCancel={handleCancelClick} id={name.location_id} />
+                            : name.location_name
+                          }
                         </td>
                         <td>
                           <Button className='mb-2' onClick={() => handleUpdateClick(index)}><FontAwesomeIcon icon={faEdit} /> Edit</Button>
-                          <Button className='btn-danger ms-1 mb-2' onClick={() => handleDelete(name.location_name, name.location_id)}><FontAwesomeIcon icon={faTrash} /> Delete</Button>
+                          <Button className='btn-danger ms-1 mb-2' onClick={() => handleDelete(name.location_name, name.location_id)}>
+                            <FontAwesomeIcon icon={faTrash} /> Delete
+                          </Button>
                         </td>
                       </tr>
                     ))}

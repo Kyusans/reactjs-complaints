@@ -186,3 +186,7 @@
     background-color: #1a1a1d !important;
     color: white !important; 
   }
+
+.clickable {
+    cursor: pointer;
+}
