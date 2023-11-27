@@ -11,7 +11,7 @@ function AdminAddLocation() {
           <Col className="mt-3">
             <LocationCategory />
           </Col>
-          <Col className="mt-3">
+          <Col>
             <Location />
           </Col>
         </Row>

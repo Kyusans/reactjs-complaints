@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import "./css/site.css";
-import { Button, Card, Container, FloatingLabel, Form } from 'react-bootstrap';
+import { Button, Card, Container, FloatingLabel, Form, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AlertScript from './AlertScript';
@@ -13,13 +12,13 @@ function ChangePassword() {
   const [validated, setValidated] = useState(false);
   const [showInvalidCurrent, setShowInvalidCurrent] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigateTo = useNavigate();
-  //for alert
+  // for alert
   const [showAlert, setShowAlert] = useState(false);
   const [alertVariant, setAlertVariant] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-
 
   function getAlert(variantAlert, messageAlert) {
     setShowAlert(true);
@@ -45,6 +44,7 @@ function ChangePassword() {
   }, []);
 
   const changePassword = () => {
+    setIsLoading(true);
     const userId = localStorage.getItem("facultyLoggedIn") === "true" ? localStorage.getItem("facCode") : localStorage.getItem("userId");
     const url = localStorage.getItem("url") + "users.php";
     const jsonData = { userId: userId, password: newPassword };
@@ -65,22 +65,31 @@ function ChangePassword() {
       })
       .catch((err) => {
         getAlert("danger", "There was an error: " + err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-  }
+  };
 
   const handleSubmit = (e) => {
-    setShowInvalidCurrent(false)
+    setShowInvalidCurrent(false);
     setPasswordsMatch(true);
     e.preventDefault();
     e.stopPropagation();
     const form = e.currentTarget;
+
+    // Trim leading and trailing spaces from current password
+    const trimmedCurrentPassword = currentPassword.trim();
+    setCurrentPassword(trimmedCurrentPassword);
+
     getCurrentPassword();
-    if (newPassword !== confirmPassword && currentPass !== currentPassword) {
+
+    if (newPassword !== confirmPassword && currentPass !== trimmedCurrentPassword) {
       setCurrentPassword("");
       setShowInvalidCurrent(true);
       setConfirmPassword("");
       setPasswordsMatch(false);
-    } else if (currentPass !== currentPassword) {
+    } else if (currentPass !== trimmedCurrentPassword) {
       setCurrentPassword("");
       setShowInvalidCurrent(true);
     } else if (newPassword !== confirmPassword) {
@@ -91,11 +100,11 @@ function ChangePassword() {
     }
 
     setValidated(true);
-  }
+  };
 
   useEffect(() => {
     getCurrentPassword();
-  }, [getCurrentPassword])
+  }, [getCurrentPassword]);
 
   return (
     <Container className='centered'>
@@ -111,7 +120,7 @@ function ChangePassword() {
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder='Current Password'
                   required
-                  autocomplete="none"
+                  autoComplete="none"
                 />
               </FloatingLabel>
               {showInvalidCurrent && <Form.Text className='text-danger'>Invalid current password</Form.Text>}
@@ -125,7 +134,7 @@ function ChangePassword() {
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder='New Password'
                   required
-                  autocomplete="none"
+                  autoComplete="none"
                 />
               </FloatingLabel>
             </Form.Group>
@@ -138,20 +147,22 @@ function ChangePassword() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder='Confirm Password'
                   required
-                  autocomplete="none"
+                  autoComplete="none"
                 />
               </FloatingLabel>
               {!passwordsMatch && <Form.Text className='text-danger'>Passwords do not match</Form.Text>}
             </Form.Group>
 
             <Container className='text-center'>
-              <Button type="submit" className='button-large btn-lg' variant='outline-success'>Change Password</Button>
+              <Button type="submit" className='button-large btn-lg' variant='outline-success' disabled={isLoading}>
+                {isLoading ? <Spinner animation="border" size="sm" /> : 'Change Password'}
+              </Button>
             </Container>
           </Form>
         </Card.Body>
       </Card>
     </Container>
-  )
+  );
 }
 
 export default ChangePassword;

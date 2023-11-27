@@ -55,7 +55,7 @@ function JobOrderModal(props) {
     const userId = localStorage.getItem("userId");
     const master = {
       ticketNumber: ticketNumber, jobCreatedBy: userId, subject: subject, description: description,
-      locationCategory: locationCategory,location: location, priority: jobPriority, additionalComment: additionalComment === "" ? null : additionalComment,
+      locationCategory: locationCategory, location: location, priority: jobPriority, additionalComment: additionalComment === "" ? null : additionalComment,
     };
     const detail = { jobPersonnelId: jobPersonnelId };
     const jsonData = { master: master, detail: detail };
@@ -63,11 +63,11 @@ function JobOrderModal(props) {
       setIsLoading(false);
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("operation", "submitJobOrder");
     formData.append("json", JSON.stringify(jsonData));
-  
+
     try {
       const res = await axios.post(url, formData);
       console.log("res ni sumbit: " + JSON.stringify(res.data));
@@ -82,7 +82,7 @@ function JobOrderModal(props) {
       getAlert("danger", "There was an unexpected error: " + err);
     }
   };
-  
+
 
   const addJobPersonnel = (e) => {
     const newPersonnelValue = e.target.value;
@@ -188,127 +188,125 @@ function JobOrderModal(props) {
   return (
     <div>
       <Modal show={show} onHide={handleHide} size='lg' backdrop="static">
-        {!isLoading ?
-          <>
-            <Modal.Header closeButton><h3>Job order creation</h3></Modal.Header>
-            <Form>
-              <Modal.Body>
-                {showAlert && (
-                  <Alert variant={alertVariant}>
-                    {alertMessage}
-                  </Alert>
-                )}
-                <Row className='mb-3'>
-                  <Col>
-                    <FloatingLabel label="Select Priority">
-                      <Form.Select
-                        value={jobPriority}
-                        onChange={(e) => setJobPriority(e.target.value)}
-                        required
-                        isInvalid={priorityValidation === "error"}
-                      >
-                        <option value={""}>Open this select menu</option>
-                        {priorities.map((priority, index) => (
-                          <option key={index} value={priority.priority_id}>{priority.priority_name}</option>
-                        ))}
-                      </Form.Select>
-                      <Form.Control.Feedback type="invalid">Please select a priority.</Form.Control.Feedback>
-                    </FloatingLabel>
-                  </Col>
-                  <Col>
-                    <FloatingLabel label="Select Personnel">
-                      <Form.Select
-                        onChange={addJobPersonnel}
-                        required
-                        isInvalid={personnelValidation === "error"}
-                      >
-                        <option value={""}>Open this select menu</option>
-                        {personnel.map((person, index) => (
-                          <option key={index} value={`${person.user_id},${person.user_full_name}`}>{person.user_full_name}</option>
-                        ))}
-                      </Form.Select>
-                      <Form.Control.Feedback type="invalid">Please select at least one personnel.</Form.Control.Feedback>
-                    </FloatingLabel>
-                  </Col>
-                </Row>
-
-                <Row className='mb-3'>
-                  <Col>
-                    Submitted by:
-                    <Form.Control type="text" placeholder={facultyName} readOnly />
-                  </Col>
-                </Row>
-
-                <Row className='mb-3'>
-                  <Col>
-                    Subject:
-                    <Form.Control type="text" placeholder={subject} readOnly />
-                  </Col>
-                </Row>
-
-                <Row className='mb-3'>
-                  <Col>
-                    Location:
-                    <Form.Control type="text" placeholder={location} readOnly />
-                  </Col>
-                </Row>
-
-                <Row className='mb-3'>
-                  <Container>
-                    <FloatingLabel label="Description">
-                      <Form.Control
-                        value={description}
-                        placeholder='Description'
-                        style={{ height: '150px' }}
-                        as='textarea'
-                        readOnly
-                      />
-                    </FloatingLabel>
-                  </Container>
-                </Row>
-
-                <Row>
-                  <Container>
-                    <FloatingLabel label="Additional Comment (optional)">
-                      <Form.Control
-                        value={additionalComment}
-                        onChange={(e) => setAdditionalComment(e.target.value)}
-                        placeholder='Additional Comment (optional)'
-                        style={{ height: '75px' }}
-                        as='textarea'
-                      />
-                    </FloatingLabel>
-                  </Container>
-                </Row>
-                
-                <Row className="mt-3">
-                  <Col>
-                    <ListGroup>
-                      {jobPersonnel.map((personnel, index) => (
-                        <ListGroup.Item key={index} variant="success" className="d-flex justify-content-between align-items-center">
-                          {personnel}
-                          <span className="green-x" onClick={() => handleRemovePersonnel(index)}>x</span>
-                        </ListGroup.Item>
+        <>
+          <Modal.Header closeButton><h3>Job order creation</h3></Modal.Header>
+          <Form>
+            <Modal.Body>
+              <Row className='mb-3'>
+                <Col>
+                  <FloatingLabel label="Select Priority">
+                    <Form.Select
+                      value={jobPriority}
+                      onChange={(e) => setJobPriority(e.target.value)}
+                      required
+                      isInvalid={priorityValidation === "error"}
+                    >
+                      <option value={""}>Open this select menu</option>
+                      {priorities.map((priority, index) => (
+                        <option key={index} value={priority.priority_id}>{priority.priority_name}</option>
                       ))}
-                    </ListGroup>
-                  </Col>
-                </Row>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant='outline-secondary' onClick={() => handleHide()}>
-                  <FontAwesomeIcon icon={faTimes} /> Close
-                </Button>
-                <Button variant='outline-success' onClick={() => submitJobOrder()}>
-                  <FontAwesomeIcon icon={faCheck} /> Submit
-                </Button>
-              </Modal.Footer>
-            </Form>
-          </>
-          :
-          <Container className='text-center mt-5 mb-5'>
-            <Spinner animation="border" variant='success' />
-          </Container>
-        }
+                    </Form.Select>
+                    <Form.Control.Feedback type="invalid">Please select a priority.</Form.Control.Feedback>
+                  </FloatingLabel>
+                </Col>
+                <Col>
+                  <FloatingLabel label="Select Personnel">
+                    <Form.Select
+                      onChange={addJobPersonnel}
+                      required
+                      isInvalid={personnelValidation === "error"}
+                    >
+                      <option value={""}>Open this select menu</option>
+                      {personnel.map((person, index) => (
+                        <option key={index} value={`${person.user_id},${person.user_full_name}`}>{person.user_full_name}</option>
+                      ))}
+                    </Form.Select>
+                    <Form.Control.Feedback type="invalid">Please select at least one personnel.</Form.Control.Feedback>
+                  </FloatingLabel>
+                </Col>
+              </Row>
+
+              <Row className='mb-3'>
+                <Col>
+                  Submitted by:
+                  <Form.Control type="text" placeholder={facultyName} readOnly />
+                </Col>
+              </Row>
+
+              <Row className='mb-3'>
+                <Col>
+                  Subject:
+                  <Form.Control type="text" placeholder={subject} readOnly />
+                </Col>
+              </Row>
+
+              <Row className='mb-3'>
+                <Col>
+                  Location:
+                  <Form.Control type="text" placeholder={location} readOnly />
+                </Col>
+              </Row>
+
+              <Row className='mb-3'>
+                <Container>
+                  <FloatingLabel label="Description">
+                    <Form.Control
+                      value={description}
+                      placeholder='Description'
+                      style={{ height: '150px' }}
+                      as='textarea'
+                      readOnly
+                    />
+                  </FloatingLabel>
+                </Container>
+              </Row>
+
+              <Row>
+                <Container>
+                  <FloatingLabel label="Additional Comment (optional)">
+                    <Form.Control
+                      value={additionalComment}
+                      onChange={(e) => setAdditionalComment(e.target.value)}
+                      placeholder='Additional Comment (optional)'
+                      style={{ height: '75px' }}
+                      as='textarea'
+                    />
+                  </FloatingLabel>
+                </Container>
+              </Row>
+
+              <Row className="mt-3 mb-3">
+                <Col>
+                  <ListGroup>
+                    {jobPersonnel.map((personnel, index) => (
+                      <ListGroup.Item key={index} variant="dark" className="d-flex justify-content-between align-items-center">
+                        {personnel}
+                        <span className="green-x" onClick={() => handleRemovePersonnel(index)}>x</span>
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  {showAlert && (
+                    <Alert variant={alertVariant}>
+                      {alertMessage}
+                    </Alert>
+                  )}
+                </Col>
+              </Row>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant='outline-secondary' onClick={() => handleHide()}>
+                <FontAwesomeIcon icon={faTimes} /> Close
+              </Button>
+              <Button variant='outline-success' onClick={() => submitJobOrder()} disabled={isLoading}>
+                {isLoading ? <Spinner animation="border" size="sm" /> : <FontAwesomeIcon icon={faCheck} />} Submit
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </>
       </Modal>
     </div>
   )

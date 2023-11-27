@@ -27,34 +27,36 @@ function Location() {
     setAlertVariant(variantAlert);
     setAlertMessage(messageAlert);
   }
+
   const submitLocation = async () => {
     setValidated(true);
+    setIsLoading(true);
     try {
       const url = localStorage.getItem("url") + "admin.php";
       const jsonData = {
         location: location,
         categoryId: categoryId,
       };
-  
+
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "addLocation");
-  
+
       const response = await axios.post(url, formData);
-  
+
       if (response.data !== 0) {
         getAlert("success", "Success!");
         setTimeout(() => {
           setValidated(false);
           setShowAlert(false);
           setLocation("");
+          setIsLoading(false);
         }, 1500);
       }
     } catch (err) {
       getAlert("danger", "There was an unexpected error: " + err);
     }
   };
-  
 
   const getLocationCategory = async () => {
     setIsLoading(true);
@@ -66,12 +68,12 @@ function Location() {
       if (response.data !== 0) {
         setLocationCategory(response.data);
       }
-      setIsLoading(false);
     } catch (err) {
       alert("There was an unexpected error: " + err);
+    } finally {
+      setIsLoading(false);
     }
   };
-
 
   const formValidation = (e) => {
     e.preventDefault();
@@ -92,7 +94,7 @@ function Location() {
 
   return (
     <>
-      <Container className="text-center">
+      <Container className="text-center mt-3">
         <Card border="dark">
           <Card.Header className="green-header">
             <h3>Location</h3>
@@ -100,58 +102,53 @@ function Location() {
           <Card.Body>
 
             <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
-            {isLoading ?
-              <Container className='text-center'>
-                <Spinner animation='border' variant='success' />
+            <div>
+              <Container className='mb-3'>
+                <Button onClick={getLocationCategory} variant='outline-success'>
+                  <FontAwesomeIcon icon={faSync} /> Refresh
+                </Button>
               </Container>
-              :
-              <div>
-                <Container className='mb-3'>
-                  <Button onClick={getLocationCategory}>
-                    <FontAwesomeIcon icon={faSync} /> Refresh
+              <Form noValidate validated={validated} onSubmit={formValidation}>
+                <Form.Group className="mb-3">
+                  <Form.Select
+                    onChange={(e) => setCategoryId(e.target.value)}
+                    value={categoryId}
+                    required
+                  >
+                    <option value={""}>Location Category</option>
+                    {locationCategory.map((items, index) => (
+                      <option key={index} value={items.locCateg_id}>
+                        {items.locCateg_name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group>
+                  <FloatingLabel label="Location">
+                    <Form.Control
+                      type="text"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="Location"
+                      required
+                    />
+                    <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+                  </FloatingLabel>
+                </Form.Group>
+                <Container className="mt-3">
+                  <Button type="submit" variant='outline-success' disabled={isLoading}>
+                    {!isLoading && <FontAwesomeIcon icon={faCheck} className='me-2'/>}
+                    {isLoading && <Spinner animation='border' size='sm' className='me-2' />}
+                    {isLoading ? 'Submitting...' : 'Submit'}
+                  </Button>
+                  <Button className='ms-1' variant='outline-secondary' onClick={openLocationModal}>
+                    <FontAwesomeIcon icon={faEye} /> See all location
                   </Button>
                 </Container>
-                <Form noValidate validated={validated} onSubmit={formValidation}>
-                  <Form.Group className="mb-3">
-                    <Form.Select
-                      onChange={(e) => setCategoryId(e.target.value)}
-                      value={categoryId}
-                      required
-                    >
-                      <option value={""}>Location Category</option>
-                      {locationCategory.map((items, index) => (
-                        <option key={index} value={items.locCateg_id}>
-                          {items.locCateg_name}
-                        </option>
-                      ))}
-
-                    </Form.Select>
-                    <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
-                  </Form.Group>
-
-                  <Form.Group>
-                    <FloatingLabel label="Location">
-                      <Form.Control
-                        type="text"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        placeholder="Location"
-                        required
-                      />
-                      <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
-                    </FloatingLabel>
-                  </Form.Group>
-                  <Container className="mt-3">
-                   <Button type="submit" variant='outline-success'>
-                      <FontAwesomeIcon icon={faCheck} /> Submit
-                    </Button>
-                    <Button className='ms-1' variant='outline-secondary' onClick={openLocationModal}>
-                     <FontAwesomeIcon icon={faEye}/> See all location
-                    </Button>
-                  </Container>
-                </Form>
-              </div>
-            }
+              </Form>
+            </div>
           </Card.Body>
         </Card>
       </Container>

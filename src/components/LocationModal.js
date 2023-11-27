@@ -56,6 +56,7 @@ function LocationModal(props) {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getLocations");
       const response = await axios.post(url, formData);
+      console.log("response", JSON.stringify(response));
       if (response.data !== 0) {
         setLocationName(response.data);
         setLocationCategoryTitle(response.data[0].locCateg_name);
@@ -133,7 +134,7 @@ function LocationModal(props) {
                 :
                   <div className="d-flex align-items-center justify-content-center">
                     <h3 className='text-center'>{locationCategoryTitle}</h3>
-                    <FontAwesomeIcon icon={faEdit} className="ms-2 clickable" onClick={() => setUpdateLocationCateg(true)}/>
+                    {locationCategoryTitle !== "No location found" && <FontAwesomeIcon icon={faEdit} className="ms-2 clickable" onClick={() => setUpdateLocationCateg(true)}/>}
                   </div>
                 }
                 <Table bordered striped variant='success' size='sm' className='text-center'>
