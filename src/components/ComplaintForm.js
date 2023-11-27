@@ -76,13 +76,13 @@ function ComplaintForm(props) {
     onHide();
   }
   const formValidation = (e) => {
+    setValidated(true);
     const form = e.currentTarget;
     e.preventDefault();
     e.stopPropagation();
     if (form.checkValidity() === true) {
       addComplaint();
     }
-    setValidated(true);
   }
   useEffect(() => {
     if (show) {

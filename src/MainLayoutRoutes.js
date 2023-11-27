@@ -9,7 +9,6 @@ import JobDetails from './components/JobDetails'
 import PersonnelDashboard from './components/PersonnelDashboard'
 import ChangePassword from './components/ChangePassword'
 import ReportModule from './components/ReportModule'
-import AddPersonnel from './components/AddPersonnel'
 
 function MainLayoutRoutes() {
   return (
@@ -23,7 +22,6 @@ function MainLayoutRoutes() {
         <Route path="/personnel/dashboard" element={<PersonnelDashboard />} />
         <Route path="/account/password" element={<ChangePassword />} />
         <Route path='/report' element={<ReportModule />} />
-        <Route path='/addpersonnel' element={<AddPersonnel />} />
       </Routes>
     </div>
   )
