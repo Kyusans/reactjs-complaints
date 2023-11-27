@@ -19,32 +19,31 @@ export default function ConfirmModal(props) {
     setAlertMessage(messageAlert);
   }
 
-  const jobDone = () => {
+  const jobDone = async () => {
     setIsLoading(true);
+    try {
+      const url = localStorage.getItem("url") + "personnel.php";
+      const jsonData = { compId: compId };
+      const formData = new FormData();
+      formData.append("operation", "jobDone");
+      formData.append("json", JSON.stringify(jsonData));
 
-    const url = localStorage.getItem("url") + "personnel.php";
-    const jsonData = { compId: compId };
-    const formData = new FormData();
-    formData.append("operation", "jobDone");
-    formData.append("json", JSON.stringify(jsonData));
+      const response = await axios.post(url, formData);
 
-    axios({ url: url, data: formData, method: "post" })
-      .then((res) => {
-        if (res.data === 1) {
-          getAlert("success", "Job Complete!");
-          setIsJobComplete(true);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
-        }
-      })
-      .catch((err) => {
-        getAlert("danger", "There was an unexpected error: " + err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      if (response.data === 1) {
+        getAlert("success", "Job Complete!");
+        setIsJobComplete(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      }
+    } catch (err) {
+      getAlert("danger", "There was an unexpected error: " + err);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
 
   const handleHide = () => {
     setIsJobComplete(false);

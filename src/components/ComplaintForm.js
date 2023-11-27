@@ -1,6 +1,6 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { Row, Col, FloatingLabel, Form, Modal, Button } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react';
+import { Row, Col, FloatingLabel, Form, Modal, Button, Spinner } from 'react-bootstrap';
 import AlertScript from './AlertScript';
 
 function ComplaintForm(props) {
@@ -12,7 +12,8 @@ function ComplaintForm(props) {
   const [locationCategory, setLocationCategory] = useState([]);
   const [location, setLocation] = useState([]);
   const [validated, setValidated] = useState(false);
-  //for alert
+  const [isLoading, setIsLoading] = useState(false);
+  // for alert
   const [showAlert, setShowAlert] = useState(false);
   const [alertVariant, setAlertVariant] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
@@ -23,32 +24,39 @@ function ComplaintForm(props) {
     setAlertMessage(messageAlert);
   }
 
-  const addComplaint = () => {
-    const url = localStorage.getItem("url") + "users.php";
-    const clientId = localStorage.getItem("userId");
-    const jsonData = {
-      subject: subject,
-      clientId: clientId,
-      locationId: locationId,
-      locationCategoryId: locationCategoryId,
-      description: description
+  const addComplaint = async () => {
+    setIsLoading(true);
+    try {
+      const url = localStorage.getItem("url") + "users.php";
+      const clientId = localStorage.getItem("userId");
+      const jsonData = {
+        subject: subject,
+        clientId: clientId,
+        locationId: locationId,
+        locationCategoryId: locationCategoryId,
+        description: description
+      };
+  
+      const formData = new FormData();
+      formData.append("json", JSON.stringify(jsonData));
+      formData.append("operation", "addComplaint");
+  
+      const response = await axios.post(url, formData);
+  
+      if (response.data !== 0) {
+        getAlert("success", "Success");
+        setTimeout(() => {
+          handleClose();
+        }, 1500);
+      }
+    } catch (err) {
+      getAlert("There was an unexpected error: " + err);
+    } finally {
+      setIsLoading(false);
     };
-    const formData = new FormData();
-    formData.append("json", JSON.stringify(jsonData));
-    formData.append("operation", "addComplaint");
-    axios({ url: url, data: formData, method: "post" })
-      .then((res) => {
-        if (res.data !== 0) {
-          getAlert("success", "Success");
-          setTimeout(() => {
-            handleClose();
-          }, 1500);
-        }
-      })
-      .catch((err) => {
-        getAlert("There was an unexpected error: " + err);
-      });
-  }
+  };
+  
+
   const getLocation = (id) => {
     const url = localStorage.getItem("url") + "admin.php";
     const jsonData = { categoryId: id };
@@ -114,7 +122,7 @@ function ComplaintForm(props) {
   return (
     <>
       <Modal show={show} onHide={handleClose} backdrop="static">
-        <Modal.Header closeButton>Ticket Form</Modal.Header>
+        <Modal.Header closeButton><h4>Ticket Form</h4></Modal.Header>
         <Modal.Body>
           <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
           <Form noValidate validated={validated} onSubmit={formValidation}>
@@ -167,7 +175,13 @@ function ComplaintForm(props) {
             </Form.Group>
             <Modal.Footer>
               <Button variant='outline-danger' onClick={handleClose}>Close</Button>
-              <Button variant='outline-success' type='submit'>Submit</Button>
+              <Button variant='outline-success' type='submit' disabled={isLoading}>
+                {isLoading ? (
+                  <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                ) : (
+                  "Submit"
+                )}
+              </Button>
             </Modal.Footer>
           </Form>
         </Modal.Body>
