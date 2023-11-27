@@ -19,6 +19,7 @@ const AdminNavbar = () => {
             <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/admin/dashboard/">Home</NavLink>
             <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/admin/addlocation/">Location</NavLink>
             <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/report/">Report</NavLink>
+            <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/addpersonnel">Add Personnel</NavLink>
           </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
           <NavDropdown title={userFullName} style={{ color: "white"}}>

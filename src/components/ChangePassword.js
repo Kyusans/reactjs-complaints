@@ -15,17 +15,17 @@ function ChangePassword() {
   const [passwordsMatch, setPasswordsMatch] = useState(true);
 
   const navigateTo = useNavigate();
-  	//for alert
-	const [showAlert, setShowAlert] = useState(false);
-	const [alertVariant, setAlertVariant] = useState("");
-	const [alertMessage, setAlertMessage] = useState("");
+  //for alert
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
 
 
-	function getAlert(variantAlert, messageAlert){
-		setShowAlert(true);
-		setAlertVariant(variantAlert);
-		setAlertMessage(messageAlert);
-	}
+  function getAlert(variantAlert, messageAlert) {
+    setShowAlert(true);
+    setAlertVariant(variantAlert);
+    setAlertMessage(messageAlert);
+  }
 
   const getCurrentPassword = useCallback(async () => {
     try {
@@ -35,7 +35,7 @@ function ChangePassword() {
       const formData = new FormData();
       formData.append("operation", "getCurrentPassword");
       formData.append("json", JSON.stringify(jsonData));
-      const response = await axios({url: url, data: formData, method: 'post'});
+      const response = await axios({ url: url, data: formData, method: 'post' });
       if (response.data !== 0) {
         setCurrentPass(localStorage.getItem("facultyLoggedIn") === "true" ? response.data.fac_password : response.data.user_password);
       }
@@ -51,7 +51,7 @@ function ChangePassword() {
     const formData = new FormData();
     formData.append("json", JSON.stringify(jsonData));
     formData.append("operation", "changePassword");
-    axios({url: url, data: formData, method: "post"})
+    axios({ url: url, data: formData, method: "post" })
       .then((res) => {
         if (res.data !== 0) {
           setTimeout(() => {
@@ -75,7 +75,7 @@ function ChangePassword() {
     e.stopPropagation();
     const form = e.currentTarget;
     getCurrentPassword();
-    if(newPassword !== confirmPassword && currentPass !== currentPassword){
+    if (newPassword !== confirmPassword && currentPass !== currentPassword) {
       setCurrentPassword("");
       setShowInvalidCurrent(true);
       setConfirmPassword("");
@@ -102,23 +102,44 @@ function ChangePassword() {
       <Card className="card-thin" border='success'>
         <Card.Body>
           <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
-          <Form noValidate validated={validated} onSubmit={handleSubmit}>
+          <Form noValidate validated={validated} onSubmit={handleSubmit} autoComplete="off">
             <Form.Group className='mb-4 fatter-text centered-label'>
               <FloatingLabel label="Current Password">
-                <Form.Control type='password' value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder='Current Password' required/>
+                <Form.Control
+                  type='password'
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder='Current Password'
+                  required
+                  autocomplete="none"
+                />
               </FloatingLabel>
               {showInvalidCurrent && <Form.Text className='text-danger'>Invalid current password</Form.Text>}
             </Form.Group>
 
             <Form.Group className='mb-4 fatter-text centered-label'>
               <FloatingLabel label="New Password">
-                <Form.Control type='password' value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder='New Password' required/>
+                <Form.Control
+                  type='password'
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder='New Password'
+                  required
+                  autocomplete="none"
+                />
               </FloatingLabel>
             </Form.Group>
 
             <Form.Group className='mb-4 fatter-text centered-label'>
               <FloatingLabel label="Confirm Password">
-                <Form.Control type='password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder='Confirm Password' required/>
+                <Form.Control
+                  type='password'
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder='Confirm Password'
+                  required
+                  autocomplete="none"
+                />
               </FloatingLabel>
               {!passwordsMatch && <Form.Text className='text-danger'>Passwords do not match</Form.Text>}
             </Form.Group>
