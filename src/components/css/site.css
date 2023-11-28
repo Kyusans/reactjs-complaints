@@ -34,7 +34,7 @@
 
 .site-body {
     /* background-color: #181a1b; */
-    background-color: rgb(145, 145, 145);
+    background-color: rgb(160, 160, 160);
 }
 
 .fatter-text {
@@ -202,4 +202,3 @@
   .completed {
     color: green;
   }
-  

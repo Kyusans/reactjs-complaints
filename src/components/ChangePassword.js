@@ -3,6 +3,8 @@ import { Button, Card, Container, FloatingLabel, Form, Spinner } from 'react-boo
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AlertScript from './AlertScript';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 function ChangePassword() {
   const [currentPass, setCurrentPass] = useState("");
@@ -102,6 +104,10 @@ function ChangePassword() {
     setValidated(true);
   };
 
+  const handleBackButtonClick = () => {
+    navigateTo(-1);
+  };
+
   useEffect(() => {
     getCurrentPassword();
   }, [getCurrentPassword]);
@@ -109,6 +115,11 @@ function ChangePassword() {
   return (
     <Container className='centered'>
       <Card className="card-thin" border='success'>
+        <Card.Footer>
+          <Button variant='outline-danger button-m' onClick={() => handleBackButtonClick()}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </Button>
+        </Card.Footer>
         <Card.Body>
           <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
           <Form noValidate validated={validated} onSubmit={handleSubmit} autoComplete="off">
