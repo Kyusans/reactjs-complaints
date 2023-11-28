@@ -40,7 +40,6 @@ function UpdateTicketModal(props) {
     formData.append("operation", "updateTicket");
     axios({ url: url, data: formData, method: "post" })
      .then((res) => {
-        console.log("res ni update: " + JSON.stringify(res.data))
         if (res.data !== 0) {
           getAlert("success", "Success");
           setTimeout(() => {

@@ -45,7 +45,6 @@ function ReportModule() {
       formData.append("json", JSON.stringify(jsonData))
       formData.append("operation", "getTicketsByDate");
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res: ni getTicketsByDate", JSON.stringify(res.data));
       if (res.data !== 0) {
         setTickets(res.data);
       } else {

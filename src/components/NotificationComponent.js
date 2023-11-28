@@ -28,8 +28,6 @@ const insertToken = async (currentToken) => {
     const res = await axios({url: url, data: formData, method: "post"});
     if(res.data === 1){
       console.log("Successfully added the token to the database");
-    }else{
-      console.log("unsuccessful insert token, res: " , JSON.stringify(res.data))
     }
   }catch(err){
     alert("There was an error: " + err);

@@ -58,7 +58,6 @@ function LocationModal(props) {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getLocations");
       const response = await axios.post(url, formData);
-      console.log("response", JSON.stringify(response));
       if (response.data !== 0) {
         setLocationName(response.data);
         setLocationCategoryTitle(response.data[0].locCateg_name);

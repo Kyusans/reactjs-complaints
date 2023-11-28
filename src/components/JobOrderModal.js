@@ -70,7 +70,6 @@ function JobOrderModal(props) {
 
     try {
       const res = await axios.post(url, formData);
-      console.log("res ni sumbit: " + JSON.stringify(res.data));
       if (res.data === 1) {
         getAlert("success", "Success");
       }

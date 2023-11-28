@@ -6,24 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { formatDate } from './JobDetails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRight, faArrowUp, faCheck, faPlay, faThList } from '@fortawesome/free-solid-svg-icons';
-import AlertScript from './AlertScript';
 
 export default function PersonnelDashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnGoing, setIsOnGoing] = useState(true);
   const [ticket, setTicket] = useState([]);
   const navigateTo = useNavigate();
-
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertVariant, setAlertVariant] = useState("");
-  const [alertMessage, setAlertMessage] = useState("");
-
-
-  function getAlert(variantAlert, messageAlert) {
-    setShowAlert(true);
-    setAlertVariant(variantAlert);
-    setAlertMessage(messageAlert);
-  }
 
   const getJobTicket = async () => {
     try {
@@ -87,8 +75,6 @@ export default function PersonnelDashboard() {
       const res = await axios({ url: url, data: formData, method: "post" });
       if (res.data !== 0) {
         setTicket(res.data);
-      } else {
-        getAlert("danger", "No ticket found");
       }
       setIsLoading(false);
     } catch (error) {
@@ -140,7 +126,6 @@ export default function PersonnelDashboard() {
         :
         <Container className='scrollable-container'>
           <div>
-            <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
             <Table bordered responsive striped hover variant='success' className='border-1'>
               <thead>
                 <tr>

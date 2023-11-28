@@ -64,7 +64,6 @@ export default function JobDetails() {
   };
 
   const addComment = () => {
-    console.log("new comment: ", newComment);
     if (newComment !== "") {
       const url = localStorage.getItem("url") + "users.php";
       const userId = localStorage.getItem("facultyLoggedIn") === "true" ? localStorage.getItem("facCode") : localStorage.getItem("userId");
@@ -93,7 +92,6 @@ export default function JobDetails() {
       formData.append("operation", "getComment");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("comment axios: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         setComment(res.data);
       }
@@ -112,7 +110,6 @@ export default function JobDetails() {
       formData.append("operation", "getJobDetails");
       const res = await axios({ url: url, data: formData, method: "post" });
       if (res.data !== 0) {
-        console.log("joStatus: " + JSON.stringify(res.data.joStatus_name))
         if (res.data.joStatus_name === "Completed") {
           setIsCompleted(true);
         }
@@ -133,7 +130,6 @@ export default function JobDetails() {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getAssignedPersonnel");
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res ni personnel: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         setAssignedPersonnel(res.data);
       }
