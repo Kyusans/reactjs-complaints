@@ -13,11 +13,14 @@ function AdminNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
 
   const userFullName = localStorage.getItem("userFullName");
-  const handleSignout = () =>{
-    localStorage.setItem("adminLoggedIn", "false");
+  const handleSignout = () => {
     localStorage.setItem("userId", "");
-		localStorage.setItem("userLevel", "");
+    localStorage.setItem("userLevel", "");
+    localStorage.setItem("isLoggedIn", "");
+    localStorage.setItem("facultyLoggedIn", "");
+    localStorage.setItem("facCode", "");
     localStorage.setItem("userCommentId", "");
+
   }
 
   const handleToggleOffcanvas = () => {
@@ -25,7 +28,7 @@ function AdminNavbar() {
   };
 
   return (
-    <Navbar className="navbar-dark bg-dark mb-3">
+    <Navbar className="navbar-dark bg-dark">
       <Container fluid>
         <Button variant="outline-light" onClick={handleToggleOffcanvas}>
           <FontAwesomeIcon icon={faBars} size='lg'/>

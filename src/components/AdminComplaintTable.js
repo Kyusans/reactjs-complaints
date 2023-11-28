@@ -112,7 +112,7 @@ function AdminComplaintTable() {
           <Spinner animation='border' variant='success' />
         </Container>
         :
-        <Container className='scrollable-container'>
+        <Container>
 
           <Table striped bordered hover responsive variant="success" className="border-1">
             <thead>

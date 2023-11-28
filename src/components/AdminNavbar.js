@@ -7,7 +7,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import './css/site.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faBars, faKey, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 function AdminNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
@@ -25,7 +25,7 @@ function AdminNavbar() {
   };
 
   return (
-    <Navbar className="navbar-dark bg-dark mb-3">
+    <Navbar className="navbar-dark bg-dark">
       <Container fluid>
         <Button variant="outline-light" onClick={handleToggleOffcanvas}>
           <FontAwesomeIcon icon={faBars} size='lg'/>
@@ -41,8 +41,8 @@ function AdminNavbar() {
 
           <Offcanvas.Header closeButton={false} className='mt-1'>
             <NavDropdown title={userFullName} >
-              <NavDropdown.Item href="/gsd/account/password">Change Password</NavDropdown.Item>
-              <NavDropdown.Item href="/gsd" onClick={handleSignout}>Signout</NavDropdown.Item>
+              <NavDropdown.Item href="/gsd/account/password"><FontAwesomeIcon icon={faKey} /> Change Password</NavDropdown.Item>
+              <NavDropdown.Item href="/gsd" onClick={handleSignout}><FontAwesomeIcon icon={faSignOutAlt} /> Signout</NavDropdown.Item>
             </NavDropdown>
             <div className="custom-close-button" onClick={() => setShowOffcanvas(false)}>
               <Button variant='outline-light'><FontAwesomeIcon icon={faArrowLeft} size='lg'/> </Button>

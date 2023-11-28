@@ -52,8 +52,8 @@ export default function JobDetails() {
   const [isCompleted, setIsCompleted] = useState(false);
   const isAdmin = localStorage.getItem("adminLoggedIn") === "true" ? true : false;
 
-  const openConfirmModal = () =>{setShowConfirmModal(true);}
-  const closeConfirmModal = () =>{
+  const openConfirmModal = () => { setShowConfirmModal(true); }
+  const closeConfirmModal = () => {
     setShowConfirmModal(false);
   }
 
@@ -65,7 +65,7 @@ export default function JobDetails() {
 
   const addComment = () => {
     console.log("new comment: ", newComment);
-    if(newComment !== ""){
+    if (newComment !== "") {
       const url = localStorage.getItem("url") + "users.php";
       const userId = localStorage.getItem("facultyLoggedIn") === "true" ? localStorage.getItem("facCode") : localStorage.getItem("userId");
       const jsonData = { compId: compId, userId: userId, commentText: newComment };
@@ -100,7 +100,7 @@ export default function JobDetails() {
     } catch (error) {
       alert("There was an unexpected error: " + error);
     }
-  }, [compId]); 
+  }, [compId]);
 
   const getJobDetails = useCallback(async () => {
     setIsLoading(true);
@@ -113,7 +113,7 @@ export default function JobDetails() {
       const res = await axios({ url: url, data: formData, method: "post" });
       if (res.data !== 0) {
         console.log("joStatus: " + JSON.stringify(res.data.joStatus_name))
-        if(res.data.joStatus_name === "Completed"){
+        if (res.data.joStatus_name === "Completed") {
           setIsCompleted(true);
         }
         getAssignedPersonnel(res.data.job_id);
@@ -125,61 +125,63 @@ export default function JobDetails() {
     }
   }, [compId])
 
-  const getAssignedPersonnel = async (jobId) =>{
+  const getAssignedPersonnel = async (jobId) => {
     try {
       const url = localStorage.getItem("url") + "admin.php";
-      const jsonData = {jobId: jobId};
+      const jsonData = { jobId: jobId };
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getAssignedPersonnel");
-      const res = await axios({url: url, data: formData, method: "post"});
+      const res = await axios({ url: url, data: formData, method: "post" });
       console.log("res ni personnel: " + JSON.stringify(res.data));
-      if(res.data !== 0){
+      if (res.data !== 0) {
         setAssignedPersonnel(res.data);
-      }  
+      }
     } catch (error) {
       alert("There was an error occured: " + error.message);
     }
   }
 
-  const reopenJob = () =>{
+  const reopenJob = () => {
     const url = localStorage.getItem("url") + "admin.php";
-    const jsonData = {compId: compId};
+    const jsonData = { compId: compId };
     const formData = new FormData();
     formData.append("operation", "reopenJob");
     formData.append("json", JSON.stringify(jsonData));
-    axios({url: url, data: formData, method: "post"})
-    .then((res) =>{
-      if(res.data === 1){
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      }
-    })
-    .catch((err) =>{
-      alert("There was an unexpected error: " + err);
-    })
+    axios({ url: url, data: formData, method: "post" })
+      .then((res) => {
+        if (res.data === 1) {
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        }
+      })
+      .catch((err) => {
+        alert("There was an unexpected error: " + err);
+      })
   }
-  
+
   useEffect(() => {
     setIsPersonnel(localStorage.getItem("userLevel") === "90" ? true : false);
     getJobDetails();
-    getComment(); 
+    getComment();
   }, [compId, getComment, getJobDetails, isPersonnel]);
 
   return (
     <>
       {isLoading ?
-        <Container className='mt-3 text-center'>
+        <Container className='text-center'>
           <Spinner animation='border' variant='success' />
         </Container>
         :
         <div>
           <Card border='secondary'>
-            <Card.Body>
+            <Card.Footer>
               <Button variant='outline-danger button-m' onClick={() => handleBackButtonClick()}>
                 <FontAwesomeIcon icon={faArrowLeft} />
               </Button>
+            </Card.Footer>
+            <Card.Body>
               <h3 className='text-center mt-3'>Job details</h3>
               <Form>
                 <Row className='mt-3'>
@@ -251,7 +253,7 @@ export default function JobDetails() {
               </Row>
 
             </Card.Body>
-              <Card.Footer className='text-center'>
+            <Card.Footer className='text-center'>
               {
                 isPersonnel && parseInt(details.joStatus_id, 10) === 2 ? (
                   <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>Mark as done</Button>
@@ -266,32 +268,32 @@ export default function JobDetails() {
               {!isCompleted ?
                 (<Form className='mb-5'>
                   <FloatingLabel label="Add a comment..">
-                    <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required/>
+                    <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required />
                   </FloatingLabel>
                   <div className='mt-3'>
                     <Button variant='outline-primary' onClick={addComment}>Submit</Button>
                   </div>
-                </Form>): null}
-              {comment.length <= 0 ? 
+                </Form>) : null}
+              {comment.length <= 0 ?
                 <Container className='text-secondary text-center'>
                   <p>There is no comment yet..</p>
                 </Container>
-              :
-              <div>
-                {comment.map((comments, index) => (
-                  <Row key={index}>
-                    <Col xs={12} md={4}>
-                      <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} date={formatDate(comments.comment_date)} />
-                    </Col>
-                  </Row>
-                ))}
-              </div>
+                :
+                <div>
+                  {comment.map((comments, index) => (
+                    <Row key={index}>
+                      <Col xs={12} md={4}>
+                        <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} date={formatDate(comments.comment_date)} />
+                      </Col>
+                    </Row>
+                  ))}
+                </div>
               }
             </Card.Body>
           </Card>
         </div>
       }
-      <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id}/>
+      <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id} />
     </>
   )
 }
