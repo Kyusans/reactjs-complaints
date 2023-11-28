@@ -9,11 +9,14 @@ import JobDetails from './components/JobDetails'
 import PersonnelDashboard from './components/PersonnelDashboard'
 import ChangePassword from './components/ChangePassword'
 import ReportModule from './components/ReportModule'
+import Sidebar from './components/Sidebar'
+
 
 function MainLayoutRoutes() {
   return (
     <div>      
-      {localStorage.getItem("adminLoggedIn") === "true" ? <AdminNavbar /> : <NavBar />}
+      {/* {localStorage.getItem("adminLoggedIn") === "true" ? <AdminNavbar /> : <NavBar />} */}
+      {localStorage.getItem("adminLoggedIn") === "true" ? <Sidebar /> : <Sidebar />}
       <Routes>
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/user/dashboard" element={<Dashboard />} />
