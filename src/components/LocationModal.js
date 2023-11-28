@@ -28,8 +28,10 @@ function LocationModal(props) {
   };
 
   useEffect(() => {
-    getLocationCategory();
-  }, []);
+    if(show){
+      getLocationCategory();
+    }
+  }, [show]);
 
   const getLocationCategory = () => {
     const url = localStorage.getItem("url") + "admin.php";

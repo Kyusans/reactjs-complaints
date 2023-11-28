@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Login from './components/Login';
 import MainLayoutRoutes from './MainLayoutRoutes';
 import AddPersonnel from './components/AddPersonnel';
-// import { useEffect } from 'react';
+import { useEffect } from 'react';
 
 function App() {
   if('serviceWorker' in navigator){

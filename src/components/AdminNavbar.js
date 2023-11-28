@@ -1,6 +1,17 @@
-import { Container, NavDropdown, NavLink, Navbar } from "react-bootstrap";
+import React, { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Offcanvas from 'react-bootstrap/Offcanvas';
+import './css/site.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faBars } from '@fortawesome/free-solid-svg-icons';
 
-const AdminNavbar = () => {
+function AdminNavbar() {
+  const [showOffcanvas, setShowOffcanvas] = useState(false);
+
   const userFullName = localStorage.getItem("userFullName");
   const handleSignout = () =>{
     localStorage.setItem("adminLoggedIn", "false");
@@ -9,28 +20,50 @@ const AdminNavbar = () => {
     localStorage.setItem("userCommentId", "");
   }
 
-  return ( 
-    <>
-      <Navbar className="nav-background" expand="lg" text="light">
-        <Container>
-          <Navbar.Brand className="brand">GSD Support Ticket System</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/admin/dashboard/">Home</NavLink>
-            <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/admin/addlocation/">Location</NavLink>
-            <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/report/">Report</NavLink>
-            <NavLink style={{ color: "white", marginRight: "10px" }} href="/gsd/addpersonnel">Add Personnel</NavLink>
-          </Navbar.Collapse>
-          <Navbar.Collapse className="justify-content-end">
-          <NavDropdown title={userFullName} style={{ color: "white"}}>
-            <NavDropdown.Item href="/gsd/account/password">Change Password</NavDropdown.Item>
-            <NavDropdown.Item href="/gsd" onClick={handleSignout}>Signout</NavDropdown.Item>
-          </NavDropdown>
-        </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    </>
-   );
+  const handleToggleOffcanvas = () => {
+    setShowOffcanvas((prev) => !prev);
+  };
+
+  return (
+    <Navbar className="navbar-dark bg-dark mb-3">
+      <Container fluid>
+        <Button variant="outline-light" onClick={handleToggleOffcanvas}>
+          <FontAwesomeIcon icon={faBars} size='lg'/>
+        </Button>
+        
+        <Navbar.Brand href="/gsd/admin/dashboard/">GSD Support Ticket System</Navbar.Brand>
+        <Offcanvas
+          className="custom-offcanvas"
+          show={showOffcanvas}
+          onHide={() => setShowOffcanvas(false)}
+          placement="start"
+        >
+
+          <Offcanvas.Header closeButton={false} className='mt-1'>
+            <NavDropdown title={userFullName} >
+              <NavDropdown.Item href="/gsd/account/password">Change Password</NavDropdown.Item>
+              <NavDropdown.Item href="/gsd" onClick={handleSignout}>Signout</NavDropdown.Item>
+            </NavDropdown>
+            <div className="custom-close-button" onClick={() => setShowOffcanvas(false)}>
+              <Button variant='outline-light'><FontAwesomeIcon icon={faArrowLeft} size='lg'/> </Button>
+            </div>
+          </Offcanvas.Header>
+
+          <Offcanvas.Body>
+            <hr />
+            <Nav className="justify-content-end flex-grow-1 pe-3">
+              <Nav.Link href="/gsd/admin/dashboard/">Home</Nav.Link>
+              <Nav.Link href="/gsd/admin/addlocation/">Add Location</Nav.Link>
+              <Nav.Link href="/gsd/report/">Report</Nav.Link>
+              <Nav.Link href="/gsd/addpersonnel">Add Personnel</Nav.Link>
+            </Nav>
+
+
+          </Offcanvas.Body>
+        </Offcanvas>
+      </Container>
+    </Navbar>
+  );
 }
- 
+
 export default AdminNavbar;

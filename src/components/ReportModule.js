@@ -70,7 +70,7 @@ function ReportModule() {
   return (
     <>
       {isLoading ?
-        <Container className='text-center mt-3'>
+        <Container className='text-center'>
           <Spinner animation='border' variant='success' />
         </Container>
         :

@@ -202,3 +202,8 @@
   .completed {
     color: green;
   }
+
+.custom-offcanvas {
+    background-color: #333 !important; 
+    color: #fff !important; 
+}
