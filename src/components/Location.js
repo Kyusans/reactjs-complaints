@@ -31,6 +31,7 @@ function Location() {
   const submitLocation = async () => {
     setValidated(true);
     setIsLoading(true);
+    getAlert(false);
     try {
       const url = localStorage.getItem("url") + "admin.php";
       const jsonData = {
@@ -43,8 +44,11 @@ function Location() {
       formData.append("operation", "addLocation");
 
       const response = await axios.post(url, formData);
-
-      if (response.data !== 0) {
+      if(response.data === 2){
+        setIsLoading(false);
+        getAlert("danger", location + " already exists");
+        setLocation("");
+      }else if (response.data !== 0) {
         getAlert("success", "Success!");
         setTimeout(() => {
           setValidated(false);
