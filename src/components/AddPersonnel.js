@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { Button, Card, Container, FloatingLabel, Form, Spinner } from 'react-bootstrap';
+import { Button, Card, Container, FloatingLabel, Form, Modal, Spinner } from 'react-bootstrap';
 import AlertScript from './AlertScript';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function AddPersonnel() {
+function AddPersonnel(props) {
+  const {show, onHide} = props; 
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ function AddPersonnel() {
   const navigateTo = useNavigate();
 
   const handleBackButtonClick = () => {
-    navigateTo(-1);
+    onHide();
   };
 
   function getAlert(variantAlert, messageAlert) {
@@ -79,7 +80,7 @@ function AddPersonnel() {
   }
 
   return (
-    <div>
+    <Modal show={show} onHide={onHide} centered>
       <Container className='centered'>
         <Card className="card-thin" border='success'>
           <Card.Header>
@@ -182,7 +183,7 @@ function AddPersonnel() {
           </Card.Body>
         </Card>
       </Container>
-    </div>
+    </Modal>
   )
 }
 

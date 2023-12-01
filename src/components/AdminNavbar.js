@@ -8,9 +8,13 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import './css/site.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faBars, faKey, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import AddPersonnel from './AddPersonnel';
 
 function AdminNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
+  const [showAddPersonnel, setShowAddPersonnel] = useState(false);
+  const hideAddPersonnel = () =>{setShowAddPersonnel(false)}
+  const openAddPersonnel = () =>{setShowAddPersonnel(true)}
 
   const userFullName = localStorage.getItem("userFullName");
   const handleSignout = () => {
@@ -51,7 +55,7 @@ function AdminNavbar() {
               <Nav.Link href="/gsd/admin/dashboard/">Home</Nav.Link>
               <Nav.Link href="/gsd/admin/addlocation/">Add Location</Nav.Link>
               <Nav.Link href="/gsd/report/">Report</Nav.Link>
-              <Nav.Link href="/gsd/addpersonnel">Add Personnel</Nav.Link>
+              <Nav.Link onClick={openAddPersonnel}>Add Personnel</Nav.Link>
             </Nav>
 
             <Container className='offCanvas-footer'>
@@ -61,8 +65,9 @@ function AdminNavbar() {
               </NavDropdown>
             </Container>
           </Offcanvas.Body>
-
+        
         </Offcanvas>
+        <AddPersonnel show={showAddPersonnel} onHide={hideAddPersonnel} />
       </Container>
     </Navbar>
   );

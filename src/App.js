@@ -10,11 +10,11 @@ function App() {
     navigator.serviceWorker.register('/gsd/service-worker.js');
   }
   
-  useEffect(() =>{
-    if (window.location.protocol === 'http:') {
-      window.location.href = `https://${window.location.host}${window.location.pathname}`;
-    }
-  },[])
+  // useEffect(() =>{
+  //   if (window.location.protocol === 'http:') {
+  //     window.location.href = `https://${window.location.host}${window.location.pathname}`;
+  //   }
+  // },[])
 
   return (
     <>
