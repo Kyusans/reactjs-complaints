@@ -22,6 +22,7 @@ function JobOrderModal(props) {
   const [priorityValidation, setPriorityValidation] = useState(null);
   const [personnelValidation, setPersonnelValidation] = useState(null);
   const [additionalComment, setAdditionalComment] = useState("");
+  const [isRetrieving, setIsRetrieving] = useState(false);
 
   // for alert
   const [showAlert, setShowAlert] = useState(false);
@@ -141,7 +142,7 @@ function JobOrderModal(props) {
   useEffect(() => {
     if (show) {
       const getSelectedTicket = async () => {
-        setIsLoading(true);
+        setIsRetrieving(true);
         try {
           const url = localStorage.getItem("url") + "admin.php";
           const jsonData = { compId: ticketId };
@@ -161,6 +162,8 @@ function JobOrderModal(props) {
           }
         } catch (error) {
           alert("There was an unexpected error: " + error);
+        } finally {
+          setIsRetrieving(false);
         }
       };
 
@@ -191,110 +194,119 @@ function JobOrderModal(props) {
           <Modal.Header closeButton><h3>Job order creation</h3></Modal.Header>
           <Form>
             <Modal.Body>
-              <Row className='mb-3'>
-                <Col>
-                  <FloatingLabel label="Select Priority">
-                    <Form.Select
-                      value={jobPriority}
-                      onChange={(e) => setJobPriority(e.target.value)}
-                      required
-                      isInvalid={priorityValidation === "error"}
-                    >
-                      <option value={""}>Open this select menu</option>
-                      {priorities.map((priority, index) => (
-                        <option key={index} value={priority.priority_id}>{priority.priority_name}</option>
-                      ))}
-                    </Form.Select>
-                    <Form.Control.Feedback type="invalid">Please select a priority.</Form.Control.Feedback>
-                  </FloatingLabel>
-                </Col>
-                <Col>
-                  <FloatingLabel label="Select Personnel">
-                    <Form.Select
-                      onChange={addJobPersonnel}
-                      required
-                      isInvalid={personnelValidation === "error"}
-                    >
-                      <option value={""}>Open this select menu</option>
-                      {personnel.map((person, index) => (
-                        <option key={index} value={`${person.user_id},${person.user_full_name}`}>{person.user_full_name}</option>
-                      ))}
-                    </Form.Select>
-                    <Form.Control.Feedback type="invalid">Please select at least one personnel.</Form.Control.Feedback>
-                  </FloatingLabel>
-                </Col>
-              </Row>
-
-              <Row className='mb-3'>
-                <Col>
-                  Submitted by:
-                  <Form.Control type="text" placeholder={facultyName} readOnly />
-                </Col>
-              </Row>
-
-              <Row className='mb-3'>
-                <Col>
-                  Subject:
-                  <Form.Control type="text" placeholder={subject} readOnly />
-                </Col>
-              </Row>
-
-              <Row className='mb-3'>
-                <Col>
-                  Location:
-                  <Form.Control type="text" placeholder={location} readOnly />
-                </Col>
-              </Row>
-
-              <Row className='mb-3'>
-                <Container>
-                  <FloatingLabel label="Description">
-                    <Form.Control
-                      value={description}
-                      placeholder='Description'
-                      style={{ height: '150px' }}
-                      as='textarea'
-                      readOnly
-                    />
-                  </FloatingLabel>
+              {isRetrieving ?
+                <Container className='text-center'>
+                  <Spinner animation='border' variant='success' />
                 </Container>
-              </Row>
+                :
+                <>
+                  <Row className='mb-3'>
+                    <Col>
+                      Location:
+                      <Form.Control type="text" placeholder={location} readOnly />
+                    </Col>
+                  </Row>
 
-              <Row>
-                <Container>
-                  <FloatingLabel label="Additional Comment (optional)">
-                    <Form.Control
-                      value={additionalComment}
-                      onChange={(e) => setAdditionalComment(e.target.value)}
-                      placeholder='Additional Comment (optional)'
-                      style={{ height: '75px' }}
-                      as='textarea'
-                    />
-                  </FloatingLabel>
-                </Container>
-              </Row>
+                  <Row className='mb-3'>
+                    <Col>
+                      Subject:
+                      <Form.Control type="text" placeholder={subject} readOnly />
+                    </Col>
+                  </Row>
 
-              <Row className="mt-3 mb-3">
-                <Col>
-                  <ListGroup>
-                    {jobPersonnel.map((personnel, index) => (
-                      <ListGroup.Item key={index} variant="dark" className="d-flex justify-content-between align-items-center">
-                        {personnel}
-                        <span className="green-x" onClick={() => handleRemovePersonnel(index)}>x</span>
-                      </ListGroup.Item>
-                    ))}
-                  </ListGroup>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  {showAlert && (
-                    <Alert variant={alertVariant}>
-                      {alertMessage}
-                    </Alert>
-                  )}
-                </Col>
-              </Row>
+                  <Row className='mb-3'>
+                    <Container>
+                      <FloatingLabel label="Description">
+                        <Form.Control
+                          value={description}
+                          placeholder='Description'
+                          style={{ height: '150px' }}
+                          as='textarea'
+                          readOnly
+                        />
+                      </FloatingLabel>
+                    </Container>
+                  </Row>
+
+                  <Row className='mb-3'>
+                    <Col>
+                      Submitted by:
+                      <Form.Control type="text" placeholder={facultyName} readOnly />
+                    </Col>
+                  </Row>
+
+                  <Row className='mb-3'>
+                    <Col>
+                      <FloatingLabel label="Select Priority">
+                        <Form.Select
+                          value={jobPriority}
+                          onChange={(e) => setJobPriority(e.target.value)}
+                          required
+                          isInvalid={priorityValidation === "error"}
+                        >
+                          <option value={""}>Open this select menu</option>
+                          {priorities.map((priority, index) => (
+                            <option key={index} value={priority.priority_id}>{priority.priority_name}</option>
+                          ))}
+                        </Form.Select>
+                        <Form.Control.Feedback type="invalid">Please select a priority.</Form.Control.Feedback>
+                      </FloatingLabel>
+                    </Col>
+                    <Col>
+                      <FloatingLabel label="Select Personnel">
+                        <Form.Select
+                          onChange={addJobPersonnel}
+                          required
+                          isInvalid={personnelValidation === "error"}
+                        >
+                          <option value={""}>Open this select menu</option>
+                          {personnel.map((person, index) => (
+                            <option key={index} value={`${person.user_id},${person.user_full_name}`}>{person.user_full_name}</option>
+                          ))}
+                        </Form.Select>
+                        <Form.Control.Feedback type="invalid">Please select at least one personnel.</Form.Control.Feedback>
+                      </FloatingLabel>
+                    </Col>
+                  </Row>
+
+                  <Row className="mt-3 mb-3">
+                    <Col>
+                      <ListGroup>
+                        {jobPersonnel.map((personnel, index) => (
+                          <ListGroup.Item key={index} variant="dark" className="d-flex justify-content-between align-items-center">
+                            {personnel}
+                            <span className="green-x" onClick={() => handleRemovePersonnel(index)}>x</span>
+                          </ListGroup.Item>
+                        ))}
+                      </ListGroup>
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Container>
+                      <FloatingLabel label="Additional Comment (optional)">
+                        <Form.Control
+                          value={additionalComment}
+                          onChange={(e) => setAdditionalComment(e.target.value)}
+                          placeholder='Additional Comment (optional)'
+                          style={{ height: '75px' }}
+                          as='textarea'
+                        />
+                      </FloatingLabel>
+                    </Container>
+                  </Row>
+
+                  <Row>
+                    <Col>
+                      {showAlert && (
+                        <Alert variant={alertVariant}>
+                          {alertMessage}
+                        </Alert>
+                      )}
+                    </Col>
+                  </Row>
+                </>
+              }
             </Modal.Body>
             <Modal.Footer>
               <Button variant='outline-secondary' onClick={() => handleHide()}>
