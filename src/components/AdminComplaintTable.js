@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Button, Container, Pagination, Spinner, Table } from "react-bootstrap";
 import JobOrderModal from "./JobOrderModal";
 import "./css/site.css";
-import { formatDate } from "./JobDetails";
+import JobDetails, { formatDate } from "./JobDetails";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faClock, faPlay, faThList } from "@fortawesome/free-solid-svg-icons";
 
 function AdminComplaintTable() {
-  const navigateTo = useNavigate();
+  // const navigateTo = useNavigate();
   const [pageStatus, setPageStatus] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
@@ -18,6 +18,8 @@ function AdminComplaintTable() {
   const ticketsPerPage = 20;
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
   const showPagination = tickets.length > ticketsPerPage;
+  const [showJobDetails, setShowJobDetails] = useState(false);
+  const hideJobDetails = () => {setShowJobDetails(false);}
 
   const handleClose = () => {
     getTicketsByStatus(pageStatus);
@@ -28,7 +30,9 @@ function AdminComplaintTable() {
       setTicketId(id);
       setShowJobOrderModal(true);
     } else {
-      navigateTo(`/job/details/${id}`);
+      setTicketId(id);
+      setShowJobDetails(true);
+      // navigateTo(`/job/details/${id}`);
     }
   };
 
@@ -178,6 +182,7 @@ function AdminComplaintTable() {
             </div>
           )}
           <JobOrderModal show={showJobOrderModal} onHide={handleClose} ticketId={ticketId} />
+          <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={ticketId} />
         </Container>
       }
     </>

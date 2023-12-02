@@ -2,7 +2,6 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Login from './components/Login';
 import MainLayoutRoutes from './MainLayoutRoutes';
-import AddPersonnel from './components/AddPersonnel';
 import { useEffect } from 'react';
 
 function App() {
@@ -22,7 +21,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Login /> } />
           <Route path="*" element={<MainLayoutRoutes />}/>
-          <Route path='/addpersonnel' element={<AddPersonnel />} />
         </Routes>
       </Router>
     </>

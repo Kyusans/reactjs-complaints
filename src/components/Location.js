@@ -141,13 +141,13 @@ function Location() {
                     <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
                   </FloatingLabel>
                 </Form.Group>
-                <Container className="mt-3">
-                  <Button type="submit" variant='outline-success' disabled={isLoading}>
+                <Container>
+                  <Button className='mt-3' type="submit" variant='outline-success' disabled={isLoading}>
                     {!isLoading && <FontAwesomeIcon icon={faCheck} className='me-2'/>}
                     {isLoading && <Spinner animation='border' size='sm' className='me-2' />}
                     {isLoading ? 'Submitting...' : 'Submit'}
                   </Button>
-                  <Button className='ms-1' variant='outline-secondary' onClick={openLocationModal}>
+                  <Button className='ms-1 mt-3' variant='outline-secondary' onClick={openLocationModal}>
                     <FontAwesomeIcon icon={faEye} /> See all location
                   </Button>
                 </Container>

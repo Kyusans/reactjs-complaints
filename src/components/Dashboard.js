@@ -6,7 +6,7 @@ import { Button, Container, Spinner, Table } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import ComplaintForm from './ComplaintForm';
 import "./css/site.css";
-import { formatDate } from './JobDetails';
+import JobDetails, { formatDate } from './JobDetails';
 import UpdateTicketModal from './UpdateTicketModal';
 
 function Dashboard() {
@@ -20,6 +20,9 @@ function Dashboard() {
     getComplaints();
     setShowComplaintModal(false);
   }
+
+  const [showJobDetails, setShowJobDetails] = useState(false);
+  const hideJobDetails = () =>{setShowJobDetails(false)};
 
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const openUpdateModal = () => { setShowUpdateModal(true) };
@@ -52,7 +55,9 @@ function Dashboard() {
       setCompId(id);
       openUpdateModal();
     } else {
-      navigateTo(`/job/details/${id}`);
+      setCompId(id);
+      setShowJobDetails(true);
+      // navigateTo(`/job/details/${id}`);
     }
   }
 
@@ -131,6 +136,7 @@ function Dashboard() {
       )}
       <ComplaintForm show={showComplaintModal} onHide={closeComplaintModal} />
       <UpdateTicketModal show={showUpdateModal} onHide={closeUpdateModal} compId={compId} />
+      <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={compId} />
     </>
   );
 

@@ -34,6 +34,7 @@ function LocationModal(props) {
   }, [show]);
 
   const getLocationCategory = () => {
+    console.log("Gi tawag siya fr fr")
     const url = localStorage.getItem("url") + "admin.php";
     const formData = new FormData();
     formData.append("operation", "getLocationCategory");

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Container, Form, Spinner, Row, Col, FloatingLabel, Button, ListGroup } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Container, Form, Spinner, Row, Col, FloatingLabel, Button, ListGroup, Modal } from 'react-bootstrap';
+// import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import "./css/site.css";
@@ -40,8 +40,9 @@ export function formatDate(inputDate) {
   }
 }
 
-export default function JobDetails() {
-  const { compId } = useParams();
+export default function JobDetails(props) {
+  const { show, onHide, compId } = props;
+  // const { compId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
   const [assignedPersonnel, setAssignedPersonnel] = useState([]);
@@ -57,11 +58,11 @@ export default function JobDetails() {
     setShowConfirmModal(false);
   }
 
-  const navigateTo = useNavigate();
+  // const navigateTo = useNavigate();
 
-  const handleBackButtonClick = () => {
-    navigateTo(-1);
-  };
+  // const handleBackButtonClick = () => {
+  //   navigateTo(-1);
+  // };
 
   const addComment = () => {
     if (newComment !== "") {
@@ -73,6 +74,7 @@ export default function JobDetails() {
       formData.append("json", JSON.stringify(jsonData));
       axios({ url: url, data: formData, method: "post" })
         .then((res) => {
+          console.log("Comment mo to: " + JSON.stringify(res.data))
           if (res.data === 1) {
             getComment();
             setNewComment('');
@@ -115,10 +117,12 @@ export default function JobDetails() {
         }
         getAssignedPersonnel(res.data.job_id);
         setDetails(res.data);
-        setIsLoading(false);
+
       }
     } catch (err) {
       alert("There was an unexpected error: " + err);
+    } finally {
+      setIsLoading(false);
     }
   }, [compId])
 
@@ -165,19 +169,19 @@ export default function JobDetails() {
 
   return (
     <>
-      {isLoading ?
-        <Container className='text-center'>
-          <Spinner animation='border' variant='success' />
-        </Container>
-        :
-        <div>
-          <Card border='secondary'>
-            <Card.Footer>
-              <Button variant='outline-danger button-m' onClick={() => handleBackButtonClick()}>
+      <Modal show={show} onHide={onHide} size='lg' centered backdrop="static">
+        <Modal.Body>
+          {isLoading ?
+            <Container className='text-center'>
+              <Spinner animation='border' variant='success' />
+            </Container>
+            :
+            <div>
+
+              <Button variant='outline-danger button-m' onClick={onHide}>
                 <FontAwesomeIcon icon={faArrowLeft} />
               </Button>
-            </Card.Footer>
-            <Card.Body>
+
               <h3 className='text-center mt-3'>Job details</h3>
               <Form>
                 <Row className='mt-3'>
@@ -247,9 +251,6 @@ export default function JobDetails() {
                   </ListGroup>
                 </Col>
               </Row>
-
-            </Card.Body>
-            <Card.Footer className='text-center'>
               {
                 isPersonnel && parseInt(details.joStatus_id, 10) === 2 ? (
                   <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>Mark as done</Button>
@@ -257,38 +258,38 @@ export default function JobDetails() {
                   <Button className='mt-2' variant='outline-success' onClick={reopenJob}>Reopen Job</Button>
                 ) : null
               }
-            </Card.Footer>
-          </Card>
-          <Card className='mt-3' border='secondary'>
-            <Card.Body>
-              {!isCompleted ?
-                (<Form className='mb-5'>
-                  <FloatingLabel label="Add a comment..">
-                    <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required />
-                  </FloatingLabel>
-                  <div className='mt-3'>
-                    <Button variant='outline-primary' onClick={addComment}>Submit</Button>
-                  </div>
-                </Form>) : null}
-              {comment.length <= 0 ?
-                <Container className='text-secondary text-center'>
-                  <p>There is no comment yet..</p>
-                </Container>
-                :
-                <div>
-                  {comment.map((comments, index) => (
-                    <Row key={index}>
-                      <Col xs={12} md={4}>
-                        <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} date={formatDate(comments.comment_date)} />
-                      </Col>
-                    </Row>
-                  ))}
+              <hr/>
+            </div>
+          }
+        </Modal.Body>
+          <Container>
+            {!isCompleted ?
+              (<Form className='mb-5'>
+                <FloatingLabel label="Add a comment..">
+                  <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required />
+                </FloatingLabel>
+                <div className='mt-3'>
+                  <Button variant='outline-primary' onClick={addComment}>Submit</Button>
                 </div>
-              }
-            </Card.Body>
-          </Card>
-        </div>
-      }
+              </Form>) : null}
+            {comment.length <= 0 ?
+              <Container className='text-secondary text-center'>
+                <p>There is no comment yet..</p>
+              </Container>
+              :
+              <div>
+                {comment.map((comments, index) => (
+                  <Row key={index}>
+                    <Col xs={12} md={12}>
+                      <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} date={formatDate(comments.comment_date)} />
+                    </Col>
+                  </Row>
+                ))}
+              </div>
+            }
+          </Container>
+      </Modal>
+
       <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id} />
     </>
   )

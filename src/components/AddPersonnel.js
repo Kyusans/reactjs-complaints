@@ -3,7 +3,6 @@ import { Button, Card, Container, FloatingLabel, Form, Modal, Spinner } from 're
 import AlertScript from './AlertScript';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function AddPersonnel(props) {
@@ -20,8 +19,6 @@ function AddPersonnel(props) {
   const [showAlert, setShowAlert] = useState(false);
   const [alertVariant, setAlertVariant] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-
-  const navigateTo = useNavigate();
 
   const handleBackButtonClick = () => {
     onHide();
@@ -80,7 +77,7 @@ function AddPersonnel(props) {
   }
 
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide={onHide} backdrop="static" centered>
       <Container className='centered'>
         <Card className="card-thin" border='success'>
           <Card.Header>
