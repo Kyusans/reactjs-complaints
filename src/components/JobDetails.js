@@ -241,7 +241,7 @@ export default function JobDetails(props) {
 
               </Form>
 
-              <Row className='mt-3'>
+              <Row className='mt-3 justify-content-center'>
                 <Col xs={12} md={6}>
                   <ListGroup>
                     <ListGroup.Item className='green-header'>Assigned Personnel</ListGroup.Item>
@@ -251,13 +251,15 @@ export default function JobDetails(props) {
                   </ListGroup>
                 </Col>
               </Row>
-              {
-                isPersonnel && parseInt(details.joStatus_id, 10) === 2 ? (
-                  <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>Mark as done</Button>
-                ) : (isAdmin && isCompleted) ? (
-                  <Button className='mt-2' variant='outline-success' onClick={reopenJob}>Reopen Job</Button>
-                ) : null
-              }
+              <Container className='text-center mt-3'>
+                {
+                  isPersonnel && parseInt(details.joStatus_id, 10) === 2 ? (
+                    <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>Mark as done</Button>
+                  ) : (isAdmin && isCompleted) ? (
+                    <Button className='mt-2' variant='outline-success' onClick={reopenJob}>Reopen Job</Button>
+                  ) : null
+                }
+              </Container>
               <hr/>
             </div>
           }

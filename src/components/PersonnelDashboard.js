@@ -2,16 +2,20 @@ import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react'
 import { Container, Dropdown, Spinner, Table } from 'react-bootstrap';
 import "./css/site.css";
-import { useNavigate } from 'react-router-dom';
-import { formatDate } from './JobDetails';
+import JobDetails, { formatDate } from './JobDetails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRight, faArrowUp, faCheck, faPlay, faThList } from '@fortawesome/free-solid-svg-icons';
 
 export default function PersonnelDashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnGoing, setIsOnGoing] = useState(true);
+  const [compId, setCompId] = useState(0);
   const [ticket, setTicket] = useState([]);
-  const navigateTo = useNavigate();
+  const [showJobDetails, setShowJobDetails] = useState(false);
+  const hideJobDetails = () => {
+    setCompId(0);
+    setShowJobDetails(false)
+  };
 
   const getJobTicket = async () => {
     try {
@@ -83,7 +87,8 @@ export default function PersonnelDashboard() {
   }, [])
 
   const handleNavigate = (id) => {
-    navigateTo(`/job/details/${id}`);
+    setCompId(id);
+    setShowJobDetails(true);
   }
 
   useEffect(() => {
@@ -169,6 +174,7 @@ export default function PersonnelDashboard() {
           </div>
         </Container>
       }
+      <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={compId} />
     </>
   )
 }
