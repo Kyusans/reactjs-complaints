@@ -114,7 +114,7 @@ export default function PersonnelDashboard() {
         {isOnGoing && (
           <Dropdown className="mb-2 mx-2 mt-2">
             <Dropdown.Toggle variant="warning" id="statusDropdown">
-              Select Status
+              Select Priority
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
