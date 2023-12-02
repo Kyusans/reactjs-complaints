@@ -1,10 +1,11 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react'
-import { Container, Dropdown, Spinner, Table } from 'react-bootstrap';
+import { Container, Dropdown, Spinner } from 'react-bootstrap';
 import "./css/site.css";
 import JobDetails, { formatDate } from './JobDetails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRight, faArrowUp, faCheck, faPlay, faThList } from '@fortawesome/free-solid-svg-icons';
+import TicketCard from './TicketCard';
 
 export default function PersonnelDashboard() {
   const [isLoading, setIsLoading] = useState(false);
@@ -131,46 +132,16 @@ export default function PersonnelDashboard() {
         :
         <Container className='scrollable-container'>
           <div>
-            <Table bordered responsive striped hover variant='success' className='border-1'>
-              <thead>
-                <tr>
-                  <th className="green-header">Subject</th>
-                  <th className="green-header">Priority</th>
-                  <th className="green-header">Status</th>
-                  <th className="green-header">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ticket.map((tickets, index) => (
-                  <tr key={index} className={`ticket-cell`} onClick={() => handleNavigate(tickets.job_complaintId)}>
-                    <td>{tickets.job_title}</td>
-                    <td>
-                      {tickets.priority_name === "High" ? (
-                        <FontAwesomeIcon icon={faArrowUp} className="text-danger me-2" />
-                      ) : tickets.priority_name === "Medium" ? (
-                        <FontAwesomeIcon icon={faArrowRight} className="text-warning me-2" />
-                      ) : tickets.priority_name === "Low" ? (
-                        <FontAwesomeIcon icon={faArrowDown} className="text-dark me-2" />
-                      ) : (
-                        null
-                      )}
-                      {tickets.priority_name}
-                    </td>
-                    <td>
-                      {tickets.joStatus_name === "On-Going" ? (
-                        <FontAwesomeIcon icon={faPlay} className="text-warning me-2" />
-                      ) : tickets.joStatus_name === "Completed" ? (
-                        <FontAwesomeIcon icon={faCheck} className="text-success me-2" />
-                      ) : (
-                        null
-                      )}
-                      {tickets.joStatus_name}
-                    </td>
-                    <td className={`ticket-date`}>{formatDate(tickets.job_createDate)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+            {ticket.map((tickets, index) => (
+              <div className='p-1 clickable' key={index} onClick={() => handleNavigate(tickets.job_complaintId)}>
+                <TicketCard
+                  subject={tickets.job_title}
+                  priority={tickets.priority_name}
+                  status={tickets.joStatus_name}
+                  date={formatDate(tickets.job_createDate)}
+                />
+              </div>
+            ))}
           </div>
         </Container>
       }
