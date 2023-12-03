@@ -68,7 +68,8 @@ export default function JobDetails(props) {
     if (newComment !== "") {
       const url = localStorage.getItem("url") + "users.php";
       const userId = localStorage.getItem("facultyLoggedIn") === "true" ? localStorage.getItem("facCode") : localStorage.getItem("userId");
-      const jsonData = { compId: compId, userId: userId, commentText: newComment };
+      const fullName= localStorage.getItem("userFullName");
+      const jsonData = { compId: compId, userId: userId, commentText: newComment, fullName: fullName };
       const formData = new FormData();
       formData.append("operation", "addComment");
       formData.append("json", JSON.stringify(jsonData));

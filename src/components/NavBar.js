@@ -20,6 +20,7 @@ function AdminNavbar() {
     localStorage.setItem("facultyLoggedIn", "");
     localStorage.setItem("facCode", "");
     localStorage.setItem("userCommentId", "");
+    localStorage.setItem("userFullName", "");
 
   }
 

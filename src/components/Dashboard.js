@@ -49,27 +49,6 @@ function Dashboard() {
     }
   }, []);
 
-  const getLastUser = async (compId) => {
-    setIsloading(true);
-    try {
-      const url = localStorage.getItem("url") + "users.php";
-      const jsonData = { compId: compId };
-      const formData = new FormData();
-      formData.append("json", JSON.stringify(jsonData));
-      formData.append("operation", "getLastUser");
-      const res = await axios.post(url, formData);
-      console.log("Res ni getLastUser: " + JSON.stringify(res.data));
-      if (res.data !== 0) {
-        return res.data.full_name;
-      }
-    } catch (error) {
-      alert("There was an unexpected error:  sa gelasdipj" + error.message);
-    } finally {
-      setIsloading(false);
-    }
-  }
-
-
   const handleNavigate = (id, status) => {
     if (status === 1) {
       setCompId(id);
@@ -121,7 +100,7 @@ function Dashboard() {
             <>
               {tickets.map((ticket, index) => (
                 <div key={index} className='p-1 clickable' onClick={() => handleNavigate(ticket.comp_id, ticket.comp_status)}>
-                  <TicketCard subject={ticket.comp_subject} status={formatStatus(ticket.comp_status)} priority={null} date={formatDate(ticket.comp_date)} lastUser={getLastUser(ticket.comp_id)} />
+                  <TicketCard subject={ticket.comp_subject} status={formatStatus(ticket.comp_status)} priority={null} date={formatDate(ticket.comp_date)} lastUser={ticket.comp_lastUser} />
                 </div>
               ))}
             </>
