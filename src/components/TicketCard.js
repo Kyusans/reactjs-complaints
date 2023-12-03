@@ -4,7 +4,7 @@ import React from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 
 function TicketCard(props) {
-  const { subject, status, priority, date } = props;
+  const { subject, status, priority, date, lastUser } = props;
   return (
     <>
       <Card
@@ -40,6 +40,7 @@ function TicketCard(props) {
               }
             </Col>
             <Col xs={12} md={3}><b>Date:</b> {date}</Col>
+            <Col xs={12} md={3}><b>Last Updated By:</b> {lastUser}</Col>
           </Row>
         </Container>
 

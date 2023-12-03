@@ -23,7 +23,7 @@ function Dashboard() {
   }
 
   const [showJobDetails, setShowJobDetails] = useState(false);
-  const hideJobDetails = () =>{setShowJobDetails(false)};
+  const hideJobDetails = () => { setShowJobDetails(false) };
 
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const openUpdateModal = () => { setShowUpdateModal(true) };
@@ -39,7 +39,6 @@ function Dashboard() {
       formData.append("json", JSON.stringify(jsonData));
 
       const response = await axios.post(url, formData);
-      console.log("response ni getComplaiknts: " +  JSON.stringify(response));
       if (response.data !== 0) {
         setTickets(response.data);
       }
@@ -48,7 +47,27 @@ function Dashboard() {
     } finally {
       setIsloading(false);
     }
-  },[]);
+  }, []);
+
+  const getLastUser = async (compId) => {
+    setIsloading(true);
+    try {
+      const url = localStorage.getItem("url") + "users.php";
+      const jsonData = { compId: compId };
+      const formData = new FormData();
+      formData.append("json", JSON.stringify(jsonData));
+      formData.append("operation", "getLastUser");
+      const res = await axios.post(url, formData);
+      console.log("Res ni getLastUser: " + JSON.stringify(res.data));
+      if (res.data !== 0) {
+        return res.data.full_name;
+      }
+    } catch (error) {
+      alert("There was an unexpected error:  sa gelasdipj" + error.message);
+    } finally {
+      setIsloading(false);
+    }
+  }
 
 
   const handleNavigate = (id, status) => {
@@ -64,9 +83,9 @@ function Dashboard() {
   function formatStatus(status) {
     if (status === 1) {
       return "Pending"
-    }else if(status ===2){
+    } else if (status === 2) {
       return "On-Going"
-    }else{
+    } else {
       return "Completed"
     }
   }
@@ -93,7 +112,7 @@ function Dashboard() {
               <FontAwesomeIcon icon={faSync} /> Refresh
             </Button>
           </Container>
-  
+
           {isLoading ? (
             <Container className='text-center'>
               <Spinner animation='border' variant='success' />
@@ -101,8 +120,8 @@ function Dashboard() {
           ) : (
             <>
               {tickets.map((ticket, index) => (
-                <div key={index} className='ticket-cell' onClick={() => handleNavigate(ticket.comp_id, ticket.comp_status)}>
-                  <TicketCard subject={ticket.comp_subject} status={formatStatus(ticket.comp_status)} priority={null} date={formatDate(ticket.comp_date)} />
+                <div key={index} className='p-1 clickable' onClick={() => handleNavigate(ticket.comp_id, ticket.comp_status)}>
+                  <TicketCard subject={ticket.comp_subject} status={formatStatus(ticket.comp_status)} priority={null} date={formatDate(ticket.comp_date)} lastUser={getLastUser(ticket.comp_id)} />
                 </div>
               ))}
             </>
@@ -116,6 +135,6 @@ function Dashboard() {
       <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={compId} />
     </>
   );
-  
+
 }
 export default Dashboard;
