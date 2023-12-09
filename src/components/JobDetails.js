@@ -71,6 +71,7 @@ export default function JobDetails(props) {
       const fullName= localStorage.getItem("userFullName");
       const jsonData = { compId: compId, userId: userId, commentText: newComment, fullName: fullName };
       const formData = new FormData();
+      console.log("jsondata ni addcomment: ", JSON.stringify(jsonData))
       formData.append("operation", "addComment");
       formData.append("json", JSON.stringify(jsonData));
       axios({ url: url, data: formData, method: "post" })

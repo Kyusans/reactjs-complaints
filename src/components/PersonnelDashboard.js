@@ -15,6 +15,7 @@ export default function PersonnelDashboard() {
   const [showJobDetails, setShowJobDetails] = useState(false);
   const hideJobDetails = () => {
     setCompId(0);
+    getTicketsByStatus(2);
     setShowJobDetails(false)
   };
 
@@ -27,6 +28,7 @@ export default function PersonnelDashboard() {
       formData.append("operation", "getJobTicket");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("res ni get job ticket: ", JSON.stringify(res.data))
       if (res.data !== 0) {
         setTicket(res.data);
         setIsLoading(false);
@@ -139,6 +141,7 @@ export default function PersonnelDashboard() {
                   priority={tickets.priority_name}
                   status={tickets.joStatus_name}
                   date={formatDate(tickets.job_createDate)}
+                  lastUser={tickets.comp_lastUser}
                 />
               </div>
             ))}

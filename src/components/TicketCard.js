@@ -9,26 +9,29 @@ function TicketCard(props) {
     <>
       <Card
         border='dark'
-        className="text-light"
-        bg={status === "On-Going" ? "secondary" : status === "Completed" ? "success" : "dark"}
+        className={status === "On-Going" ? "text-dark" : "text-white"}
+        bg={status === "On-Going" ? "warning" : status === "Completed" ? "success" : "dark"}
       >
         <Container className='p-3'>
           <Row>
-            <Col xs={12} md={3}><b>Subject:</b> {subject}</Col>
+            <Col xs={12} md={2}><b>Subject: </b>
+              {subject}
+            </Col>
+
             {priority === null ? <></> :
-              <Col xs={12} md={3}><b className='me-2'>Priority:</b>
+              <Col xs={12} md={2}><b className='me-2'>Priority:</b>
                 {
                   priority === "High" ?
                     <FontAwesomeIcon icon={faArrowUp} className="text-danger me-2" />
                     :
                     priority === "Medium" ?
-                      <FontAwesomeIcon icon={faArrowRight} className="text-warning me-2" />
+                      <FontAwesomeIcon icon={faArrowRight} className="text-dark me-2" />
                       :
-                      <FontAwesomeIcon icon={faArrowDown} className="text-light me-2" />
+                      <FontAwesomeIcon icon={faArrowDown} className="text-secondary me-2" />
                 }
               </Col>
             }
-            <Col xs={12} md={3}><b className='me-2'>Status:</b>
+            <Col xs={12} md={2}><b className='me-2'>Status:</b>
               {
                 status === "Completed" ?
                   <FontAwesomeIcon icon={faCheck} />
@@ -36,11 +39,11 @@ function TicketCard(props) {
                   status === "Pending" ?
                     <FontAwesomeIcon icon={faClock} />
                     :
-                    <FontAwesomeIcon icon={faPlay} className='text-warning' />
+                    <FontAwesomeIcon icon={faPlay} className='text-dark' />
               }
             </Col>
-            <Col xs={12} md={3}><b>Date:</b> {date}</Col>
-            <Col xs={12} md={3}><b>Last Updated By:</b> {lastUser}</Col>
+            <Col xs={12} md={2}><b>Date:</b> {date}</Col>
+            {status !== "Pending" && <Col xs={12} md={2}><b>Last Updated By:</b> {lastUser}</Col>}
           </Row>
         </Container>
 

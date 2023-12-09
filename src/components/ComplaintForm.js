@@ -11,7 +11,7 @@ function ComplaintForm(props) {
   const [description, setDescription] = useState("");
   const [locationCategory, setLocationCategory] = useState([]);
   const [location, setLocation] = useState([]);
-  const [startDate, setStartDate] = useState("");
+  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState("");
   const [validated, setValidated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +57,6 @@ function ComplaintForm(props) {
       setIsLoading(false);
     };
   };
-
 
   const getLocation = (id) => {
     const url = localStorage.getItem("url") + "admin.php";
@@ -181,14 +180,14 @@ function ComplaintForm(props) {
                 <Col xs={12} md={6} className='mb-2'>
                   <Container>
                     <FloatingLabel controlId="startDateLabel" label="Start Date">
-                      <Form.Control type='date' value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                      <Form.Control type='date' value={startDate} onChange={(e) => setStartDate(e.target.value)} required/>
                     </FloatingLabel>
                   </Container>
                 </Col>
                 
                 <Col xs={12} md={6}>
                   <Container>
-                    <FloatingLabel controlId="endDateLabel" label="End Date">
+                    <FloatingLabel controlId="endDateLabel" label="End Date (optional)">
                       <Form.Control type='date' value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                     </FloatingLabel>
                   </Container>

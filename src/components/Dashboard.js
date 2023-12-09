@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faSync } from '@fortawesome/free-solid-svg-icons';
-import { Button, Container, Spinner } from 'react-bootstrap'
+import { faCheck, faClock, faPlay, faPlus, faThList } from '@fortawesome/free-solid-svg-icons';
+import { Button, Container, Dropdown, Spinner } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import ComplaintForm from './ComplaintForm';
 import "./css/site.css";
@@ -49,6 +49,30 @@ function Dashboard() {
     }
   }, []);
 
+  const getTicketsByStatus = async (status) => {
+    setIsloading(true);
+
+    try {
+      setTickets([]);
+      const url = localStorage.getItem("url") + "users.php";
+      const userId = localStorage.getItem("userId");
+      const jsonData = { status: status, userId: userId };
+      const formData = new FormData();
+      formData.append("json", JSON.stringify(jsonData));
+      formData.append("operation", "getSelectedStatus");
+      const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("res ni getTioasdkjwqd: ", JSON.stringify(res.data));
+      if (res.data !== 0) {
+        setTickets(res.data);
+      } else {
+        getComplaints();
+      }
+      setIsloading(false);
+    } catch (error) {
+      alert("There was an error: " + error.message);
+    }
+  }
+
   const handleNavigate = (id, status) => {
     if (status === 1) {
       setCompId(id);
@@ -87,9 +111,18 @@ function Dashboard() {
             <Button className='btn btn-success me-1' onClick={openComplaintModal}>
               <FontAwesomeIcon icon={faPlus} /> Add Ticket
             </Button>
-            <Button onClick={getComplaints}>
-              <FontAwesomeIcon icon={faSync} /> Refresh
-            </Button>
+            <Dropdown className="me-1">
+              <Dropdown.Toggle variant="primary">
+                Select Ticket Type
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => getTicketsByStatus(0)}><FontAwesomeIcon icon={faThList} className="me-2"/>All Ticket</Dropdown.Item>
+                <Dropdown.Item onClick={() => getTicketsByStatus(1)} className="text-dark"><FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending</Dropdown.Item>
+                <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning"><FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-going</Dropdown.Item>
+                <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success"><FontAwesomeIcon icon={faCheck} className="me-2" />Completed</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </Container>
 
           {isLoading ? (
@@ -98,11 +131,16 @@ function Dashboard() {
             </Container>
           ) : (
             <>
-              {tickets.map((ticket, index) => (
-                <div key={index} className='p-1 clickable' onClick={() => handleNavigate(ticket.comp_id, ticket.comp_status)}>
-                  <TicketCard subject={ticket.comp_subject} status={formatStatus(ticket.comp_status)} priority={null} date={formatDate(ticket.comp_date)} lastUser={ticket.comp_lastUser} />
-                </div>
-              ))}
+              {tickets.length === 0 ? (
+                <h1>No tickets yet</h1>
+              ) : (
+                tickets.map((ticket, index) => (
+                  <div key={index} className='p-1 clickable' onClick={() => handleNavigate(ticket.comp_id, ticket.comp_status)}>
+                    <TicketCard subject={ticket.comp_subject} status={formatStatus(ticket.comp_status)} priority={null} date={formatDate(ticket.comp_date)} lastUser={ticket.comp_lastUser} />
+                  </div>
+                ))
+              )}
+
             </>
           )}
         </Container>
