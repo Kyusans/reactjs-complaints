@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Row, Col, FloatingLabel, Form, Modal, Button, Spinner } from 'react-bootstrap';
+import { Row, Col, FloatingLabel, Form, Modal, Button, Spinner, Container } from 'react-bootstrap';
 import AlertScript from './AlertScript';
 
 function ComplaintForm(props) {
@@ -11,6 +11,8 @@ function ComplaintForm(props) {
   const [description, setDescription] = useState("");
   const [locationCategory, setLocationCategory] = useState([]);
   const [location, setLocation] = useState([]);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [validated, setValidated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   // for alert
@@ -36,13 +38,13 @@ function ComplaintForm(props) {
         locationCategoryId: locationCategoryId,
         description: description
       };
-  
+
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "addComplaint");
-  
+
       const response = await axios.post(url, formData);
-  
+
       if (response.data !== 0) {
         getAlert("success", "Success");
         setTimeout(() => {
@@ -55,7 +57,7 @@ function ComplaintForm(props) {
       setIsLoading(false);
     };
   };
-  
+
 
   const getLocation = (id) => {
     const url = localStorage.getItem("url") + "admin.php";
@@ -172,6 +174,26 @@ function ComplaintForm(props) {
                 />
                 <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
               </FloatingLabel>
+            </Form.Group>
+
+            <Form.Group className="mt-3 mb-2">
+              <Row>
+                <Col xs={12} md={6} className='mb-2'>
+                  <Container>
+                    <FloatingLabel controlId="startDateLabel" label="Start Date">
+                      <Form.Control type='date' value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                    </FloatingLabel>
+                  </Container>
+                </Col>
+                
+                <Col xs={12} md={6}>
+                  <Container>
+                    <FloatingLabel controlId="endDateLabel" label="End Date">
+                      <Form.Control type='date' value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                    </FloatingLabel>
+                  </Container>
+                </Col>
+              </Row>
             </Form.Group>
             <Modal.Footer>
               <Button variant='outline-danger' onClick={handleClose}>Close</Button>
