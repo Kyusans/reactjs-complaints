@@ -18,7 +18,6 @@ export default function AdminDashboard() {
           <Row>
             <AdminComplaintTable />
           </Row>
-          
         </Container>
       ) : (
         <h2 className="text-center text-danger">You are not admin</h2>

@@ -164,10 +164,12 @@ export default function JobDetails(props) {
   }
 
   useEffect(() => {
-    setIsPersonnel(localStorage.getItem("userLevel") === "90" ? true : false);
-    getJobDetails();
-    getComment();
-  }, [compId, getComment, getJobDetails, isPersonnel]);
+    if(show){
+      setIsPersonnel(localStorage.getItem("userLevel") === "90" ? true : false);
+      getJobDetails();
+      getComment();
+    }
+  }, [compId, getComment, getJobDetails, isPersonnel, show]);
 
   return (
     <>
