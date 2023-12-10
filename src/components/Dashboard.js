@@ -16,6 +16,7 @@ function Dashboard() {
   const [tickets, setTickets] = useState([]);
   const [compId, setCompId] = useState(0);
   const [showComplaintModal, setShowComplaintModal] = useState(false);
+  const [statusType, setStatusType] = useState(null);
   const openComplaintModal = () => { setShowComplaintModal(true); }
   const closeComplaintModal = () => {
     getComplaints();
@@ -51,7 +52,11 @@ function Dashboard() {
 
   const getTicketsByStatus = async (status) => {
     setIsloading(true);
-
+    setStatusType(status);
+    if(status === 0){
+      getComplaints();
+      return;
+    }
     try {
       setTickets([]);
       const url = localStorage.getItem("url") + "users.php";
@@ -64,8 +69,6 @@ function Dashboard() {
       console.log("res ni getTioasdkjwqd: ", JSON.stringify(res.data));
       if (res.data !== 0) {
         setTickets(res.data);
-      } else {
-        getComplaints();
       }
       setIsloading(false);
     } catch (error) {
@@ -112,8 +115,8 @@ function Dashboard() {
               <FontAwesomeIcon icon={faPlus} /> Add Ticket
             </Button>
             <Dropdown className="me-1">
-              <Dropdown.Toggle variant="primary">
-                Select Ticket Type
+              <Dropdown.Toggle variant={statusType === 0 ? "primary" : statusType === 1 ? "dark" : statusType === 2 ?  "warning text-dark" : statusType === 3 ? "success" : "primary"}>
+                {statusType === 0 ? "All Tickets" : statusType === 1 ? "Pending Tickets" : statusType === 2 ?  "On-going Tickets" : statusType === 3 ? "Completed Tickets" : "Select Ticket Type"}
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
