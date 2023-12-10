@@ -12,10 +12,12 @@ export default function PersonnelDashboard() {
   const [isOnGoing, setIsOnGoing] = useState(true);
   const [compId, setCompId] = useState(0);
   const [ticket, setTicket] = useState([]);
+  const [statusType, setStatusType] = useState(null);
+  const [priorityType, setPriorityType] = useState(null);
   const [showJobDetails, setShowJobDetails] = useState(false);
   const hideJobDetails = () => {
     setCompId(0);
-    getTicketsByStatus(2);
+    getTicketsByStatus(statusType);
     setShowJobDetails(false)
   };
 
@@ -38,7 +40,9 @@ export default function PersonnelDashboard() {
     }
   }
 
+  //priority ni siya
   const getSelectedStatus = async (priority) => {
+    setPriorityType(priority);
     setIsLoading(true);
     try {
       const url = localStorage.getItem("url") + "personnel.php";
@@ -61,6 +65,7 @@ export default function PersonnelDashboard() {
   }
 
   const getTicketsByStatus = useCallback(async (status) => {
+    setStatusType(status);
     setIsLoading(true);
     if (status === 2) {
       setIsOnGoing(true);
@@ -102,9 +107,9 @@ export default function PersonnelDashboard() {
   return (
     <>
       <Container className='d-flex align-content-sm-start justify-content-start'>
-        <Dropdown className="mb-2 mt-2">
-          <Dropdown.Toggle variant="primary" id="typeDropdown">
-            Select Ticket Type
+        <Dropdown className="ms-2 mt-2">
+          <Dropdown.Toggle variant={statusType === 0 ? "primary" : statusType === 1 ? "dark" : statusType === 2 ? "warning text-dark" : statusType === 3 ? "success" : "primary"}>
+            {statusType === 0 ? "All Tickets" : statusType === 1 ? "Pending Tickets" : statusType === 2 ? "On-going Tickets" : statusType === 3 ? "Completed Tickets" : "Select Ticket Type"}
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
@@ -115,8 +120,8 @@ export default function PersonnelDashboard() {
         </Dropdown>
         {isOnGoing && (
           <Dropdown className="mb-2 mx-2 mt-2">
-            <Dropdown.Toggle variant="warning" id="statusDropdown">
-              Select Priority
+            <Dropdown.Toggle variant={priorityType === 1 ? "danger" : priorityType === 2 ? "warning" : priorityType === 3 ? "dark" : "primary"}>
+              { priorityType === 1 ? "High" : priorityType === 2 ? "Medium" : priorityType === 3 ? "Low" : "Select Priority" }
             </Dropdown.Toggle>
 
             <Dropdown.Menu>

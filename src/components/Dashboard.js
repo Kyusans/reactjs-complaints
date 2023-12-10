@@ -24,7 +24,10 @@ function Dashboard() {
   }
 
   const [showJobDetails, setShowJobDetails] = useState(false);
-  const hideJobDetails = () => { setShowJobDetails(false) };
+  const hideJobDetails = () => { 
+    getTicketsByStatus(statusType);
+    setShowJobDetails(false);
+  };
 
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const openUpdateModal = () => { setShowUpdateModal(true) };

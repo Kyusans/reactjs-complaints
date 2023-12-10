@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 // import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Button, Container, Pagination, Spinner, Table } from "react-bootstrap";
+import { Container, Dropdown, Pagination, Spinner, Table } from "react-bootstrap";
 import JobOrderModal from "./JobOrderModal";
 import "./css/site.css";
 import JobDetails, { formatDate } from "./JobDetails";
@@ -10,7 +10,7 @@ import { faCheck, faClock, faPlay, faThList } from "@fortawesome/free-solid-svg-
 
 function AdminComplaintTable() {
   // const navigateTo = useNavigate();
-  const [pageStatus, setPageStatus] = useState(0);
+  const [pageStatus, setPageStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
   const [ticketId, setTicketId] = useState("");
@@ -19,7 +19,7 @@ function AdminComplaintTable() {
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
   const showPagination = tickets.length > ticketsPerPage;
   const [showJobDetails, setShowJobDetails] = useState(false);
-  const hideJobDetails = () => {setShowJobDetails(false);}
+  const hideJobDetails = () => { setShowJobDetails(false); }
 
   const handleClose = () => {
     getTicketsByStatus(pageStatus);
@@ -105,12 +105,18 @@ function AdminComplaintTable() {
 
   return (
     <>
-      <div className="d-flex flex-wrap">
-        <Button onClick={() => getTicketsByStatus(0)} className="mb-2"><FontAwesomeIcon icon={faThList} className="me-2" />All Ticket</Button>
-        <Button onClick={() => getTicketsByStatus(1)} className="btn-dark mx-1 mb-2"><FontAwesomeIcon icon={faClock} className="me-2" />Pending</Button>
-        <Button onClick={() => getTicketsByStatus(2)} className="btn-warning mb-2"><FontAwesomeIcon icon={faPlay} className="me-2" />On-Going</Button>
-        <Button onClick={() => getTicketsByStatus(3)} className="btn-success mx-1 mb-2"><FontAwesomeIcon icon={faCheck} className="me-2" />Completed</Button>
-      </div>
+      <Dropdown className="mb-2">
+        <Dropdown.Toggle variant={pageStatus === 0 ? "primary" : pageStatus === 1 ? "dark" : pageStatus === 2 ? "warning text-dark" : pageStatus === 3 ? "success" : "primary"}>
+          {pageStatus === 0 ? "All Tickets" : pageStatus === 1 ? "Pending Tickets" : pageStatus === 2 ? "On-going Tickets" : pageStatus === 3 ? "Completed Tickets" : "Select Ticket Type"}
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu>
+          <Dropdown.Item onClick={() => getTicketsByStatus(0)}><FontAwesomeIcon icon={faThList} className="me-2" />All Ticket</Dropdown.Item>
+          <Dropdown.Item onClick={() => getTicketsByStatus(1)} className="text-dark"><FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending</Dropdown.Item>
+          <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning"><FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-going</Dropdown.Item>
+          <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success"><FontAwesomeIcon icon={faCheck} className="me-2" />Completed</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
       {isLoading ?
         <Container className='text-center mt-3'>
           <Spinner animation='border' variant='success' />
@@ -131,21 +137,17 @@ function AdminComplaintTable() {
                 displayedTickets.map((ticket, index) => (
                   <tr
                     key={index}
-                    className="ticket-cell"
                     onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}
+                    className="clickable"
                   >
-                    <td className={ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}>
-                      {ticket.comp_subject}
-                    </td>
-                    <td
-                      className="ticket-status"
-                    >
+                    <td>{ticket.comp_subject}</td>
+                    <td>
                       {ticket.joStatus_name === "Pending" ? (
                         <span><FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending</span>
                       ) : ticket.joStatus_name === "On-Going" ? (
-                        <span><FontAwesomeIcon icon={faPlay} className="me-2 text-warning"/>On-Going</span>
+                        <span><FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-Going</span>
                       ) : (
-                        <span><FontAwesomeIcon icon={faCheck} className="me-2 text-success"/>Completed</span>
+                        <span><FontAwesomeIcon icon={faCheck} className="me-2 text-success" />Completed</span>
                       )}
                     </td>
 
@@ -156,7 +158,7 @@ function AdminComplaintTable() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="3">No tickets to display.</td>
+                  <td colSpan="3">No tickets yet to display.</td>
                 </tr>
               )}
             </tbody>

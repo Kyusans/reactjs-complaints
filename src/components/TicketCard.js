@@ -14,7 +14,7 @@ function TicketCard(props) {
       >
         <Container className='p-3'>
           <Row>
-            <Col xs={12} md={2}><b>Subject: </b>
+            <Col xs={12} md={3}><b>Subject: </b>
               {subject}
             </Col>
 
@@ -46,7 +46,6 @@ function TicketCard(props) {
             {status !== "Pending" && <Col xs={12} md={2}><b>Last Updated By:</b> {lastUser}</Col>}
           </Row>
         </Container>
-
       </Card>
     </>
   )
