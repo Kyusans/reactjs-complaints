@@ -9,6 +9,7 @@ import "./css/site.css";
 import JobDetails, { formatDate } from './JobDetails';
 import UpdateTicketModal from './UpdateTicketModal';
 import TicketCard from './TicketCard';
+import AlertScript from './AlertScript';
 
 function Dashboard() {
   const navigateTo = useNavigate();
@@ -138,7 +139,7 @@ function Dashboard() {
           ) : (
             <>
               {tickets.length === 0 ? (
-                <h1>No tickets yet</h1>
+                <AlertScript show={true} variant={"dark"} message={"No tickets yet"} />
               ) : (
                 tickets.map((ticket, index) => (
                   <div key={index} className='p-1 clickable' onClick={() => handleNavigate(ticket.comp_id, ticket.comp_status)}>

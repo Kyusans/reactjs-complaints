@@ -6,6 +6,7 @@ import JobDetails, { formatDate } from './JobDetails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRight, faArrowUp, faCheck, faPlay, faThList } from '@fortawesome/free-solid-svg-icons';
 import TicketCard from './TicketCard';
+import AlertScript from './AlertScript';
 
 export default function PersonnelDashboard() {
   const [isLoading, setIsLoading] = useState(false);
@@ -121,7 +122,7 @@ export default function PersonnelDashboard() {
         {isOnGoing && (
           <Dropdown className="mb-2 mx-2 mt-2">
             <Dropdown.Toggle variant={priorityType === 1 ? "danger" : priorityType === 2 ? "warning" : priorityType === 3 ? "dark" : "primary"}>
-              { priorityType === 1 ? "High" : priorityType === 2 ? "Medium" : priorityType === 3 ? "Low" : "Select Priority" }
+              {priorityType === 1 ? "High" : priorityType === 2 ? "Medium" : priorityType === 3 ? "Low" : "Select Priority"}
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
@@ -139,6 +140,8 @@ export default function PersonnelDashboard() {
         :
         <Container className='scrollable-container'>
           <div>
+            {ticket.length === 0 && <AlertScript show={true} variant={"dark"} message={"No tickets yet"} />}
+
             {ticket.map((tickets, index) => (
               <div className='p-1 clickable' key={index} onClick={() => handleNavigate(tickets.job_complaintId)}>
                 <TicketCard
@@ -149,8 +152,10 @@ export default function PersonnelDashboard() {
                   lastUser={tickets.comp_lastUser}
                 />
               </div>
-            ))}
+            ))
+            }
           </div>
+
         </Container>
       }
       <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={compId} />

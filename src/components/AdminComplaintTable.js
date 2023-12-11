@@ -7,6 +7,7 @@ import "./css/site.css";
 import JobDetails, { formatDate } from "./JobDetails";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faClock, faPlay, faThList } from "@fortawesome/free-solid-svg-icons";
+import AlertScript from "./AlertScript";
 
 function AdminComplaintTable() {
   // const navigateTo = useNavigate();
@@ -124,6 +125,8 @@ function AdminComplaintTable() {
         :
         <Container>
 
+          {displayedTickets.length === 0 ? <AlertScript show={true} variant={"dark"} message={"No tickets yet"} /> :
+
           <Table striped bordered hover responsive variant="success" className="border-1">
             <thead>
               <tr>
@@ -164,6 +167,7 @@ function AdminComplaintTable() {
             </tbody>
 
           </Table>
+          }
           {showPagination && (
             <div className="d-flex justify-content-end mt-2">
               <Pagination>
