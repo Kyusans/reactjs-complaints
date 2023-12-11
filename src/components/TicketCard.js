@@ -43,7 +43,7 @@ function TicketCard(props) {
               }
             </Col>
             <Col xs={12} md={2}><b>Date:</b> {date}</Col>
-            {status !== "Pending" && <Col xs={12} md={2}><b>Last Updated By:</b> {lastUser}</Col>}
+            {status !== "Pending" && <Col xs={12} md={2}><b>Last Updated By:</b> {lastUser === "" ? "GSD Administrator" : lastUser}</Col>}
           </Row>
         </Container>
       </Card>

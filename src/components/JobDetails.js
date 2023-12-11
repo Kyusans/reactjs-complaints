@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Container, Form, Spinner, Row, Col, FloatingLabel, Button, ListGroup, Modal } from 'react-bootstrap';
 // import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faCheck, faUpload } from '@fortawesome/free-solid-svg-icons';
 import "./css/site.css";
 import ConfirmModal from './ConfirmModal';
 import MessageList from './MessageList';
@@ -51,11 +51,17 @@ export default function JobDetails(props) {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isPersonnel, setIsPersonnel] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
   const isAdmin = localStorage.getItem("adminLoggedIn") === "true" ? true : false;
 
   const openConfirmModal = () => { setShowConfirmModal(true); }
   const closeConfirmModal = () => {
     setShowConfirmModal(false);
+  }
+
+  const openImageModal = () => { setShowImageModal(true); }
+  const closeImageModal = () =>{
+    setShowImageModal(false);
   }
 
   // const navigateTo = useNavigate();
@@ -68,7 +74,7 @@ export default function JobDetails(props) {
     if (newComment !== "") {
       const url = localStorage.getItem("url") + "users.php";
       const userId = localStorage.getItem("facultyLoggedIn") === "true" ? localStorage.getItem("facCode") : localStorage.getItem("userId");
-      const fullName= localStorage.getItem("userFullName");
+      const fullName = localStorage.getItem("userFullName");
       const jsonData = { compId: compId, userId: userId, commentText: newComment, fullName: fullName };
       const formData = new FormData();
       console.log("jsondata ni addcomment: ", JSON.stringify(jsonData))
@@ -164,7 +170,7 @@ export default function JobDetails(props) {
   }
 
   useEffect(() => {
-    if(show){
+    if (show) {
       setIsPersonnel(localStorage.getItem("userLevel") === "90" ? true : false);
       getJobDetails();
       getComment();
@@ -264,36 +270,37 @@ export default function JobDetails(props) {
                   ) : null
                 }
               </Container>
-              <hr/>
+              <hr />
             </div>
           }
         </Modal.Body>
-          <Container>
-            {!isCompleted ?
-              (<Form className='mb-5'>
-                <FloatingLabel label="Add a comment..">
-                  <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required />
-                </FloatingLabel>
-                <div className='mt-3'>
-                  <Button variant='outline-primary' onClick={addComment}>Submit</Button>
-                </div>
-              </Form>) : null}
-            {comment.length <= 0 ?
-              <Container className='text-secondary text-center'>
-                <p>There is no comment yet..</p>
-              </Container>
-              :
-              <div>
-                {comment.map((comments, index) => (
-                  <Row key={index}>
-                    <Col xs={12} md={12}>
-                      <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} date={formatDate(comments.comment_date)} />
-                    </Col>
-                  </Row>
-                ))}
+        <Container>
+          {!isCompleted ?
+            (<Form className='mb-5'>
+              <FloatingLabel label="Add a comment..">
+                <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required />
+              </FloatingLabel>
+              <div className='mt-3'>
+                <Button variant='outline-primary' onClick={addComment}><FontAwesomeIcon icon={faCheck} /> Submit</Button>{" "}
+                <Button variant='outline-secondary' onClick={openImageModal}><FontAwesomeIcon icon={faUpload} /> Upload an image</Button>
               </div>
-            }
-          </Container>
+            </Form>) : null}
+          {comment.length <= 0 ?
+            <Container className='text-secondary text-center'>
+              <p>There is no comment yet..</p>
+            </Container>
+            :
+            <div>
+              {comment.map((comments, index) => (
+                <Row key={index}>
+                  <Col xs={12} md={12}>
+                    <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} date={formatDate(comments.comment_date)} />
+                  </Col>
+                </Row>
+              ))}
+            </div>
+          }
+        </Container>
       </Modal>
 
       <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id} />

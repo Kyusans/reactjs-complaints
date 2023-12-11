@@ -11,7 +11,7 @@ import AlertScript from "./AlertScript";
 
 function AdminComplaintTable() {
   // const navigateTo = useNavigate();
-  const [pageStatus, setPageStatus] = useState(null);
+  const [pageStatus, setPageStatus] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
   const [ticketId, setTicketId] = useState("");

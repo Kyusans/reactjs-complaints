@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Col, Container, FloatingLabel, Form, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
+import { Alert, Button, Col, Container, FloatingLabel, Form, Image, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
 import "./css/site.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -22,6 +22,7 @@ function JobOrderModal(props) {
   const [priorityValidation, setPriorityValidation] = useState(null);
   const [personnelValidation, setPersonnelValidation] = useState(null);
   const [additionalComment, setAdditionalComment] = useState("");
+  const [image, setImage] = useState("");
   const [isRetrieving, setIsRetrieving] = useState(false);
 
   // for alert
@@ -150,7 +151,7 @@ function JobOrderModal(props) {
           formData.append("json", JSON.stringify(jsonData));
           formData.append("operation", "getSelectedTicket");
           const response = await axios({ url: url, data: formData, method: "post" });
-          console.log("response ni getSelectedTicket: ", JSON.stringify(response));
+          console.log("response ni getSelectedTicket: ", JSON.stringify(response.data));
           if (response.data !== 0) {
             const resData = response.data[0];
             setTicketNumber(resData.comp_id);
@@ -159,6 +160,7 @@ function JobOrderModal(props) {
             setDescription(resData.comp_description);
             setLocationCategory(resData.locCateg_name);
             setLocation(resData.location_name);
+            setImage("")
             getAllPersonnel();
           }
         } catch (error) {
@@ -227,6 +229,12 @@ function JobOrderModal(props) {
                         />
                       </FloatingLabel>
                     </Container>
+                  </Row>
+
+                  <Row>
+                    <Col xs={6} md={4}>
+                      <Image src={image} rounded />
+                    </Col>
                   </Row>
 
                   <Row className='mb-3'>
