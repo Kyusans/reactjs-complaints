@@ -105,6 +105,8 @@ function ComplaintForm(props) {
     setLocationCategoryId("");
     setDescription("");
     setShowAlert(false);
+    setStartDate("");
+    setEndDate("");
     onHide();
   }
   const formValidation = (e) => {
@@ -171,10 +173,9 @@ function ComplaintForm(props) {
               </Form.Group>
 
               <Form.Group as={Col}>
-                {locationCategoryId && (
                   <>
                     <FloatingLabel label="Location">
-                      <Form.Select value={locationId} onChange={e => setLocationId(e.target.value)} required>
+                      <Form.Select value={locationId} onChange={e => setLocationId(e.target.value)} required disabled={locationCategoryId === ""}>
                         <option value={""}>Open this select menu</option>
                         {location.map((locations, index) => (
                           <option key={index} value={locations.location_id}>{locations.location_name}</option>
@@ -183,7 +184,6 @@ function ComplaintForm(props) {
                       <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
                     </FloatingLabel>
                   </>
-                )}
               </Form.Group>
 
             </Row>
@@ -214,7 +214,7 @@ function ComplaintForm(props) {
                 <Col xs={12} md={6} className='mb-2'>
                   <Container>
                     <FloatingLabel controlId="startDateLabel" label="Start Date">
-                      <Form.Control type='date' value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
+                      <Form.Control type='datetime-local' value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
                     </FloatingLabel>
                   </Container>
                 </Col>
@@ -222,7 +222,7 @@ function ComplaintForm(props) {
                 <Col xs={12} md={6}>
                   <Container>
                     <FloatingLabel controlId="endDateLabel" label="End Date (optional)">
-                      <Form.Control type='date' value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                      <Form.Control type='datetime-local' value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                     </FloatingLabel>
                   </Container>
                 </Col>
