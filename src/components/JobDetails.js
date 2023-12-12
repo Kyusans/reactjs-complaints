@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Container, Form, Spinner, Row, Col, FloatingLabel, Button, ListGroup, Modal } from 'react-bootstrap';
+import { Container, Form, Spinner, Row, Col, FloatingLabel, Button, ListGroup, Modal, Image } from 'react-bootstrap';
 // import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCheck, faUpload } from '@fortawesome/free-solid-svg-icons';
@@ -51,6 +51,7 @@ export default function JobDetails(props) {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isPersonnel, setIsPersonnel] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [image, setImage] = useState("");
   const [showImageModal, setShowImageModal] = useState(false);
   const isAdmin = localStorage.getItem("adminLoggedIn") === "true" ? true : false;
 
@@ -125,7 +126,7 @@ export default function JobDetails(props) {
         }
         getAssignedPersonnel(res.data.job_id);
         setDetails(res.data);
-
+        setImage(localStorage.getItem("url") + "/images/" + res.data.comp_image);
       }
     } catch (err) {
       alert("There was an unexpected error: " + err);
@@ -193,7 +194,6 @@ export default function JobDetails(props) {
               </Button>
 
               <h3 className='text-center mt-3'>Job details</h3>
-              <Form>
                 <Row className='mt-3'>
                   <Col>
                     <FloatingLabel controlId="subject" label="Subject">
@@ -247,8 +247,21 @@ export default function JobDetails(props) {
                     </FloatingLabel>
                   </Col>
                 </Row>
-
-              </Form>
+              
+              <Row className='mt-3'>
+                <Col>
+                  <Container className='image-border'>
+                    {image ? (
+                      <>
+                        <p className='text-secondary mt-2'>Image submitted</p>
+                        <Image src={image} className='card-image' rounded />
+                      </>
+                    ) : (
+                      <p className='text-secondary'>No image submitted</p>
+                    )}
+                  </Container>
+                </Col>
+              </Row>
 
               <Row className='mt-3 justify-content-center'>
                 <Col xs={12} md={6}>
@@ -260,6 +273,7 @@ export default function JobDetails(props) {
                   </ListGroup>
                 </Col>
               </Row>
+
               <Container className='text-center mt-3'>
                 {
                   isPersonnel && parseInt(details.joStatus_id, 10) === 2 ? (
