@@ -7,6 +7,7 @@ import { faArrowLeft, faCheck, faUpload } from '@fortawesome/free-solid-svg-icon
 import "./css/site.css";
 import ConfirmModal from './ConfirmModal';
 import MessageList from './MessageList';
+import UploadImageComment from './UploadImageComment';
 
 export function formatDate(inputDate) {
   const date = new Date(inputDate);
@@ -43,6 +44,7 @@ export function formatDate(inputDate) {
 export default function JobDetails(props) {
   const { show, onHide, compId } = props;
   // const { compId } = useParams();
+  const [isGoingToUpload, setIsGoingToUpload] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
   const [assignedPersonnel, setAssignedPersonnel] = useState([]);
@@ -51,6 +53,7 @@ export default function JobDetails(props) {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isPersonnel, setIsPersonnel] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isAddingComment, setIsAddingComment] = useState(false);
   const [image, setImage] = useState("");
   const [showImageModal, setShowImageModal] = useState(false);
   const isAdmin = localStorage.getItem("adminLoggedIn") === "true" ? true : false;
@@ -71,29 +74,44 @@ export default function JobDetails(props) {
   //   navigateTo(-1);
   // };
 
-  const addComment = () => {
-    if (newComment !== "") {
-      const url = localStorage.getItem("url") + "users.php";
-      const userId = localStorage.getItem("facultyLoggedIn") === "true" ? localStorage.getItem("facCode") : localStorage.getItem("userId");
-      const fullName = localStorage.getItem("userFullName");
-      const jsonData = { compId: compId, userId: userId, commentText: newComment, fullName: fullName };
-      const formData = new FormData();
-      console.log("jsondata ni addcomment: ", JSON.stringify(jsonData))
-      formData.append("operation", "addComment");
-      formData.append("json", JSON.stringify(jsonData));
-      axios({ url: url, data: formData, method: "post" })
-        .then((res) => {
-          console.log("Comment mo to: " + JSON.stringify(res.data))
-          if (res.data === 1) {
-            getComment();
-            setNewComment('');
-          }
-        })
-        .catch((err) => {
-          alert("Error: " + err);
+  const addComment = async () => {
+    setIsAddingComment(true);
+    try {
+      if (newComment !== "") {
+        const url = localStorage.getItem("url") + "users.php";
+        const userId = localStorage.getItem("facultyLoggedIn")
+          ? localStorage.getItem("facCode")
+          : localStorage.getItem("userId");
+        const fullName = localStorage.getItem("userFullName");
+        const jsonData = { compId: compId, userId: userId, commentText: newComment, fullName: fullName };
+        const formData = new FormData();
+        console.log("jsondata ni addcomment: ", JSON.stringify(jsonData))
+        formData.append("operation", "addComment");
+        formData.append("json", JSON.stringify(jsonData));
+
+        const res = await axios({
+          url: url,
+          data: formData,
+          method: "post",
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         });
+
+        console.log("Comment mo to: " + JSON.stringify(res.data));
+
+        if (res.data === 1) {
+          getComment();
+          setNewComment('');
+        }
+      }
+    } catch (err) {
+      alert("Error: " + err);
+    }finally{
+      setIsAddingComment(false);
     }
-  }
+  };
+
 
   const getComment = useCallback(async () => {
     try {
@@ -172,6 +190,8 @@ export default function JobDetails(props) {
 
   useEffect(() => {
     if (show) {
+      setIsAddingComment(false);
+      setIsGoingToUpload(false);
       setIsPersonnel(localStorage.getItem("userLevel") === "90" ? true : false);
       getJobDetails();
       getComment();
@@ -284,38 +304,49 @@ export default function JobDetails(props) {
                 }
               </Container>
               <hr />
+              <Container>
+                {!isCompleted ?
+                  (<Form className='mb-5'>
+                    <FloatingLabel label="Add a comment..">
+                      <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required />
+                    </FloatingLabel>
+                    {isGoingToUpload &&
+                      <Form.Group className='mt-2'>
+                        <FloatingLabel label="Image (optional)">
+                          <Form.Control type='file' name='file' onChange={(e) => setImage(e.target.files[0])} />
+                        </FloatingLabel>
+                      </Form.Group>
+                    }
+                    <div className='mt-3'>
+                      <Button variant='outline-primary' onClick={addComment} disabled={isAddingComment}>
+                        {isAddingComment ? <Spinner size='sm' /> : <FontAwesomeIcon icon={faCheck} />} Submit
+                      </Button>
+                      {" "}
+                      <Button variant='outline-secondary' onClick={() => setIsGoingToUpload(true)}><FontAwesomeIcon icon={faUpload} /> Upload an image</Button>
+                    </div>
+                  </Form>) : null}
+                {comment.length <= 0 ?
+                  <Container className='text-secondary text-center'>
+                    <p>There is no comment yet..</p>
+                  </Container>
+                  :
+                  <div>
+                    {comment.map((comments, index) => (
+                      <Row key={index}>
+                        <Col xs={12} md={12}>
+                          <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} date={formatDate(comments.comment_date)} />
+                        </Col>
+                      </Row>
+                    ))}
+                  </div>
+                }
+              </Container>
             </div>
           }
         </Modal.Body>
-        <Container>
-          {!isCompleted ?
-            (<Form className='mb-5'>
-              <FloatingLabel label="Add a comment..">
-                <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required />
-              </FloatingLabel>
-              <div className='mt-3'>
-                <Button variant='outline-primary' onClick={addComment}><FontAwesomeIcon icon={faCheck} /> Submit</Button>{" "}
-                <Button variant='outline-secondary' onClick={openImageModal}><FontAwesomeIcon icon={faUpload} /> Upload an image</Button>
-              </div>
-            </Form>) : null}
-          {comment.length <= 0 ?
-            <Container className='text-secondary text-center'>
-              <p>There is no comment yet..</p>
-            </Container>
-            :
-            <div>
-              {comment.map((comments, index) => (
-                <Row key={index}>
-                  <Col xs={12} md={12}>
-                    <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} date={formatDate(comments.comment_date)} />
-                  </Col>
-                </Row>
-              ))}
-            </div>
-          }
-        </Container>
-      </Modal>
 
+      </Modal>
+      <UploadImageComment show={showImageModal} onHide={closeImageModal} compId={compId} />
       <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id} />
     </>
   )
