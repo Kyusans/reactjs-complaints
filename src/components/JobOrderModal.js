@@ -160,7 +160,7 @@ function JobOrderModal(props) {
             setDescription(resData.comp_description);
             setLocationCategory(resData.locCateg_name);
             setLocation(resData.location_name);
-            setImage("")
+            setImage(localStorage.getItem("url") + "/images/" + resData.comp_image);
             getAllPersonnel();
           }
         } catch (error) {
@@ -223,7 +223,7 @@ function JobOrderModal(props) {
                         <Form.Control
                           value={description}
                           placeholder='Description'
-                          style={{ height: '150px' }}
+                          style={{ height: '100px' }}
                           as='textarea'
                           readOnly
                         />
@@ -231,16 +231,27 @@ function JobOrderModal(props) {
                     </Container>
                   </Row>
 
-                  <Row>
-                    <Col xs={6} md={4}>
-                      <Image src={image} rounded />
+                  <Row className='mb-3'>
+                    <Col>
+                      <Container className='image-border'>
+                        {image ? (
+                          <>
+                            <p className='text-secondary'>Image submitted</p>
+                            <Image src={image} className='card-image' rounded />
+                          </>
+                        ) : (
+                          <p className='text-secondary'>No image submitted</p>
+                        )}
+                      </Container>
                     </Col>
                   </Row>
 
+
                   <Row className='mb-3'>
                     <Col>
-                      Submitted by:
-                      <Form.Control type="text" placeholder={facultyName} readOnly />
+                      <FloatingLabel label="Submitted by">
+                        <Form.Control type="text" placeholder={"Submitted by"} value={facultyName} readOnly />
+                      </FloatingLabel>
                     </Col>
                   </Row>
 
