@@ -46,7 +46,7 @@ function ComplaintForm(props) {
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "addComplaint");
-      formData.append('file', image);
+      formData.append('file', image !== "" ? image : "");
 
       const response = await axios.post(url, formData, {
         headers: {

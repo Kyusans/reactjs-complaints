@@ -160,7 +160,7 @@ function JobOrderModal(props) {
             setDescription(resData.comp_description);
             setLocationCategory(resData.locCateg_name);
             setLocation(resData.location_name);
-            setImage(localStorage.getItem("url") + "/images/" + resData.comp_image);
+            setImage(resData.comp_image);
             getAllPersonnel();
           }
         } catch (error) {
@@ -237,10 +237,10 @@ function JobOrderModal(props) {
                         {image ? (
                           <>
                             <p className='text-secondary'>Image submitted</p>
-                            <Image src={image} className='card-image' rounded />
+                            <Image src={localStorage.getItem("url") + "/images/" + image} className='card-image' rounded />
                           </>
                         ) : (
-                          <p className='text-secondary'>No image submitted</p>
+                          <p className='text-secondary mt-2'>No image submitted</p>
                         )}
                       </Container>
                     </Col>

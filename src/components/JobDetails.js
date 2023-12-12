@@ -126,7 +126,7 @@ export default function JobDetails(props) {
         }
         getAssignedPersonnel(res.data.job_id);
         setDetails(res.data);
-        setImage(localStorage.getItem("url") + "/images/" + res.data.comp_image);
+        setImage(res.data.comp_image);
       }
     } catch (err) {
       alert("There was an unexpected error: " + err);
@@ -194,70 +194,70 @@ export default function JobDetails(props) {
               </Button>
 
               <h3 className='text-center mt-3'>Job details</h3>
-                <Row className='mt-3'>
-                  <Col>
-                    <FloatingLabel controlId="subject" label="Subject">
-                      <Form.Control type="text" value={details.comp_subject} readOnly />
-                    </FloatingLabel>
-                  </Col>
-                  <Col>
-                    <FloatingLabel controlId="location" label="Location">
-                      <Form.Control type="text" value={details.location_name} readOnly />
-                    </FloatingLabel>
-                  </Col>
-                </Row>
+              <Row className='mt-3'>
+                <Col>
+                  <FloatingLabel controlId="subject" label="Subject">
+                    <Form.Control type="text" value={details.comp_subject} readOnly />
+                  </FloatingLabel>
+                </Col>
+                <Col>
+                  <FloatingLabel controlId="location" label="Location">
+                    <Form.Control type="text" value={details.location_name} readOnly />
+                  </FloatingLabel>
+                </Col>
+              </Row>
 
-                <Row className='mt-3'>
-                  <Col>
-                    <FloatingLabel controlId="Submitted By" label="Submitted By">
-                      <Form.Control type="text" value={details.fac_name} readOnly />
-                    </FloatingLabel>
-                  </Col>
-                  <Col>
-                    <FloatingLabel controlId="user" label="Job Order Created By">
-                      <Form.Control type="text" value={details.user_full_name} readOnly />
-                    </FloatingLabel>
-                  </Col>
-                </Row>
+              <Row className='mt-3'>
+                <Col>
+                  <FloatingLabel controlId="Submitted By" label="Submitted By">
+                    <Form.Control type="text" value={details.fac_name} readOnly />
+                  </FloatingLabel>
+                </Col>
+                <Col>
+                  <FloatingLabel controlId="user" label="Job Order Created By">
+                    <Form.Control type="text" value={details.user_full_name} readOnly />
+                  </FloatingLabel>
+                </Col>
+              </Row>
 
-                <Row className='mt-3'>
-                  <Col>
-                    <Form.Label>Description:</Form.Label>
-                    <Form.Control as="textarea" style={{ height: "100px" }} value={details.job_description} readOnly />
-                  </Col>
-                </Row>
+              <Row className='mt-3'>
+                <Col>
+                  <Form.Label>Description:</Form.Label>
+                  <Form.Control as="textarea" style={{ height: "100px" }} value={details.job_description} readOnly />
+                </Col>
+              </Row>
 
-                <Row className='mt-3'>
-                  <Col>
-                    <FloatingLabel controlId="status" label="Status">
-                      <Form.Control type="text" value={details.joStatus_name} readOnly />
-                    </FloatingLabel>
-                  </Col>
-                  <Col>
-                    <FloatingLabel controlId="priority" label="Priority">
-                      <Form.Control type="text" value={details.priority_name} readOnly />
-                    </FloatingLabel>
-                  </Col>
-                </Row>
+              <Row className='mt-3'>
+                <Col>
+                  <FloatingLabel controlId="status" label="Status">
+                    <Form.Control type="text" value={details.joStatus_name} readOnly />
+                  </FloatingLabel>
+                </Col>
+                <Col>
+                  <FloatingLabel controlId="priority" label="Priority">
+                    <Form.Control type="text" value={details.priority_name} readOnly />
+                  </FloatingLabel>
+                </Col>
+              </Row>
 
-                <Row className='mt-3'>
-                  <Col>
-                    <FloatingLabel controlId="createDate" label="Job Order Date Created">
-                      <Form.Control type="text" value={formatDate(details.job_createDate)} readOnly />
-                    </FloatingLabel>
-                  </Col>
-                </Row>
-              
+              <Row className='mt-3'>
+                <Col>
+                  <FloatingLabel controlId="createDate" label="Job Order Date Created">
+                    <Form.Control type="text" value={formatDate(details.job_createDate)} readOnly />
+                  </FloatingLabel>
+                </Col>
+              </Row>
+
               <Row className='mt-3'>
                 <Col>
                   <Container className='image-border'>
                     {image ? (
                       <>
-                        <p className='text-secondary mt-2'>Image submitted</p>
-                        <Image src={image} className='card-image' rounded />
+                        <p className='text-secondary'>Image submitted</p>
+                        <Image src={localStorage.getItem("url") + "/images/" + image} className='card-image' rounded />
                       </>
                     ) : (
-                      <p className='text-secondary'>No image submitted</p>
+                      <p className='text-secondary mt-2'>No image submitted</p>
                     )}
                   </Container>
                 </Col>
