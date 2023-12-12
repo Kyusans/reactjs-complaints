@@ -17,7 +17,7 @@ function Dashboard() {
   const [tickets, setTickets] = useState([]);
   const [compId, setCompId] = useState(0);
   const [showComplaintModal, setShowComplaintModal] = useState(false);
-  const [statusType, setStatusType] = useState(null);
+  const [statusType, setStatusType] = useState(0);
   const openComplaintModal = () => { setShowComplaintModal(true); }
   const closeComplaintModal = () => {
     getComplaints();
@@ -103,7 +103,7 @@ function Dashboard() {
   useEffect(() => {
     if (localStorage.getItem("isLoggedIn") !== "1") {
       setTimeout(() => {
-        navigateTo("/gsd");
+        navigateTo("/");
       }, 1500);
     } else {
       getComplaints();
