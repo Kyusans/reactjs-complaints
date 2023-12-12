@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { FloatingLabel, Form, Modal } from 'react-bootstrap';
+import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap';
 import AlertScript from './AlertScript';
 
 function UploadImageComment(props) {
@@ -70,7 +70,7 @@ function UploadImageComment(props) {
 
   return (
     <>
-      <Modal show={show} onHide={onHide} backdrop="static">
+      <Modal show={show} onHide={onHide} size='lg' backdrop="static">
         <Modal.Body>
           <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
           <Form onSubmit={addImageComment}>
@@ -80,6 +80,10 @@ function UploadImageComment(props) {
               </FloatingLabel>
             </Form.Group>
           </Form>
+          <Modal.Footer>
+            <Button variant='outline-danger'onClick={onHide} >Close</Button>
+            <Button variant='outline-success'>Submit</Button>
+          </Modal.Footer>
         </Modal.Body>
 
       </Modal>
