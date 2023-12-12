@@ -60,7 +60,7 @@ export default function JobDetails(props) {
   }
 
   const openImageModal = () => { setShowImageModal(true); }
-  const closeImageModal = () =>{
+  const closeImageModal = () => {
     setShowImageModal(false);
   }
 
@@ -222,9 +222,8 @@ export default function JobDetails(props) {
 
                 <Row className='mt-3'>
                   <Col>
-                    <FloatingLabel controlId="description" label="Description">
-                      <Form.Control as="textarea" style={{ height: '200px' }} value={details.job_description} readOnly />
-                    </FloatingLabel>
+                    <Form.Label>Description:</Form.Label>
+                    <Form.Control as="textarea" style={{ height: "100px" }} value={details.job_description} readOnly />
                   </Col>
                 </Row>
 

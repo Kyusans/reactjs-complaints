@@ -11,8 +11,7 @@ function ComplaintForm(props) {
   const [description, setDescription] = useState("");
   const [locationCategory, setLocationCategory] = useState([]);
   const [location, setLocation] = useState([]);
-  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
-  const [endDate, setEndDate] = useState("");
+  const [endDate, setEndDate] = useState(new Date().toISOString().slice(0,10));
   const [image, setImage] = useState(null);
   const [validated, setValidated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +27,7 @@ function ComplaintForm(props) {
   }
 
   const addComplaint = async () => {
+    setShowAlert(false);
     setIsLoading(true);
     try {
       const url = localStorage.getItem("url") + "users.php";
@@ -38,9 +38,10 @@ function ComplaintForm(props) {
         locationId: locationId,
         locationCategoryId: locationCategoryId,
         description: description,
-        startDate: startDate,
-        endDate: endDate,
+        endDate: endDate
       };
+
+      console.log("json ni addComplaint: " + JSON.stringify(jsonData))
 
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
@@ -62,6 +63,7 @@ function ComplaintForm(props) {
           }, 1500);
           break;
         case 2:
+          setImage("");
           getAlert("danger", "You cannot Upload files of this type!");
           break;
         case 3:
@@ -69,6 +71,10 @@ function ComplaintForm(props) {
           break;
         case 4:
           getAlert("danger", "Your file is too big (25mb maximum)");
+          break;
+        case 5:
+          setEndDate("");
+          getAlert("danger", "End date cannot be earlier than today's date");
           break;
         default:
           getAlert("danger", "Unsuccessful");
@@ -105,8 +111,7 @@ function ComplaintForm(props) {
     setLocationCategoryId("");
     setDescription("");
     setShowAlert(false);
-    setStartDate("");
-    setEndDate("");
+    setEndDate(new Date().toISOString().slice(0,10));
     onHide();
   }
   const formValidation = (e) => {
@@ -173,17 +178,17 @@ function ComplaintForm(props) {
               </Form.Group>
 
               <Form.Group as={Col}>
-                  <>
-                    <FloatingLabel label="Location">
-                      <Form.Select value={locationId} onChange={e => setLocationId(e.target.value)} required disabled={locationCategoryId === ""}>
-                        <option value={""}>Open this select menu</option>
-                        {location.map((locations, index) => (
-                          <option key={index} value={locations.location_id}>{locations.location_name}</option>
-                        ))}
-                      </Form.Select>
-                      <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
-                    </FloatingLabel>
-                  </>
+                <>
+                  <FloatingLabel label="Location">
+                    <Form.Select value={locationId} onChange={e => setLocationId(e.target.value)} required disabled={locationCategoryId === ""}>
+                      <option value={""}>Open this select menu</option>
+                      {location.map((locations, index) => (
+                        <option key={index} value={locations.location_id}>{locations.location_name}</option>
+                      ))}
+                    </Form.Select>
+                    <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
+                  </FloatingLabel>
+                </>
               </Form.Group>
 
             </Row>
@@ -209,23 +214,13 @@ function ComplaintForm(props) {
               </FloatingLabel>
             </Form.Group>
 
-            <Form.Group className="mt-3 mb-2">
+            <Form.Group className="mb-3">
               <Row>
-                <Col xs={12} md={6} className='mb-2'>
                   <Container>
-                    <FloatingLabel controlId="startDateLabel" label="Start Date">
-                      <Form.Control type='datetime-local' value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
+                    <FloatingLabel controlId="endDateLabel" label="End Date">
+                      <Form.Control type='date' value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
                     </FloatingLabel>
                   </Container>
-                </Col>
-
-                <Col xs={12} md={6}>
-                  <Container>
-                    <FloatingLabel controlId="endDateLabel" label="End Date (optional)">
-                      <Form.Control type='datetime-local' value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                    </FloatingLabel>
-                  </Container>
-                </Col>
               </Row>
             </Form.Group>
 
