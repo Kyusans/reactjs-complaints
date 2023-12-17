@@ -58,7 +58,8 @@ export default function JobDetails(props) {
   const isAdmin = localStorage.getItem("adminLoggedIn") === "true" ? true : false;
 
   const openConfirmModal = () => { setShowConfirmModal(true); }
-  const closeConfirmModal = () => {
+  const closeConfirmModal = async () => {
+    await getJobDetails(compId);
     setShowConfirmModal(false);
   }
 
@@ -71,7 +72,7 @@ export default function JobDetails(props) {
   const addComment = async () => {
     setIsAddingComment(true);
     try {
-      if (newComment !== "") {
+      if (newComment !== "" || commentImage !== "") {
         const url = localStorage.getItem("url") + "users.php";
         const userId = localStorage.getItem("facultyLoggedIn")
           ? localStorage.getItem("facCode")
@@ -98,7 +99,7 @@ export default function JobDetails(props) {
         switch (res.data) {
           case 1:
             getComment();
-            setImage("");
+            setCommentImage("");
             setNewComment('');
             break;
           case 2:
@@ -118,11 +119,11 @@ export default function JobDetails(props) {
       }
     } catch (err) {
       alert("Error: " + err);
-    }finally{
+    } finally {
+      setIsGoingToUpload(false);
       setIsAddingComment(false);
     }
   };
-
 
   const getComment = useCallback(async () => {
     try {
@@ -149,6 +150,7 @@ export default function JobDetails(props) {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getJobDetails");
       const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("res.data: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         if (res.data.joStatus_name === "Completed") {
           setIsCompleted(true);
@@ -311,7 +313,14 @@ export default function JobDetails(props) {
                     <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>Mark as done</Button>
                   ) : (isAdmin && isCompleted) ? (
                     <Button className='mt-2' variant='outline-success' onClick={reopenJob}>Reopen Job</Button>
-                  ) : null
+                  ) :
+                    <Row className='mt-3'>
+                      <Col>
+                        <FloatingLabel label="Closed by">
+                          <Form.Control type="text" value={details.comp_closedBy} readOnly />
+                        </FloatingLabel>
+                      </Col>
+                    </Row>
                 }
               </Container>
               <hr />
