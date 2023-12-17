@@ -7,7 +7,6 @@ import { faArrowLeft, faCheck, faUpload } from '@fortawesome/free-solid-svg-icon
 import "./css/site.css";
 import ConfirmModal from './ConfirmModal';
 import MessageList from './MessageList';
-import UploadImageComment from './UploadImageComment';
 
 export function formatDate(inputDate) {
   const date = new Date(inputDate);
@@ -55,17 +54,13 @@ export default function JobDetails(props) {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isAddingComment, setIsAddingComment] = useState(false);
   const [image, setImage] = useState("");
-  const [showImageModal, setShowImageModal] = useState(false);
+  const [commentImage, setCommentImage] = useState("");
   const isAdmin = localStorage.getItem("adminLoggedIn") === "true" ? true : false;
 
   const openConfirmModal = () => { setShowConfirmModal(true); }
-  const closeConfirmModal = () => {
+  const closeConfirmModal = async () => {
+    await getJobDetails(compId);
     setShowConfirmModal(false);
-  }
-
-  const openImageModal = () => { setShowImageModal(true); }
-  const closeImageModal = () => {
-    setShowImageModal(false);
   }
 
   // const navigateTo = useNavigate();
@@ -77,7 +72,7 @@ export default function JobDetails(props) {
   const addComment = async () => {
     setIsAddingComment(true);
     try {
-      if (newComment !== "") {
+      if (newComment !== "" || commentImage !== "") {
         const url = localStorage.getItem("url") + "users.php";
         const userId = localStorage.getItem("facultyLoggedIn")
           ? localStorage.getItem("facCode")
@@ -88,6 +83,7 @@ export default function JobDetails(props) {
         console.log("jsondata ni addcomment: ", JSON.stringify(jsonData))
         formData.append("operation", "addComment");
         formData.append("json", JSON.stringify(jsonData));
+        formData.append('file', commentImage !== "" ? commentImage : "");
 
         const res = await axios({
           url: url,
@@ -100,18 +96,34 @@ export default function JobDetails(props) {
 
         console.log("Comment mo to: " + JSON.stringify(res.data));
 
-        if (res.data === 1) {
-          getComment();
-          setNewComment('');
+        switch (res.data) {
+          case 1:
+            getComment();
+            setCommentImage("");
+            setNewComment('');
+            break;
+          case 2:
+            setImage("");
+            alert("You cannot Upload files of this type!");
+            break;
+          case 3:
+            alert("There was an error uploading your file!");
+            break;
+          case 4:
+            alert("Your file is too big (25mb maximum)");
+            break;
+          default:
+            alert("danger", "Unsuccessful");
+            break;
         }
       }
     } catch (err) {
       alert("Error: " + err);
-    }finally{
+    } finally {
+      setIsGoingToUpload(false);
       setIsAddingComment(false);
     }
   };
-
 
   const getComment = useCallback(async () => {
     try {
@@ -138,6 +150,7 @@ export default function JobDetails(props) {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getJobDetails");
       const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("res.data: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         if (res.data.joStatus_name === "Completed") {
           setIsCompleted(true);
@@ -300,7 +313,14 @@ export default function JobDetails(props) {
                     <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>Mark as done</Button>
                   ) : (isAdmin && isCompleted) ? (
                     <Button className='mt-2' variant='outline-success' onClick={reopenJob}>Reopen Job</Button>
-                  ) : null
+                  ) :
+                    <Row className='mt-3'>
+                      <Col>
+                        <FloatingLabel label="Closed by">
+                          <Form.Control type="text" value={details.comp_closedBy} readOnly />
+                        </FloatingLabel>
+                      </Col>
+                    </Row>
                 }
               </Container>
               <hr />
@@ -313,7 +333,7 @@ export default function JobDetails(props) {
                     {isGoingToUpload &&
                       <Form.Group className='mt-2'>
                         <FloatingLabel label="Image (optional)">
-                          <Form.Control type='file' name='file' onChange={(e) => setImage(e.target.files[0])} />
+                          <Form.Control type='file' onChange={(e) => setCommentImage(e.target.files[0])} />
                         </FloatingLabel>
                       </Form.Group>
                     }
@@ -334,7 +354,7 @@ export default function JobDetails(props) {
                     {comment.map((comments, index) => (
                       <Row key={index}>
                         <Col xs={12} md={12}>
-                          <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} date={formatDate(comments.comment_date)} />
+                          <MessageList userId={comments.user_id} username={comments.full_name} message={comments.comment_commentText} image={comments.comment_commentImage} date={formatDate(comments.comment_date)} />
                         </Col>
                       </Row>
                     ))}
@@ -346,7 +366,6 @@ export default function JobDetails(props) {
         </Modal.Body>
 
       </Modal>
-      <UploadImageComment show={showImageModal} onHide={closeImageModal} compId={compId} />
       <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id} />
     </>
   )

@@ -23,7 +23,8 @@ export default function ConfirmModal(props) {
     setIsLoading(true);
     try {
       const url = localStorage.getItem("url") + "personnel.php";
-      const jsonData = { compId: compId };
+      const fullName = localStorage.getItem("userFullName");
+      const jsonData = { compId: compId, fullName: fullName };
       const formData = new FormData();
       formData.append("operation", "jobDone");
       formData.append("json", JSON.stringify(jsonData));
@@ -52,7 +53,7 @@ export default function ConfirmModal(props) {
 
   return (
     <>
-      <Modal show={show} onHide={handleHide} centered backdrop="static">
+      <Modal show={show} className='bg-dark' onHide={handleHide} centered backdrop="static">
         <Modal.Header>
           <h4>Confirmation</h4>
         </Modal.Header>
