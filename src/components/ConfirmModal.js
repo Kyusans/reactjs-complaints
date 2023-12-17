@@ -35,7 +35,7 @@ export default function ConfirmModal(props) {
         getAlert("success", "Job Complete!");
         setIsJobComplete(true);
         setTimeout(() => {
-          window.location.reload();
+          handleHide();
         }, 1500);
       }
     } catch (err) {
