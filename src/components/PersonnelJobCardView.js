@@ -134,11 +134,11 @@ export default function PersonnelJobCardView() {
         )}
       </Container>
       {isLoading ?
-        <Container className='text-center mt-3'>
+        <Container className='text-center mt-3 vh-100'>
           <Spinner animation='border' variant='success' />
         </Container>
         :
-        <Container className='scrollable-container'>
+        <Container className='scrollable-container vh-100'>
           <div>
             {ticket.length === 0 && <AlertScript show={true} variant={"dark"} message={"No tickets yet"} />}
 
