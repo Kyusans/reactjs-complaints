@@ -121,7 +121,7 @@ export default function PersonnelJobCardView() {
         </Dropdown>
         {isOnGoing && (
           <Dropdown className="mb-2 mx-2 mt-2">
-            <Dropdown.Toggle variant={priorityType === 1 ? "danger" : priorityType === 2 ? "warning" : priorityType === 3 ? "dark" : "primary"}>
+            <Dropdown.Toggle variant={priorityType === 1 ? "danger" : priorityType === 2 ? "warning" : priorityType === 3 ? "secondary" : "primary"}>
               {priorityType === 1 ? "High" : priorityType === 2 ? "Medium" : priorityType === 3 ? "Low" : "Select Priority"}
             </Dropdown.Toggle>
 

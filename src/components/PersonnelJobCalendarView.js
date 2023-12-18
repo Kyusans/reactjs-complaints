@@ -11,11 +11,11 @@ function PersonnelJobCalendarView() {
   const [events, setEvents] = useState([]);
   const [ticketId, setTicketId] = useState("");
   const [showJobDetails, setShowJobDetails] = useState(false);
-  const hideJobDetails = () => { 
-    getJobTicket(); 
+
+  const hideJobDetails = () => {
+    getJobTicket();
     setShowJobDetails(false);
   }
-  
 
   const getJobTicket = useCallback(async () => {
     try {
@@ -52,13 +52,14 @@ function PersonnelJobCalendarView() {
   }, [getJobTicket])
 
   return (
-    <Container fluid className="bg-dark vh-100 text-white scrollable-container">
+    <Container fluid className="gray-body vh-100 text-white scrollable-container">
       <FullCalendar
         className="clickable"
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView='dayGridMonth'
         weekends={true}
         events={events}
+        dayMaxEvents={true}
         eventClick={handleEventClick}
         headerToolbar={{
           left: 'title',
@@ -84,7 +85,7 @@ export function colorFormatter(status) {
       colorCode = "#f4ca16";
       break;
     default:
-      colorCode = "#014421"
+      colorCode = "#006400"
       break;
   }
   return colorCode;
