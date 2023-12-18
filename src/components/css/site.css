@@ -225,3 +225,17 @@
     border: 1px solid rgba(128, 128, 128, 0.479);
     border-radius: 5px;
   }
+
+  .fc-daygrid-day-number {
+    color: white; 
+  }
+
+  .fc-col-header-cell-cushion{
+    color: white;
+  }
+
+  .fc-event-title{
+    font-size: 15px;
+    color: white;
+    font-weight: bold;
+  }
