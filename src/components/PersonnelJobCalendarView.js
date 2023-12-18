@@ -43,7 +43,6 @@ function PersonnelJobCalendarView() {
   }, []);
 
   function handleEventClick(info) {
-    // alert("info: " + JSON.stringify(info.event.id));
     setTicketId(info.event.id);
     setShowJobDetails(true);
   };
@@ -53,7 +52,7 @@ function PersonnelJobCalendarView() {
   }, [getJobTicket])
 
   return (
-    <Container fluid className="bg-dark vh-100 text-white">
+    <Container fluid className="bg-dark vh-100 text-white scrollable-container">
       <FullCalendar
         className="clickable"
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -62,11 +61,11 @@ function PersonnelJobCalendarView() {
         events={events}
         eventClick={handleEventClick}
         headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek'
+          left: 'title',
+          center: '',
+          right: 'today,prev,next dayGridMonth,timeGridWeek,timeGridDay'
         }}
-        height={'80vh'}
+        height={'90vh'}
       />
       <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={ticketId} />
     </Container>

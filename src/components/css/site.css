@@ -248,3 +248,7 @@
   .fc-event-title-container{
     cursor: pointer;
   }
+
+  .fc-toolbar-title{
+    padding: 10px;
+  }
