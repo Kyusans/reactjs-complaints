@@ -34,9 +34,7 @@ export default function ConfirmModal(props) {
       if (response.data === 1) {
         getAlert("success", "Job Complete!");
         setIsJobComplete(true);
-        setTimeout(() => {
-          handleHide();
-        }, 1500);
+        handleHide();
       }
     } catch (err) {
       getAlert("danger", "There was an unexpected error: " + err);

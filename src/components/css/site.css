@@ -235,7 +235,16 @@
   }
 
   .fc-event-title{
+    cursor: pointer;
     font-size: 15px;
     color: white;
     font-weight: bold;
+  }
+
+  .fc-event-time{
+    font-size: 1px;
+  }
+
+  .fc-event-title-container{
+    cursor: pointer;
   }
