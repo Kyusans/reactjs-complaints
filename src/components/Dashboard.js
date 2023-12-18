@@ -25,7 +25,7 @@ function Dashboard() {
   }
 
   const [showJobDetails, setShowJobDetails] = useState(false);
-  const hideJobDetails = () => { 
+  const hideJobDetails = () => {
     getTicketsByStatus(statusType);
     setShowJobDetails(false);
   };
@@ -57,7 +57,7 @@ function Dashboard() {
   const getTicketsByStatus = async (status) => {
     setIsloading(true);
     setStatusType(status);
-    if(status === 0){
+    if (status === 0) {
       getComplaints();
       return;
     }
@@ -115,21 +115,21 @@ function Dashboard() {
       {localStorage.getItem("isLoggedIn") === "1" ? (
         <Container className="mt-3">
           <Container className='mb-2 mt-2 d-flex align-content-sm-start justify-content-start'>
-            <Button className='btn btn-success me-1' onClick={openComplaintModal}>
-              <FontAwesomeIcon icon={faPlus} /> Add Ticket
-            </Button>
             <Dropdown className="me-1">
-              <Dropdown.Toggle variant={statusType === 0 ? "primary" : statusType === 1 ? "dark" : statusType === 2 ?  "warning text-dark" : statusType === 3 ? "success" : "primary"}>
-                {statusType === 0 ? "All Tickets" : statusType === 1 ? "Pending Tickets" : statusType === 2 ?  "On-going Tickets" : statusType === 3 ? "Completed Tickets" : "Select Ticket Type"}
+              <Dropdown.Toggle variant={statusType === 0 ? "primary" : statusType === 1 ? "dark" : statusType === 2 ? "warning text-dark" : statusType === 3 ? "success" : "primary"}>
+                {statusType === 0 ? "All Tickets" : statusType === 1 ? "Pending Tickets" : statusType === 2 ? "On-going Tickets" : statusType === 3 ? "Completed Tickets" : "Select Ticket Type"}
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => getTicketsByStatus(0)}><FontAwesomeIcon icon={faThList} className="me-2"/>All Ticket</Dropdown.Item>
+                <Dropdown.Item onClick={() => getTicketsByStatus(0)}><FontAwesomeIcon icon={faThList} className="me-2" />All Ticket</Dropdown.Item>
                 <Dropdown.Item onClick={() => getTicketsByStatus(1)} className="text-dark"><FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending</Dropdown.Item>
                 <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning"><FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-going</Dropdown.Item>
                 <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success"><FontAwesomeIcon icon={faCheck} className="me-2" />Completed</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+            <Button className='btn btn-success me-1' onClick={openComplaintModal}>
+              <FontAwesomeIcon icon={faPlus} /> Add Ticket
+            </Button>
           </Container>
 
           {isLoading ? (

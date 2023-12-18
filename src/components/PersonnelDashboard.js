@@ -12,7 +12,7 @@ export default function PersonnelDashboard() {
 
   return (
     <>
-      <Container className="bg-dark" fluid>
+      <Container className="gray-body p-2" fluid>
         <Container>
           <Button variant="info" onClick={() => setIsCalendarView(false)} className="me-1 ms-2"><FontAwesomeIcon icon={faTh} /> </Button>
           <Button variant="light" onClick={() => setIsCalendarView(true)}><FontAwesomeIcon icon={faCalendar}/> </Button>

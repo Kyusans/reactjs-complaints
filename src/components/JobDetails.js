@@ -213,7 +213,7 @@ export default function JobDetails(props) {
 
   return (
     <>
-      <Modal className='bg-dark' show={show} onHide={onHide} size='lg' centered backdrop="static">
+      <Modal className='bg-dark' show={show} onHide={onHide} size='lg' backdrop="static">
         <Modal.Body>
           {isLoading ?
             <Container className='text-center'>

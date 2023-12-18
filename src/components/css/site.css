@@ -232,6 +232,7 @@
 
   .fc-col-header-cell-cushion{
     color: white;
+    font-size: 11px;
   }
 
   .fc-event-title{
@@ -251,4 +252,22 @@
 
   .fc-toolbar-title{
     padding: 10px;
+  }
+
+  .fc-popover-header {
+    background-color: #0c0c0c !important;
+    color: white !important;
+  }
+
+  .fc-popover-body {
+    background-color: #1a1a1d !important;
+    color: white !important;
+  }
+
+  .fc-popover {
+    z-index: 100 !important;
+  }
+
+  .gray-body{
+    background-color: #333333 !important;
   }
