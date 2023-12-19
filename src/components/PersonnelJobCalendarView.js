@@ -52,7 +52,7 @@ function PersonnelJobCalendarView() {
   }, [getJobTicket])
 
   return (
-    <Container fluid className="gray-body vh-100 text-white scrollable-container">
+    <Container fluid className="vh-100 text-white scrollable-container">
       <FullCalendar
         className="clickable"
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
