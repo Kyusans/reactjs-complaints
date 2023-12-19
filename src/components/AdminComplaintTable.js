@@ -106,7 +106,7 @@ function AdminComplaintTable() {
 
   return (
     <>
-      <Dropdown className="mb-2">
+      <Dropdown className="mb-2 ms-3">
         <Dropdown.Toggle variant={pageStatus === 0 ? "primary" : pageStatus === 1 ? "dark" : pageStatus === 2 ? "warning text-dark" : pageStatus === 3 ? "success" : "primary"}>
           {pageStatus === 0 ? "All Tickets" : pageStatus === 1 ? "Pending Tickets" : pageStatus === 2 ? "On-going Tickets" : pageStatus === 3 ? "Completed Tickets" : "Select Ticket Type"}
         </Dropdown.Toggle>
@@ -123,7 +123,7 @@ function AdminComplaintTable() {
           <Spinner animation='border' variant='success' />
         </Container>
         :
-        <Container>
+        <Container fluid>
 
           {displayedTickets.length === 0 ? <AlertScript show={true} variant={"dark"} message={"No tickets yet"} /> :
 

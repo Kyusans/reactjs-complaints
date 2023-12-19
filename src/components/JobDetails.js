@@ -213,7 +213,7 @@ export default function JobDetails(props) {
 
   return (
     <>
-      <Modal className='bg-dark' show={show} onHide={onHide} size='lg' backdrop="static">
+      <Modal className='bg-dark' show={show} onHide={onHide} size='lg' backdrop="static" centered>
         <Modal.Body>
           {isLoading ?
             <Container className='text-center'>
@@ -221,7 +221,6 @@ export default function JobDetails(props) {
             </Container>
             :
             <div>
-
               <Button variant='outline-danger button-m' onClick={onHide}>
                 <FontAwesomeIcon icon={faArrowLeft} />
               </Button>
