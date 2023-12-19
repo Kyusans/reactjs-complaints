@@ -11,7 +11,7 @@ import UpdateTicketModal from './UpdateTicketModal';
 import TicketCard from './TicketCard';
 import AlertScript from './AlertScript';
 
-function Dashboard() {
+function ClientCardView() {
   const navigateTo = useNavigate();
   const [isLoading, setIsloading] = useState(false);
   const [tickets, setTickets] = useState([]);
@@ -161,4 +161,4 @@ function Dashboard() {
   );
 
 }
-export default Dashboard;
+export default ClientCardView;

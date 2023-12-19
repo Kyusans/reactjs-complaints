@@ -82,7 +82,7 @@ export function colorFormatter(status) {
       colorCode = "#080808";
       break;
     case "On-Going":
-      colorCode = "#f4ca16";
+      colorCode = "#ffa500";
       break;
     default:
       colorCode = "#006400"
