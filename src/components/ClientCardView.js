@@ -10,6 +10,7 @@ import JobDetails, { formatDate } from './JobDetails';
 import UpdateTicketModal from './UpdateTicketModal';
 import TicketCard from './TicketCard';
 import AlertScript from './AlertScript';
+import { statusFormatter } from './ClientCalendarView';
 
 function ClientCardView() {
   const navigateTo = useNavigate();
@@ -90,16 +91,6 @@ function ClientCardView() {
     }
   }
 
-  function formatStatus(status) {
-    if (status === 1) {
-      return "Pending"
-    } else if (status === 2) {
-      return "On-Going"
-    } else {
-      return "Completed"
-    }
-  }
-
   useEffect(() => {
     if (localStorage.getItem("isLoggedIn") !== "1") {
       setTimeout(() => {
@@ -113,37 +104,37 @@ function ClientCardView() {
   return (
     <>
       {localStorage.getItem("isLoggedIn") === "1" ? (
-        <Container className="mt-3">
-          <Container className='mb-2 mt-2 d-flex align-content-sm-start justify-content-start'>
-            <Dropdown className="me-1">
-              <Dropdown.Toggle variant={statusType === 0 ? "primary" : statusType === 1 ? "dark" : statusType === 2 ? "warning text-dark" : statusType === 3 ? "success" : "primary"}>
-                {statusType === 0 ? "All Tickets" : statusType === 1 ? "Pending Tickets" : statusType === 2 ? "On-going Tickets" : statusType === 3 ? "Completed Tickets" : "Select Ticket Type"}
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => getTicketsByStatus(0)}><FontAwesomeIcon icon={faThList} className="me-2" />All Ticket</Dropdown.Item>
-                <Dropdown.Item onClick={() => getTicketsByStatus(1)} className="text-dark"><FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending</Dropdown.Item>
-                <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning"><FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-going</Dropdown.Item>
-                <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success"><FontAwesomeIcon icon={faCheck} className="me-2" />Completed</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-            <Button className='btn btn-success me-1' onClick={openComplaintModal}>
-              <FontAwesomeIcon icon={faPlus} /> Add Ticket
-            </Button>
-          </Container>
-
+        <Container fluid className="mt-3">
           {isLoading ? (
             <Container className='text-center'>
               <Spinner animation='border' variant='success' />
             </Container>
           ) : (
             <>
+              <Container fluid className='mb-2 mt-2 d-flex align-content-sm-start justify-content-start'>
+                <Dropdown className="me-1">
+                  <Dropdown.Toggle variant={statusType === 0 ? "primary" : statusType === 1 ? "dark" : statusType === 2 ? "warning text-dark" : statusType === 3 ? "success" : "primary"}>
+                    {statusType === 0 ? "All Tickets" : statusType === 1 ? "Pending Tickets" : statusType === 2 ? "On-going Tickets" : statusType === 3 ? "Completed Tickets" : "Select Ticket Type"}
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => getTicketsByStatus(0)}><FontAwesomeIcon icon={faThList} className="me-2" />All Ticket</Dropdown.Item>
+                    <Dropdown.Item onClick={() => getTicketsByStatus(1)} className="text-dark"><FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending</Dropdown.Item>
+                    <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning"><FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-going</Dropdown.Item>
+                    <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success"><FontAwesomeIcon icon={faCheck} className="me-2" />Completed</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+                <Button className='btn btn-success me-1' onClick={openComplaintModal}>
+                  <FontAwesomeIcon icon={faPlus} /> Add Ticket
+                </Button>
+              </Container>
+
               {tickets.length === 0 ? (
                 <AlertScript show={true} variant={"dark"} message={"No tickets yet"} />
               ) : (
                 tickets.map((ticket, index) => (
                   <div key={index} className='p-1 clickable' onClick={() => handleNavigate(ticket.comp_id, ticket.comp_status)}>
-                    <TicketCard subject={ticket.comp_subject} status={formatStatus(ticket.comp_status)} priority={null} date={formatDate(ticket.comp_date)} lastUser={ticket.comp_lastUser} />
+                    <TicketCard subject={ticket.comp_subject} status={statusFormatter(ticket.comp_status)} priority={null} date={formatDate(ticket.comp_date)} lastUser={ticket.comp_lastUser} />
                   </div>
                 ))
               )}

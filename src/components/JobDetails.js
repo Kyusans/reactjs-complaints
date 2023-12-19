@@ -313,7 +313,7 @@ export default function JobDetails(props) {
                     <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>Mark as done</Button>
                   ) : (isAdmin && isCompleted) ? (
                     <Button className='mt-2' variant='outline-success' onClick={reopenJob}>Reopen Job</Button>
-                  ) :
+                  ) : isCompleted ?
                     <Row className='mt-3'>
                       <Col>
                         <FloatingLabel label="Closed by">
@@ -321,6 +321,7 @@ export default function JobDetails(props) {
                         </FloatingLabel>
                       </Col>
                     </Row>
+                    : <></>
                 }
               </Container>
               <hr />
