@@ -3,10 +3,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Container, Form, Spinner, Row, Col, FloatingLabel, Button, ListGroup, Modal, Image } from 'react-bootstrap';
 // import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCheck, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faCamera, faCheck, faUpload } from '@fortawesome/free-solid-svg-icons';
 import "./css/site.css";
 import ConfirmModal from './ConfirmModal';
 import MessageList from './MessageList';
+import ReopenJob from './ReopenJob';
 
 export function formatDate(inputDate) {
   const date = new Date(inputDate);
@@ -57,9 +58,23 @@ export default function JobDetails(props) {
   const [commentImage, setCommentImage] = useState("");
   const isAdmin = localStorage.getItem("adminLoggedIn") === "true" ? true : false;
 
+  const [showReopenJob, setShowReopenJob] = useState(false);
+
+  const hideReopenJob = async () => {
+    getComment();
+    await getJobDetails();
+    setShowReopenJob(false)
+  }
+
+  const openReopenJob = () => {
+    setShowReopenJob(true);
+    console.log("showReopenJob state:", showReopenJob);
+  }
+
   const openConfirmModal = () => { setShowConfirmModal(true); }
+
   const closeConfirmModal = async () => {
-    await getJobDetails(compId);
+    await getJobDetails();
     setShowConfirmModal(false);
   }
 
@@ -68,6 +83,8 @@ export default function JobDetails(props) {
   // const handleBackButtonClick = () => {
   //   navigateTo(-1);
   // };
+
+
 
   const addComment = async () => {
     setIsAddingComment(true);
@@ -142,6 +159,7 @@ export default function JobDetails(props) {
   }, [compId]);
 
   const getJobDetails = useCallback(async () => {
+    console.log("Gi tawag ang getJobDetails")
     setIsLoading(true);
     try {
       const url = localStorage.getItem("url") + "admin.php";
@@ -154,6 +172,8 @@ export default function JobDetails(props) {
       if (res.data !== 0) {
         if (res.data.joStatus_name === "Completed") {
           setIsCompleted(true);
+        } else {
+          setIsCompleted(false);
         }
         getAssignedPersonnel(res.data.job_id);
         setDetails(res.data);
@@ -180,25 +200,6 @@ export default function JobDetails(props) {
     } catch (error) {
       alert("There was an error occured: " + error.message);
     }
-  }
-
-  const reopenJob = () => {
-    const url = localStorage.getItem("url") + "admin.php";
-    const jsonData = { compId: compId };
-    const formData = new FormData();
-    formData.append("operation", "reopenJob");
-    formData.append("json", JSON.stringify(jsonData));
-    axios({ url: url, data: formData, method: "post" })
-      .then((res) => {
-        if (res.data === 1) {
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
-        }
-      })
-      .catch((err) => {
-        alert("There was an unexpected error: " + err);
-      })
   }
 
   useEffect(() => {
@@ -311,7 +312,7 @@ export default function JobDetails(props) {
                   isPersonnel && parseInt(details.joStatus_id, 10) === 2 ? (
                     <Button className='mt-2' variant='outline-success' onClick={openConfirmModal}>Mark as done</Button>
                   ) : (isAdmin && isCompleted) ? (
-                    <Button className='mt-2' variant='outline-success' onClick={reopenJob}>Reopen Job</Button>
+                    <Button className='mt-2' variant='outline-success' onClick={openReopenJob}>Reopen Job</Button>
                   ) : isCompleted ?
                     <Row className='mt-3'>
                       <Col>
@@ -325,7 +326,7 @@ export default function JobDetails(props) {
               </Container>
               <hr />
               <Container>
-                {!isCompleted ?
+                {!isCompleted &&
                   (<Form className='mb-5'>
                     <FloatingLabel label="Add a comment..">
                       <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required />
@@ -338,13 +339,14 @@ export default function JobDetails(props) {
                       </Form.Group>
                     }
                     <div className='mt-3'>
-                      <Button variant='outline-primary' onClick={addComment} disabled={isAddingComment}>
+                      <Button variant='outline-primary' className='me-1' onClick={addComment} disabled={isAddingComment}>
                         {isAddingComment ? <Spinner size='sm' /> : <FontAwesomeIcon icon={faCheck} />} Submit
                       </Button>
-                      {" "}
-                      <Button variant='outline-secondary' onClick={() => setIsGoingToUpload(true)}><FontAwesomeIcon icon={faUpload} /> Upload an image</Button>
+                      <Button variant='outline-dark'><FontAwesomeIcon icon={faCamera} size='lg' /></Button>
+                      <Button variant='outline-dark' className='ms-1' onClick={() => setIsGoingToUpload(true)}><FontAwesomeIcon icon={faUpload} /></Button>
                     </div>
-                  </Form>) : null}
+                  </Form>)
+                }
                 {comment.length <= 0 ?
                   <Container className='text-secondary text-center'>
                     <p>There is no comment yet..</p>
@@ -367,6 +369,7 @@ export default function JobDetails(props) {
 
       </Modal>
       <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id} />
+      <ReopenJob show={showReopenJob} onHide={hideReopenJob} compId={compId} />
     </>
   )
 }
