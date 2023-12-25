@@ -8,11 +8,6 @@ import AlertScript from './AlertScript';
 import { requestPermission } from './NotificationComponent';
 
 export default function Login() {
-  if (localStorage.getItem("url") !== "http://localhost/gsd/api/") {
-    localStorage.setItem("url", "http://localhost/gsd/api/");
-    // https://coc-studentinfo.net/gsd/api/
-  }
-
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);

@@ -40,9 +40,6 @@ function ComplaintForm(props) {
         description: description,
         endDate: endDate
       };
-
-      console.log("json ni addComplaint: " + JSON.stringify(jsonData))
-
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "addComplaint");
@@ -53,8 +50,6 @@ function ComplaintForm(props) {
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      console.log("response: " + JSON.stringify(response));
       switch (response.data) {
         case 1:
           getAlert("success", "Success");

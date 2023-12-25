@@ -35,7 +35,6 @@ function LocationCategory() {
       method: "post",
     })
       .then((res) => {
-        console.log("res ni submit location category: " + JSON.stringify(res.data))
         if (res.data === 2) {
           getAlert("danger" , locationCategoryText + " already exists")
           setIsLoading(false);

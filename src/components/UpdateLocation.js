@@ -15,7 +15,7 @@ function UpdateLocation(props) {
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "updateLocation");
-      const res = await axios({ url: url, data: formData, method: "post" });
+      await axios({ url: url, data: formData, method: "post" });
       onCancel();
     } catch (error) {
       alert("There was an unexpected error: " + error.message);

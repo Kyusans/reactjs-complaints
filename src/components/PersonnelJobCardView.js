@@ -31,7 +31,6 @@ export default function PersonnelJobCardView() {
       formData.append("operation", "getJobTicket");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res ni get job ticket: ", JSON.stringify(res.data))
       if (res.data !== 0) {
         setTicket(res.data);
         setIsLoading(false);

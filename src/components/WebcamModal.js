@@ -41,9 +41,6 @@ function WebcamModal(props) {
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      console.log("Comment mo to: " + JSON.stringify(res.data));
-
       switch (res.data) {
         case 1:
           break;

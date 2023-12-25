@@ -71,7 +71,6 @@ function ClientCardView() {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getSelectedStatus");
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res ni getTioasdkjwqd: ", JSON.stringify(res.data));
       if (res.data !== 0) {
         setTickets(res.data);
       }

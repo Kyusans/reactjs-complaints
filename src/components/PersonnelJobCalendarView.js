@@ -26,7 +26,6 @@ function PersonnelJobCalendarView() {
       formData.append("operation", "getJobTicket");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("Json ni getJobTicket: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         const formattedEvents = res.data.map((job) => ({
           id: job.job_complaintId,
