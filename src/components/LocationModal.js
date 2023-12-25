@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Dropdown, Modal, Spinner, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import UpdateLocation from './UpdateLocation';
 import UpdateLocationCategory from './UpdateLocationCategory';
 
@@ -34,7 +34,6 @@ function LocationModal(props) {
   }, [show]);
 
   const getLocationCategory = () => {
-    console.log("Gi tawag siya fr fr")
     const url = localStorage.getItem("url") + "admin.php";
     const formData = new FormData();
     formData.append("operation", "getLocationCategory");
@@ -72,33 +71,6 @@ function LocationModal(props) {
       alert("There was an unexpected error: " + err);
     }
   };
-
-  const deleteLocation = async (id) => {
-    setIsLoading(true);
-    try {
-      const url = localStorage.getItem("url") + "admin.php";
-      const jsonData = { locationId: id };
-      const formData = new FormData();
-      formData.append("json", JSON.stringify(jsonData));
-      formData.append("operation", "deleteLocation");
-
-      const response = await axios.post(url, formData);
-      if (response.data !== 0) {
-        const updatedLocations = locationName.filter(location => location.location_id !== id);
-        setLocationName(updatedLocations);
-      }
-      setIsLoading(false);
-    } catch (err) {
-      alert("There was an unexpected error: " + err);
-    }
-  };
-
-  const handleDelete = (name, id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete " + name + "?");
-    if (isConfirmed) {
-      deleteLocation(id)
-    }
-  }
 
   function handleClose() {
     setLocationCategoryTitle("Select Category");
@@ -157,9 +129,6 @@ function LocationModal(props) {
                         </td>
                         <td>
                           <Button className='mb-2' onClick={() => handleUpdateClick(index)}><FontAwesomeIcon icon={faEdit} /> Edit</Button>
-                          <Button className='btn-danger ms-1 mb-2' onClick={() => handleDelete(name.location_name, name.location_id)}>
-                            <FontAwesomeIcon icon={faTrash} /> Delete
-                          </Button>
                         </td>
                       </tr>
                     ))}

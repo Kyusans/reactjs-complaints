@@ -43,7 +43,6 @@ function UpdateTicketModal(props) {
     formData.append("operation", "updateTicket");
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
-        console.log("Res ni updateTicket: " + JSON.stringify(res.data))
         if(res.data === 5){
           getAlert("danger", "End date cannot be earlier than today's date");
         }else if (res.data === 0) {
@@ -73,7 +72,6 @@ function UpdateTicketModal(props) {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getSelectedComplaint");
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("Res ni getSelectedComplaint", JSON.stringify(res.data));
       if (res.data !== 0) {
         setLocationId(res.data.comp_locationId);
         setLocationCategoryId(res.data.comp_locationCategoryId);

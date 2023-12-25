@@ -30,15 +30,11 @@ function ReopenJob(props) {
       const formData = new FormData();
       formData.append("operation", "reopenJob");
       formData.append("json", JSON.stringify(jsonData));
-
-      console.log("json data: " + JSON.stringify(jsonData));
-
       const res = await axios({
         url: url,
         data: formData,
         method: "post"
       });
-      console.log("res ni reopenjob", res.data);
       if (res.data === 1) {
         getAlert("success", "Success!");
       }

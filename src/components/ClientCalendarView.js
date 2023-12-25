@@ -37,7 +37,6 @@ function ClientCalendarView() {
       formData.append("operation", "getComplaints");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("Json ni getCompalints: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         const formattedEvents = res.data.map((comp) => ({
           id: comp.comp_id,

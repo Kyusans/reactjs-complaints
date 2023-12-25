@@ -9,6 +9,7 @@ import ConfirmModal from './ConfirmModal';
 import MessageList from './MessageList';
 import ReopenJob from './ReopenJob';
 import WebcamModal from './WebcamModal';
+import ViewImageModal from './ViewImageModal';
 
 export function formatDate(inputDate) {
   const date = new Date(inputDate);
@@ -60,6 +61,8 @@ export default function JobDetails(props) {
   const [commentImage, setCommentImage] = useState("");
   const isAdmin = localStorage.getItem("adminLoggedIn") === "true" ? true : false;
   const [showReopenJob, setShowReopenJob] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [showViewImage, setShowViewImage] = useState(false);
 
   // reopen job modal
   const hideReopenJob = async () => {
@@ -79,11 +82,20 @@ export default function JobDetails(props) {
   }
 
   // webcam modal
-
   const hideWebcam = async () => {
     getComment();
     await getJobDetails();
     setShowWebcam(false);
+  }
+
+  // view image modal
+  const hideViewImage = async () => {
+    setShowViewImage(false);
+  }
+  
+  const handleViewImage = (selectedImage) => {
+    setSelectedImage(selectedImage);
+    setShowViewImage(true);
   }
 
 
@@ -92,6 +104,7 @@ export default function JobDetails(props) {
   // const handleBackButtonClick = () => {
   //   navigateTo(-1);
   // };
+
 
 
 
@@ -106,7 +119,6 @@ export default function JobDetails(props) {
         const fullName = localStorage.getItem("userFullName");
         const jsonData = { compId: compId, userId: userId, commentText: newComment, fullName: fullName };
         const formData = new FormData();
-        console.log("jsondata ni addcomment: ", JSON.stringify(jsonData))
         formData.append("operation", "addComment");
         formData.append("json", JSON.stringify(jsonData));
         formData.append('file', commentImage !== "" ? commentImage : "");
@@ -119,9 +131,6 @@ export default function JobDetails(props) {
             'Content-Type': 'multipart/form-data',
           },
         });
-
-        console.log("Comment mo to: " + JSON.stringify(res.data));
-
         switch (res.data) {
           case 1:
             getComment();
@@ -168,7 +177,6 @@ export default function JobDetails(props) {
   }, [compId]);
 
   const getJobDetails = useCallback(async () => {
-    console.log("Gi tawag ang getJobDetails")
     setIsLoading(true);
     try {
       const url = localStorage.getItem("url") + "admin.php";
@@ -177,7 +185,6 @@ export default function JobDetails(props) {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getJobDetails");
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res.data: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         if (res.data.joStatus_name === "Completed") {
           setIsCompleted(true);
@@ -296,7 +303,7 @@ export default function JobDetails(props) {
                     {image ? (
                       <>
                         <p className='text-secondary'>Image submitted</p>
-                        <Image src={localStorage.getItem("url") + "/images/" + image} className='card-image' rounded />
+                        <Image src={localStorage.getItem("url") + "/images/" + image} className='card-image clickable' onClick={() => handleViewImage(image)} rounded />
                       </>
                     ) : (
                       <p className='text-secondary mt-2'>No image submitted</p>
@@ -384,6 +391,7 @@ export default function JobDetails(props) {
       <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id} />
       <ReopenJob show={showReopenJob} onHide={hideReopenJob} compId={compId} />
       <WebcamModal show={showWebcam} onHide={hideWebcam} compId={compId} />
+      <ViewImageModal show={showViewImage} onHide={hideViewImage} selectedImage={selectedImage} />
     </>
   )
 }
