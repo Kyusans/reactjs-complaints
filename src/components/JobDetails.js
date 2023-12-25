@@ -8,6 +8,7 @@ import "./css/site.css";
 import ConfirmModal from './ConfirmModal';
 import MessageList from './MessageList';
 import ReopenJob from './ReopenJob';
+import WebcamModal from './WebcamModal';
 
 export function formatDate(inputDate) {
   const date = new Date(inputDate);
@@ -51,32 +52,40 @@ export default function JobDetails(props) {
   const [comment, setComment] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showWebcam, setShowWebcam] = useState(false);
   const [isPersonnel, setIsPersonnel] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isAddingComment, setIsAddingComment] = useState(false);
   const [image, setImage] = useState("");
   const [commentImage, setCommentImage] = useState("");
   const isAdmin = localStorage.getItem("adminLoggedIn") === "true" ? true : false;
-
   const [showReopenJob, setShowReopenJob] = useState(false);
 
+  // reopen job modal
   const hideReopenJob = async () => {
     getComment();
     await getJobDetails();
     setShowReopenJob(false)
   }
-
   const openReopenJob = () => {
     setShowReopenJob(true);
-    console.log("showReopenJob state:", showReopenJob);
   }
 
+  // close job modal
   const openConfirmModal = () => { setShowConfirmModal(true); }
-
   const closeConfirmModal = async () => {
     await getJobDetails();
     setShowConfirmModal(false);
   }
+
+  // webcam modal
+
+  const hideWebcam = async () => {
+    getComment();
+    await getJobDetails();
+    setShowWebcam(false);
+  }
+
 
   // const navigateTo = useNavigate();
 
@@ -329,7 +338,11 @@ export default function JobDetails(props) {
                 {!isCompleted &&
                   (<Form className='mb-5'>
                     <FloatingLabel label="Add a comment..">
-                      <Form.Control as="textarea" style={{ height: '75px' }} value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder='Add a comment..' required />
+                      <Form.Control as="textarea" style={{ height: '75px' }}
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder='Add a comment..' required
+                      />
                     </FloatingLabel>
                     {isGoingToUpload &&
                       <Form.Group className='mt-2'>
@@ -342,7 +355,7 @@ export default function JobDetails(props) {
                       <Button variant='outline-primary' className='me-1' onClick={addComment} disabled={isAddingComment}>
                         {isAddingComment ? <Spinner size='sm' /> : <FontAwesomeIcon icon={faCheck} />} Submit
                       </Button>
-                      <Button variant='outline-dark'><FontAwesomeIcon icon={faCamera} size='lg' /></Button>
+                      <Button variant='outline-dark' onClick={() => setShowWebcam(true)} ><FontAwesomeIcon icon={faCamera} size='lg' /></Button>
                       <Button variant='outline-dark' className='ms-1' onClick={() => setIsGoingToUpload(true)}><FontAwesomeIcon icon={faUpload} /></Button>
                     </div>
                   </Form>)
@@ -370,6 +383,7 @@ export default function JobDetails(props) {
       </Modal>
       <ConfirmModal show={showConfirmModal} hide={closeConfirmModal} compId={details.comp_id} />
       <ReopenJob show={showReopenJob} onHide={hideReopenJob} compId={compId} />
+      <WebcamModal show={showWebcam} onHide={hideWebcam} compId={compId} />
     </>
   )
 }

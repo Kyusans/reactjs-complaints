@@ -271,3 +271,7 @@
   .gray-body{
     background-color: #333333 !important;
   }
+
+  .webcam-height{
+    height: 500px !important;
+  }
