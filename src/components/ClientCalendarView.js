@@ -63,6 +63,8 @@ function ClientCalendarView() {
     getComplaints()
   }, [getComplaints]);
 
+  const maxEventsToShow = 4;
+
   return (
     <>
       {isLoading
@@ -80,8 +82,8 @@ function ClientCalendarView() {
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView='dayGridMonth'
             weekends={true}
-            events={events}
-            dayMaxEvents={true}
+            events={events || []}
+            dayMaxEvents={events && events.length >= maxEventsToShow ? maxEventsToShow : false}
             eventClick={handleEventClick}
             headerToolbar={{
               left: 'title',
