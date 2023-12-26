@@ -50,6 +50,8 @@ function PersonnelJobCalendarView() {
     getJobTicket()
   }, [getJobTicket])
 
+  const maxEventsToShow = 4;
+
   return (
     <Container fluid className="vh-100 text-white scrollable-container">
       <FullCalendar
@@ -57,8 +59,8 @@ function PersonnelJobCalendarView() {
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView='dayGridMonth'
         weekends={true}
-        events={events}
-        dayMaxEvents={true}
+        events={events || []}
+        dayMaxEvents={events && events.length >= maxEventsToShow ? maxEventsToShow : false}
         eventClick={handleEventClick}
         headerToolbar={{
           left: 'title',

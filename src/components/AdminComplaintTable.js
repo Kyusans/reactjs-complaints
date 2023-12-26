@@ -43,6 +43,7 @@ function AdminComplaintTable() {
       const formData = new FormData();
       formData.append("operation", "getAllTickets");
       const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("res ni getAllTickets", JSON.stringify(res.data));
       if (res.data !== 0) {
         setTickets(res.data);
       } else {
@@ -52,6 +53,7 @@ function AdminComplaintTable() {
     } catch (err) {
       alert("There was an unexpected error: " + err);
     }
+
   }, []);
 
   const startIndex = (currentPage - 1) * ticketsPerPage;

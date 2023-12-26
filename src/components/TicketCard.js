@@ -10,7 +10,7 @@ function TicketCard(props) {
       <Card
         border='dark'
         className={status === "On-Going" ? "text-dark" : "text-white"}
-        bg={status === "On-Going" ? "warning" : status === "Completed" ? "success" : "dark"}
+        bg={status === "On-Going" ? "warning" : status === "Completed" ? "success" : "secondary"}
       >
         <Container className='p-3'>
           <Row>

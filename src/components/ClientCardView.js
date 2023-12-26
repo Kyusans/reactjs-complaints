@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faClock, faPlay, faPlus, faThList } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClock, faPlay, faPlus, faSync, faThList } from '@fortawesome/free-solid-svg-icons';
 import { Button, Container, Dropdown, Spinner } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import ComplaintForm from './ComplaintForm';
@@ -112,7 +112,7 @@ function ClientCardView() {
             <>
               <Container fluid className='mb-2 mt-2 d-flex align-content-sm-start justify-content-start'>
                 <Dropdown className="me-1">
-                  <Dropdown.Toggle variant={statusType === 0 ? "primary" : statusType === 1 ? "dark" : statusType === 2 ? "warning text-dark" : statusType === 3 ? "success" : "primary"}>
+                  <Dropdown.Toggle variant={statusType === 0 ? "primary" : statusType === 1 ? "secondary" : statusType === 2 ? "warning text-dark" : statusType === 3 ? "success" : "primary"}>
                     {statusType === 0 ? "All Tickets" : statusType === 1 ? "Pending Tickets" : statusType === 2 ? "On-going Tickets" : statusType === 3 ? "Completed Tickets" : "Select Ticket Type"}
                   </Dropdown.Toggle>
 
@@ -125,6 +125,9 @@ function ClientCardView() {
                 </Dropdown>
                 <Button className='btn btn-success me-1' onClick={openComplaintModal}>
                   <FontAwesomeIcon icon={faPlus} /> Add Ticket
+                </Button>
+                <Button onClick={ getComplaints}>
+                  <FontAwesomeIcon icon={faSync} /> Refresh
                 </Button>
               </Container>
 

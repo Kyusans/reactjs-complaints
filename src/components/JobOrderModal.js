@@ -137,6 +137,7 @@ function JobOrderModal(props) {
     setPriorities([]);
     setJobPersonnelId([]);
     setJobPriority("");
+    setAdditionalComment("");
     onHide();
   }
 
@@ -192,153 +193,153 @@ function JobOrderModal(props) {
   return (
     <div>
       <Modal show={show} onHide={handleHide} size='lg' backdrop="static">
-        <>
-          <Modal.Header closeButton><h3>Job order creation</h3></Modal.Header>
-          <Form>
-            <Modal.Body>
-              {isRetrieving ?
-                <Container className='text-center'>
-                  <Spinner animation='border' variant='success' />
-                </Container>
-                :
-                <>
-                  <Row className='mb-3'>
-                    <Col>
-                      Location:
-                      <Form.Control type="text" placeholder={location} readOnly />
-                    </Col>
-                  </Row>
+        <Modal.Header closeButton>
+          <h3>Job order creation</h3>
+        </Modal.Header>
+        <Form>
+          <Modal.Body>
+            {isRetrieving ?
+              <Container className='text-center'>
+                <Spinner animation='border' variant='success' />
+              </Container>
+              :
+              <>
+                <Row className='mb-3'>
+                  <Col>
+                    Location:
+                    <Form.Control type="text" placeholder={location} readOnly />
+                  </Col>
+                </Row>
 
-                  <Row className='mb-3'>
-                    <Col>
-                      Subject:
-                      <Form.Control type="text" placeholder={subject} readOnly />
-                    </Col>
-                  </Row>
+                <Row className='mb-3'>
+                  <Col>
+                    Subject:
+                    <Form.Control type="text" placeholder={subject} readOnly />
+                  </Col>
+                </Row>
 
-                  <Row className='mb-3'>
-                    <Container>
-                      <FloatingLabel label="Description">
-                        <Form.Control
-                          value={description}
-                          placeholder='Description'
-                          style={{ height: '100px' }}
-                          as='textarea'
-                          readOnly
-                        />
-                      </FloatingLabel>
-                    </Container>
-                  </Row>
+                <Row className='mb-3'>
+                  <Container>
+                    <FloatingLabel label="Description">
+                      <Form.Control
+                        value={description}
+                        placeholder='Description'
+                        style={{ height: '100px' }}
+                        as='textarea'
+                        readOnly
+                      />
+                    </FloatingLabel>
+                  </Container>
+                </Row>
 
-                  <Row className='mb-3'>
-                    <Col>
-                      <Container className='image-border'>
-                        {image ? (
-                          <>
-                            <p className='text-secondary'>Image submitted</p>
-                            <Image src={localStorage.getItem("url") + "/images/" + image} className='card-image' rounded />
-                          </>
-                        ) : (
-                          <p className='text-secondary mt-2'>No image submitted</p>
-                        )}
-                      </Container>
-                    </Col>
-                  </Row>
-
-
-                  <Row className='mb-3'>
-                    <Col>
-                      <FloatingLabel label="Submitted by">
-                        <Form.Control type="text" placeholder={"Submitted by"} value={facultyName} readOnly />
-                      </FloatingLabel>
-                    </Col>
-                  </Row>
-
-                  <Row className='mb-3'>
-                    <Col>
-                      <FloatingLabel label="Select Priority">
-                        <Form.Select
-                          value={jobPriority}
-                          onChange={(e) => setJobPriority(e.target.value)}
-                          required
-                          isInvalid={priorityValidation === "error"}
-                        >
-                          <option value={""}>Open this select menu</option>
-                          {priorities.map((priority, index) => (
-                            <option key={index} value={priority.priority_id}>{priority.priority_name}</option>
-                          ))}
-                        </Form.Select>
-                        <Form.Control.Feedback type="invalid">Please select a priority.</Form.Control.Feedback>
-                      </FloatingLabel>
-                    </Col>
-                    <Col>
-                      <FloatingLabel label="Select Personnel">
-                        <Form.Select
-                          onChange={addJobPersonnel}
-                          required
-                          isInvalid={personnelValidation === "error"}
-                        >
-                          <option value={""}>Open this select menu</option>
-                          {personnel.map((person, index) => (
-                            <option key={index} value={`${person.user_id},${person.user_full_name}`}>{person.user_full_name}</option>
-                          ))}
-                        </Form.Select>
-                        <Form.Control.Feedback type="invalid">Please select at least one personnel.</Form.Control.Feedback>
-                      </FloatingLabel>
-                    </Col>
-                  </Row>
-
-                  <Row className="mt-3 mb-3">
-                    <Col>
-                      <ListGroup>
-                        {jobPersonnel.map((personnel, index) => (
-                          <ListGroup.Item key={index} variant="dark" className="d-flex justify-content-between align-items-center">
-                            {personnel}
-                            <span className="green-x" onClick={() => handleRemovePersonnel(index)}>x</span>
-                          </ListGroup.Item>
-                        ))}
-                      </ListGroup>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Container>
-                      <FloatingLabel label="Additional Comment (optional)">
-                        <Form.Control
-                          value={additionalComment}
-                          onChange={(e) => setAdditionalComment(e.target.value)}
-                          placeholder='Additional Comment (optional)'
-                          style={{ height: '75px' }}
-                          as='textarea'
-                        />
-                      </FloatingLabel>
-                    </Container>
-                  </Row>
-
-                  <Row>
-                    <Col>
-                      {showAlert && (
-                        <Alert variant={alertVariant}>
-                          {alertMessage}
-                        </Alert>
+                <Row className='mb-3'>
+                  <Col>
+                    <Container className='image-border'>
+                      {image ? (
+                        <>
+                          <p className='text-secondary'>Image submitted</p>
+                          <Image src={localStorage.getItem("url") + "/images/" + image} className='card-image' rounded />
+                        </>
+                      ) : (
+                        <p className='text-secondary mt-2'>No image submitted</p>
                       )}
-                    </Col>
-                  </Row>
-                </>
-              }
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant='outline-secondary' onClick={() => handleHide()}>
-                <FontAwesomeIcon icon={faTimes} /> Close
-              </Button>
-              <Button variant='outline-success' onClick={() => submitJobOrder()} disabled={isLoading}>
-                {isLoading ? <Spinner animation="border" size="sm" /> : <FontAwesomeIcon icon={faCheck} />} Submit
-              </Button>
-            </Modal.Footer>
-          </Form>
-        </>
+                    </Container>
+                  </Col>
+                </Row>
+
+
+                <Row className='mb-3'>
+                  <Col>
+                    <FloatingLabel label="Submitted by">
+                      <Form.Control type="text" placeholder={"Submitted by"} value={facultyName} readOnly />
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+
+                <Row className='mb-3'>
+                  <Col>
+                    <FloatingLabel label="Select Priority">
+                      <Form.Select
+                        value={jobPriority}
+                        onChange={(e) => setJobPriority(e.target.value)}
+                        required
+                        isInvalid={priorityValidation === "error"}
+                      >
+                        <option value={""}>Open this select menu</option>
+                        {priorities.map((priority, index) => (
+                          <option key={index} value={priority.priority_id}>{priority.priority_name}</option>
+                        ))}
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid">Please select a priority.</Form.Control.Feedback>
+                    </FloatingLabel>
+                  </Col>
+                  <Col>
+                    <FloatingLabel label="Select Personnel">
+                      <Form.Select
+                        onChange={addJobPersonnel}
+                        required
+                        isInvalid={personnelValidation === "error"}
+                      >
+                        <option value={""}>Open this select menu</option>
+                        {personnel.map((person, index) => (
+                          <option key={index} value={`${person.user_id},${person.user_full_name}`}>{person.user_full_name}</option>
+                        ))}
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid">Please select at least one personnel.</Form.Control.Feedback>
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+
+                <Row className="mt-3 mb-3">
+                  <Col>
+                    <ListGroup>
+                      {jobPersonnel.map((personnel, index) => (
+                        <ListGroup.Item key={index} variant="dark" className="d-flex justify-content-between align-items-center">
+                          {personnel}
+                          <span className="green-x" onClick={() => handleRemovePersonnel(index)}>x</span>
+                        </ListGroup.Item>
+                      ))}
+                    </ListGroup>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Container>
+                    <FloatingLabel label="Additional Comment (optional)">
+                      <Form.Control
+                        value={additionalComment}
+                        onChange={(e) => setAdditionalComment(e.target.value)}
+                        placeholder='Additional Comment (optional)'
+                        style={{ height: '75px' }}
+                        as='textarea'
+                      />
+                    </FloatingLabel>
+                  </Container>
+                </Row>
+
+                <Row>
+                  <Col>
+                    {showAlert && (
+                      <Alert variant={alertVariant}>
+                        {alertMessage}
+                      </Alert>
+                    )}
+                  </Col>
+                </Row>
+              </>
+            }
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant='outline-secondary' onClick={() => handleHide()}>
+              <FontAwesomeIcon icon={faTimes} /> Close
+            </Button>
+            <Button variant='outline-success' onClick={() => submitJobOrder()} disabled={isLoading}>
+              {isLoading ? <Spinner animation="border" size="sm" /> : <FontAwesomeIcon icon={faCheck} />} Submit
+            </Button>
+          </Modal.Footer>
+        </Form>
       </Modal>
-    </div>
+    </div >
   )
 }
 
