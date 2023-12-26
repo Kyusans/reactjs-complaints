@@ -212,7 +212,7 @@ function ComplaintForm(props) {
             <Form.Group className="mb-3">
               <Row>
                   <Container>
-                    <FloatingLabel controlId="endDateLabel" label="End Date">
+                    <FloatingLabel controlId="endDateLabel" label="Expected finish date">
                       <Form.Control type='date' value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
                     </FloatingLabel>
                   </Container>

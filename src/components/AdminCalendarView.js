@@ -31,6 +31,7 @@ function AdminCalendarView() {
       if (res.data !== 0) {
         const formattedEvents = res.data.map((comp) => ({
           id: comp.comp_id,
+          status: comp.comp_status,
           title: comp.comp_subject,
           start: new Date(comp.comp_date),
           end: new Date(comp.comp_end_date),
@@ -44,6 +45,7 @@ function AdminCalendarView() {
   }, []);
 
   function handleEventClick(info) {
+    console.log("Status: ", info.event.status)
     setTicketId(info.event.id);
     setShowJobDetails(true);
   };
