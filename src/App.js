@@ -11,16 +11,16 @@ function App() {
     navigator.serviceWorker.register('/gsd/service-worker.js');
   }
 
-  if (localStorage.getItem("url") !== "https://coc-studentinfo.net/gsd/api/") {
-    localStorage.setItem("url", "https://coc-studentinfo.net/gsd/api/");
+  if (localStorage.getItem("url") !== "http://localhost/gsd/api/") {
+    localStorage.setItem("url", "http://localhost/gsd/api/");
     // https://coc-studentinfo.net/gsd/api/
   }
   
-  useEffect(() =>{
-    if (window.location.protocol === 'http:') {
-      window.location.href = `https://${window.location.host}${window.location.pathname}`;
-    }
-  },[])
+  // useEffect(() =>{
+  //   if (window.location.protocol === 'http:') {
+  //     window.location.href = `https://${window.location.host}${window.location.pathname}`;
+  //   }
+  // },[])
 
   
 

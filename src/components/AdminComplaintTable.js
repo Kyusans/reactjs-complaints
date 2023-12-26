@@ -56,7 +56,7 @@ function AdminComplaintTable() {
 
   const startIndex = (currentPage - 1) * ticketsPerPage;
   const endIndex = startIndex + ticketsPerPage;
-  const displayedTickets = tickets.slice(startIndex, endIndex);
+  const displayedTickets = tickets ? tickets.slice(startIndex, endIndex) : 0;
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -125,19 +125,19 @@ function AdminComplaintTable() {
         :
         <Container fluid>
 
-          {displayedTickets.length === 0 ? <AlertScript show={true} variant={"dark"} message={"No tickets yet"} /> :
-
-          <Table striped bordered hover responsive variant="success" className="border-1">
-            <thead>
-              <tr>
-                <th className="green-header">Subject</th>
-                <th className="green-header">Status</th>
-                <th className="green-header">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.isArray(displayedTickets) ? (
-                displayedTickets.map((ticket, index) => (
+          {displayedTickets.length <= 0 ?
+            <AlertScript show={true} variant={"dark"} message={"No tickets yet"} />
+            :
+            <Table striped bordered hover responsive variant="success" className="border-1">
+              <thead>
+                <tr>
+                  <th className="green-header">Subject</th>
+                  <th className="green-header">Status</th>
+                  <th className="green-header">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.isArray(displayedTickets) && displayedTickets.map((ticket, index) => (
                   <tr
                     key={index}
                     onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}
@@ -158,16 +158,12 @@ function AdminComplaintTable() {
                       {formatDate(ticket.comp_date)}
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="3">No tickets yet to display.</td>
-                </tr>
-              )}
-            </tbody>
-
-          </Table>
+                )
+                )}
+              </tbody>
+            </Table>
           }
+
           {showPagination && (
             <div className="d-flex justify-content-end mt-2">
               <Pagination>
