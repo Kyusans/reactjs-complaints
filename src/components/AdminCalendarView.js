@@ -60,7 +60,6 @@ function AdminCalendarView() {
 
   const handleStartDateOnly = (status) => {
     setStartDateOnly(status === 1);
-    getAllTickets();
   }
 
   function handleEventClick(info) {
@@ -82,17 +81,16 @@ function AdminCalendarView() {
   return (
     <Container fluid className="vh-100 text-white scrollable-container">
       {!startDateOnly ?
-        (<Button onClick={() => handleStartDateOnly(1)}>Start date only</Button>)
+        (<Button onClick={() => handleStartDateOnly(1)}>Show Start Date Only</Button>)
         :
-        (<Button onClick={() => handleStartDateOnly(0)} className='btn-secondary'>Include end date</Button>)
+        (<Button onClick={() => handleStartDateOnly(0)} className='btn-info'>Include Deadline</Button>)
       }
       {isLoading ?
-        <Container className='text-center'>
+        <Container className='text-center mt-3'>
           <Spinner animation='border' variant='success' />
         </Container>
         :
         <FullCalendar
-          className="clickable"
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView='dayGridMonth'
           weekends={true}
