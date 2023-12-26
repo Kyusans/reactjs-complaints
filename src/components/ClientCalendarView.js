@@ -17,6 +17,7 @@ function ClientCalendarView() {
   const [ticketId, setTicketId] = useState("");
   const [showComplaintModal, setShowComplaintModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [startDateOnly, setStartDateOnly] = useState(false);
 
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const closeUpdateModal = () => { setShowUpdateModal(false) };
@@ -49,7 +50,7 @@ function ClientCalendarView() {
           status: comp.comp_status,
           title: comp.comp_subject,
           start: new Date(comp.comp_date),
-          end: new Date(comp.comp_end_date),
+          end: startDateOnly ? null : new Date(comp.comp_end_date),
           color: colorFormatter(statusFormatter(comp.comp_status)),
         }));
         setEvents(formattedEvents);
@@ -59,7 +60,11 @@ function ClientCalendarView() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [startDateOnly]);
+
+  const handleStartDateOnly = (status) => {
+    setStartDateOnly(status === 1);
+  }
 
   function handleEventClick(info) {
     setTicketId(info.event.id);
@@ -88,21 +93,32 @@ function ClientCalendarView() {
           <Button className='btn btn-success mt-3 ms-2' onClick={openComplaintModal}>
             <FontAwesomeIcon icon={faPlus} /> Add Ticket
           </Button>
-          <FullCalendar
-            className="clickable"
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            initialView='dayGridMonth'
-            weekends={true}
-            events={events || []}
-            dayMaxEvents={events && events.length >= maxEventsToShow ? maxEventsToShow : false}
-            eventClick={handleEventClick}
-            headerToolbar={{
-              left: 'title',
-              center: '',
-              right: 'today,prev,next dayGridMonth,timeGridWeek,timeGridDay'
-            }}
-            height={'90vh'}
-          />
+          {!startDateOnly ?
+            (<Button onClick={() => handleStartDateOnly(1)} className='mt-3 ms-1'>Show Start Date Only</Button>)
+            :
+            (<Button onClick={() => handleStartDateOnly(0)} className='btn-info mt-3 ms-1'>Include Deadline</Button>)
+          }
+          {isLoading ?
+            <Container className='text-center mt-3'>
+              <Spinner animation='border' variant='success' />
+            </Container>
+            :
+            <FullCalendar
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              initialView='dayGridMonth'
+              weekends={true}
+              events={events || []}
+              dayMaxEvents={events && events.length >= maxEventsToShow ? maxEventsToShow : false}
+              eventClick={handleEventClick}
+              headerToolbar={{
+                left: 'title',
+                center: '',
+                right: 'today,prev,next dayGridMonth,timeGridWeek,timeGridDay'
+              }}
+              height={'90vh'}
+            />
+
+          }
           <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={ticketId} />
           <ComplaintForm show={showComplaintModal} onHide={closeComplaintModal} />
           <UpdateTicketModal show={showUpdateModal} onHide={closeUpdateModal} compId={ticketId} />
