@@ -10,12 +10,17 @@ import { colorFormatter } from './PersonnelJobCalendarView'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import ComplaintForm from './ComplaintForm'
+import UpdateTicketModal from './UpdateTicketModal'
 
 function ClientCalendarView() {
   const [events, setEvents] = useState([]);
   const [ticketId, setTicketId] = useState("");
   const [showComplaintModal, setShowComplaintModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const closeUpdateModal = () => { setShowUpdateModal(false) };
+
   const openComplaintModal = () => { setShowComplaintModal(true); }
   const closeComplaintModal = () => {
     getComplaints();
@@ -37,9 +42,11 @@ function ClientCalendarView() {
       formData.append("operation", "getComplaints");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("res ni getComplaints", JSON.stringify(res.data));
       if (res.data !== 0) {
         const formattedEvents = res.data.map((comp) => ({
           id: comp.comp_id,
+          status: comp.comp_status,
           title: comp.comp_subject,
           start: new Date(comp.comp_date),
           end: new Date(comp.comp_end_date),
@@ -56,7 +63,11 @@ function ClientCalendarView() {
 
   function handleEventClick(info) {
     setTicketId(info.event.id);
-    setShowJobDetails(true);
+    if (info.event.extendedProps.status === 1) {
+      setShowUpdateModal(true);
+    } else {
+      setShowJobDetails(true);
+    }
   };
 
   useEffect(() => {
@@ -94,6 +105,7 @@ function ClientCalendarView() {
           />
           <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={ticketId} />
           <ComplaintForm show={showComplaintModal} onHide={closeComplaintModal} />
+          <UpdateTicketModal show={showUpdateModal} onHide={closeUpdateModal} compId={ticketId} />
         </Container>
       }
     </>
