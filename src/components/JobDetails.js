@@ -105,9 +105,6 @@ export default function JobDetails(props) {
   //   navigateTo(-1);
   // };
 
-
-
-
   const addComment = async () => {
     setIsAddingComment(true);
     try {
