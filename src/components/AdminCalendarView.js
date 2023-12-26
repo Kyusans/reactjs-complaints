@@ -60,7 +60,6 @@ function AdminCalendarView() {
 
   const handleStartDateOnly = (status) => {
     setStartDateOnly(status === 1);
-    getAllTickets();
   }
 
   function handleEventClick(info) {
@@ -84,7 +83,7 @@ function AdminCalendarView() {
       {!startDateOnly ?
         (<Button onClick={() => handleStartDateOnly(1)}>Show Start Date Only</Button>)
         :
-        (<Button onClick={() => handleStartDateOnly(0)} className='btn-secondary'>Include Deadline</Button>)
+        (<Button onClick={() => handleStartDateOnly(0)} className='btn-info'>Include Deadline</Button>)
       }
       {isLoading ?
         <Container className='text-center mt-3'>

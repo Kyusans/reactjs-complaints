@@ -8,7 +8,6 @@ import axios from 'axios';
 import JobDetails from './JobDetails'
 
 function PersonnelJobCalendarView() {
-  const [originalEvents, setOriginalEvents] = useState([]);
   const [events, setEvents] = useState([]);
   const [ticketId, setTicketId] = useState("");
   const [showJobDetails, setShowJobDetails] = useState(false);
@@ -32,12 +31,11 @@ function PersonnelJobCalendarView() {
       const res = await axios({ url: url, data: formData, method: "post" });
       if (res.data !== 0) {
         console.log("Res.data ni getJobTicket", JSON.stringify(res.data));
-        setOriginalEvents(res.data);
         const formattedEvents = res.data.map((job) => ({
           id: job.job_complaintId,
           title: job.job_title,
           start: new Date(job.job_createDate),
-          end: new Date(job.comp_end_date),
+          end: startDateOnly ? null : new Date(job.comp_end_date),
           color: colorFormatter(job.joStatus_name),
         }));
         setEvents(formattedEvents);
@@ -45,24 +43,12 @@ function PersonnelJobCalendarView() {
     } catch (error) {
       alert("There was an unexpected error: " + error);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
-  }, []);
+  }, [startDateOnly]);
 
   const handleStartDateOnly = (status) => {
     setStartDateOnly(status === 1);
-    updateEvent();
-  }
-
-  function updateEvent() {
-    const updateEvent = originalEvents.map((job) => ({
-      id: job.job_complaintId,
-      title: job.job_title,
-      start: new Date(job.job_createDate),
-      end: startDateOnly ? null : new Date(job.comp_end_date),
-      color: colorFormatter(job.joStatus_name),
-    }));
-    setEvents(updateEvent);
   }
 
   function handleEventClick(info) {
@@ -82,7 +68,7 @@ function PersonnelJobCalendarView() {
         {!startDateOnly ?
           (<Button onClick={() => handleStartDateOnly(1)} className='ms-2'>Show Start Date Only</Button>)
           :
-          (<Button onClick={() => handleStartDateOnly(0)} className='btn-secondary ms-2'>Include Deadline</Button>)
+          (<Button onClick={() => handleStartDateOnly(0)} className='btn-info ms-2'>Include Deadline</Button>)
         }
 
         {isLoading ?
