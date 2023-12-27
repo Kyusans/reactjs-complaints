@@ -13,6 +13,7 @@ import ComplaintForm from './ComplaintForm'
 import UpdateTicketModal from './UpdateTicketModal'
 
 function ClientCalendarView() {
+  const [eventsWithoutEndDate, setEventsWithoutEndDate] = useState([]);
   const [events, setEvents] = useState([]);
   const [ticketId, setTicketId] = useState("");
   const [showComplaintModal, setShowComplaintModal] = useState(false);
@@ -20,11 +21,14 @@ function ClientCalendarView() {
   const [startDateOnly, setStartDateOnly] = useState(false);
 
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const closeUpdateModal = () => { setShowUpdateModal(false) };
+  const closeUpdateModal = async () => { 
+    await getComplaints();
+    setShowUpdateModal(false); 
+  };
 
   const openComplaintModal = () => { setShowComplaintModal(true); }
-  const closeComplaintModal = () => {
-    getComplaints();
+  const closeComplaintModal = async () => {
+    await getComplaints();
     setShowComplaintModal(false);
   }
   const [showJobDetails, setShowJobDetails] = useState(false);
@@ -45,22 +49,33 @@ function ClientCalendarView() {
       const res = await axios({ url: url, data: formData, method: "post" });
       console.log("res ni getComplaints", JSON.stringify(res.data));
       if (res.data !== 0) {
+        // with end dates (default)
         const formattedEvents = res.data.map((comp) => ({
           id: comp.comp_id,
           status: comp.comp_status,
           title: comp.comp_subject,
           start: new Date(comp.comp_date),
-          end: startDateOnly ? null : new Date(comp.comp_end_date),
+          end: new Date(comp.comp_end_date),
           color: colorFormatter(statusFormatter(comp.comp_status)),
         }));
         setEvents(formattedEvents);
+
+        // without end date para sa switch 
+        const withoutEndDate = res.data.map((comp) => ({
+          id: comp.comp_id,
+          status: comp.comp_status,
+          title: comp.comp_subject,
+          date: new Date(comp.comp_date),
+          color: colorFormatter(statusFormatter(comp.comp_status)),
+        }));
+        setEventsWithoutEndDate(withoutEndDate);
       }
     } catch (error) {
       alert("There was an unexpected error: " + error);
     } finally {
       setIsLoading(false);
     }
-  }, [startDateOnly]);
+  }, []);
 
   const handleStartDateOnly = (status) => {
     setStartDateOnly(status === 1);
@@ -107,7 +122,8 @@ function ClientCalendarView() {
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
               initialView='dayGridMonth'
               weekends={true}
-              events={events || []}
+              allDaySlot={false}
+              events={startDateOnly ? eventsWithoutEndDate : events || []}
               dayMaxEvents={events && events.length >= maxEventsToShow ? maxEventsToShow : false}
               eventClick={handleEventClick}
               headerToolbar={{

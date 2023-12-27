@@ -11,6 +11,7 @@ import { statusFormatter } from './ClientCalendarView'
 import JobOrderModal from './JobOrderModal'
 
 function AdminCalendarView() {
+  const [eventsWithoutEndDate, setEventsWithoutEndDate] = useState([]);
   const [events, setEvents] = useState(null);
   const [ticketId, setTicketId] = useState("");
   const [showJobDetails, setShowJobDetails] = useState(false);
@@ -41,22 +42,33 @@ function AdminCalendarView() {
       const res = await axios({ url: url, data: formData, method: "post" });
       if (res.data !== 0) {
         console.log("getalltickets res.data: " + JSON.stringify(res.data));
+        // with end dates (default)
         const formattedEvents = res.data.map((comp) => ({
           id: comp.comp_id,
           status: comp.comp_status,
           title: comp.comp_subject,
           start: new Date(comp.comp_date),
-          end: startDateOnly ? null : new Date(comp.comp_end_date),
+          end: new Date(comp.comp_end_date),
           color: colorFormatter(statusFormatter(comp.comp_status)),
         }));
         setEvents(formattedEvents);
+
+        // without end date para sa switch 
+        const withoutEndDate = res.data.map((comp) => ({
+          id: comp.comp_id,
+          status: comp.comp_status,
+          title: comp.comp_subject,
+          date: new Date(comp.comp_date),
+          color: colorFormatter(statusFormatter(comp.comp_status)),
+        }));
+        setEventsWithoutEndDate(withoutEndDate);
       }
     } catch (error) {
       alert("There was an unexpected error: " + error);
-    }finally{
+    } finally {
       setIsLoading(false);
     }
-  }, [startDateOnly]);
+  }, []);
 
   const handleStartDateOnly = (status) => {
     setStartDateOnly(status === 1);
@@ -94,7 +106,8 @@ function AdminCalendarView() {
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView='dayGridMonth'
           weekends={true}
-          events={events || []}
+          allDaySlot={false}
+          events={startDateOnly ? eventsWithoutEndDate : events || []}
           dayMaxEvents={events && events.length >= maxEventsToShow ? maxEventsToShow : false}
           eventClick={handleEventClick}
           headerToolbar={{
