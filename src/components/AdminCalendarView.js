@@ -106,6 +106,7 @@ function AdminCalendarView() {
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView='dayGridMonth'
           weekends={true}
+          allDaySlot={false}
           events={startDateOnly ? eventsWithoutEndDate : events || []}
           dayMaxEvents={events && events.length >= maxEventsToShow ? maxEventsToShow : false}
           eventClick={handleEventClick}
