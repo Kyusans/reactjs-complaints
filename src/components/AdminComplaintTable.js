@@ -20,7 +20,11 @@ function AdminComplaintTable() {
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
   const showPagination = tickets.length > ticketsPerPage;
   const [showJobDetails, setShowJobDetails] = useState(false);
-  const hideJobDetails = () => { setShowJobDetails(false); }
+
+  const hideJobDetails = () => { 
+    getTicketsByStatus(pageStatus);
+    setShowJobDetails(false); 
+  }
 
   const handleClose = () => {
     getTicketsByStatus(pageStatus);

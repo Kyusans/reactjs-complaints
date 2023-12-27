@@ -307,7 +307,12 @@ export default function JobDetails(props) {
                     {image ? (
                       <>
                         <p className='text-secondary'>Image submitted</p>
-                        <Image src={localStorage.getItem("url") + "/images/" + image} className='card-image clickable' onClick={() => handleViewImage(image)} rounded />
+                        <Container className='text-center'>
+                          <Image src={localStorage.getItem("url") + "/images/" + image}
+                            className='card-image clickable w-100'
+                            onClick={() => handleViewImage(image)} rounded
+                          />
+                        </Container>
                       </>
                     ) : (
                       <p className='text-secondary mt-2'>No image submitted</p>
@@ -338,6 +343,11 @@ export default function JobDetails(props) {
                       <Col>
                         <FloatingLabel label="Closed by">
                           <Form.Control type="text" value={details.comp_closedBy} readOnly />
+                        </FloatingLabel>
+                      </Col>
+                      <Col>
+                        <FloatingLabel label="Date closed">
+                          <Form.Control type="text" value={formatDate(details.comp_end_date)} readOnly />
                         </FloatingLabel>
                       </Col>
                     </Row>
