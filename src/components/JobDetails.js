@@ -10,6 +10,7 @@ import MessageList from './MessageList';
 import ReopenJob from './ReopenJob';
 import WebcamModal from './WebcamModal';
 import ViewImageModal from './ViewImageModal';
+import { formatDates } from './ReportModule';
 
 export function formatDate(inputDate) {
   const date = new Date(inputDate);
@@ -92,7 +93,7 @@ export default function JobDetails(props) {
   const hideViewImage = async () => {
     setShowViewImage(false);
   }
-  
+
   const handleViewImage = (selectedImage) => {
     setSelectedImage(selectedImage);
     setShowViewImage(true);
@@ -182,6 +183,7 @@ export default function JobDetails(props) {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getJobDetails");
       const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("res ni getJobDetails: ", JSON.stringify(res.data));
       if (res.data !== 0) {
         if (res.data.joStatus_name === "Completed") {
           setIsCompleted(true);
@@ -292,6 +294,11 @@ export default function JobDetails(props) {
                     <Form.Control type="text" value={formatDate(details.job_createDate)} readOnly />
                   </FloatingLabel>
                 </Col>
+                <Col>
+                  <FloatingLabel controlId="createDate" label="Job Order Deadline">
+                    <Form.Control type="text" value={formatDates(details.comp_end_date)} readOnly />
+                  </FloatingLabel>
+                </Col>
               </Row>
 
               <Row className='mt-3'>
@@ -300,7 +307,12 @@ export default function JobDetails(props) {
                     {image ? (
                       <>
                         <p className='text-secondary'>Image submitted</p>
-                        <Image src={localStorage.getItem("url") + "/images/" + image} className='card-image clickable' onClick={() => handleViewImage(image)} rounded />
+                        <Container className='text-center'>
+                          <Image src={localStorage.getItem("url") + "/images/" + image}
+                            className='card-image clickable w-100'
+                            onClick={() => handleViewImage(image)} rounded
+                          />
+                        </Container>
                       </>
                     ) : (
                       <p className='text-secondary mt-2'>No image submitted</p>
@@ -331,6 +343,11 @@ export default function JobDetails(props) {
                       <Col>
                         <FloatingLabel label="Closed by">
                           <Form.Control type="text" value={details.comp_closedBy} readOnly />
+                        </FloatingLabel>
+                      </Col>
+                      <Col>
+                        <FloatingLabel label="Date closed">
+                          <Form.Control type="text" value={formatDate(details.comp_date_closed)} readOnly />
                         </FloatingLabel>
                       </Col>
                     </Row>
