@@ -347,7 +347,7 @@ export default function JobDetails(props) {
                       </Col>
                       <Col>
                         <FloatingLabel label="Date closed">
-                          <Form.Control type="text" value={formatDate(details.comp_end_date)} readOnly />
+                          <Form.Control type="text" value={formatDate(details.comp_date_closed)} readOnly />
                         </FloatingLabel>
                       </Col>
                     </Row>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, ListGroup } from 'react-bootstrap';
+import { Container, Image, ListGroup, Row } from 'react-bootstrap';
 import ViewImageModal from './ViewImageModal';
 
 export default function MessageList(props) {
@@ -25,9 +25,17 @@ export default function MessageList(props) {
           <div className='ms-2'>
             <div className='fw-bold'>{username}</div>
             {message}
-            {image && (
-              <Image src={localStorage.getItem("url") + "/images/" + image} onClick={() => handleViewImage(image)} className='clickable card-image' rounded />
-            )}
+            <Row>
+              {image && (
+                <Container>
+                  <Image
+                    src={localStorage.getItem("url") + "/images/" + image}
+                    onClick={() => handleViewImage(image)}
+                    className='clickable card-image w-75' rounded
+                  />
+                </Container>
+              )}
+            </Row>
             <p className='text-end'>{date}</p>
           </div>
         </ListGroup.Item>
