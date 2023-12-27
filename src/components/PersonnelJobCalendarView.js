@@ -8,6 +8,7 @@ import axios from 'axios';
 import JobDetails from './JobDetails'
 
 function PersonnelJobCalendarView() {
+  const [eventsWithoutEndDate, setEventsWithoutEndDate] = useState([]);
   const [events, setEvents] = useState([]);
   const [ticketId, setTicketId] = useState("");
   const [showJobDetails, setShowJobDetails] = useState(false);
@@ -31,21 +32,31 @@ function PersonnelJobCalendarView() {
       const res = await axios({ url: url, data: formData, method: "post" });
       if (res.data !== 0) {
         console.log("Res.data ni getJobTicket", JSON.stringify(res.data));
+        // with end dates (default)
         const formattedEvents = res.data.map((job) => ({
           id: job.job_complaintId,
           title: job.job_title,
           start: new Date(job.job_createDate),
-          end: startDateOnly ? null : new Date(job.comp_end_date),
+          end: new Date(job.comp_end_date),
           color: colorFormatter(job.joStatus_name),
         }));
         setEvents(formattedEvents);
+
+        // without end date para sa switch 
+        const withoutEndDate = res.data.map((job) =>({
+          id: job.job_complaintId,
+          title: job.job_title,
+          date: new Date(job.job_createDate),
+          color: colorFormatter(job.joStatus_name),
+        }));
+        setEventsWithoutEndDate(withoutEndDate);
       }
     } catch (error) {
       alert("There was an unexpected error: " + error);
     } finally {
       setIsLoading(false);
     }
-  }, [startDateOnly]);
+  }, []);
 
   const handleStartDateOnly = (status) => {
     setStartDateOnly(status === 1);
@@ -80,7 +91,7 @@ function PersonnelJobCalendarView() {
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView='dayGridMonth'
             weekends={true}
-            events={events || []}
+            events={startDateOnly ? eventsWithoutEndDate : events || []}
             dayMaxEvents={events && events.length >= maxEventsToShow ? maxEventsToShow : false}
             eventClick={handleEventClick}
             headerToolbar={{
