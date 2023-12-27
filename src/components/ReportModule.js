@@ -7,6 +7,17 @@ import AlertScript from "./AlertScript";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel, faFilePdf, faFilter } from "@fortawesome/free-solid-svg-icons";
 
+export function formatDates (inputDate){
+  const date = new Date(inputDate);
+  const monthNames = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+  const month = monthNames[date.getMonth()];
+  const day = date.getDate();
+  return `${month} ${day}`;
+}
+
 function ReportModule() {
   const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,16 +35,8 @@ function ReportModule() {
     setAlertMessage(messageAlert);
   }
 
-  const formatDates = (inputDate) => {
-    const date = new Date(inputDate);
-    const monthNames = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
-    const month = monthNames[date.getMonth()];
-    const day = date.getDate();
-    return `${month} ${day}`;
-  }
+  // month only
+
 
   const getTicketsByDate = async () => {
     setTickets([]);
