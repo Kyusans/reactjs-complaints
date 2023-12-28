@@ -1,7 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { Container, Dropdown, Pagination, Spinner, Table } from "react-bootstrap";
+import { Container, Dropdown, Pagination, Table } from "react-bootstrap";
 import JobOrderModal from "./JobOrderModal";
 import "./css/site.css";
 import JobDetails, { formatDate } from "./JobDetails";
@@ -9,10 +8,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faClock, faPlay, faThList } from "@fortawesome/free-solid-svg-icons";
 import AlertScript from "./AlertScript";
 
-function AdminComplaintTable() {
+function AdminComplaintTable({ allData }) {
   // const navigateTo = useNavigate();
   const [pageStatus, setPageStatus] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
   const [ticketId, setTicketId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,10 +18,11 @@ function AdminComplaintTable() {
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
   const showPagination = tickets.length > ticketsPerPage;
   const [showJobDetails, setShowJobDetails] = useState(false);
+  // const [defaultTicket, setDefaultTicket] = useState([]);
 
-  const hideJobDetails = () => { 
+  const hideJobDetails = () => {
     getTicketsByStatus(pageStatus);
-    setShowJobDetails(false); 
+    setShowJobDetails(false);
   }
 
   const handleClose = () => {
@@ -41,24 +40,27 @@ function AdminComplaintTable() {
     }
   };
 
-  const getAllTickets = useCallback(async () => {
-    try {
-      const url = localStorage.getItem("url") + "admin.php";
-      const formData = new FormData();
-      formData.append("operation", "getAllTickets");
-      const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res ni getAllTickets", JSON.stringify(res.data));
-      if (res.data !== 0) {
-        setTickets(res.data);
-      } else {
-        //no ticket found
-      }
-      setIsLoading(false);
-    } catch (err) {
-      alert("There was an unexpected error: " + err);
-    }
+  // const getAllTickets = useCallback(async () => {
+  //   try {
+  //     const url = localStorage.getItem("url") + "admin.php";
+  //     const formData = new FormData();
+  //     formData.append("operation", "getAllTickets");
+  //     const res = await axios({ url: url, data: formData, method: "post" });
+  //     console.log("res ni getAllTickets", JSON.stringify(res.data));
+  //     if (res.data !== 0) {
+  //       console.log("res.data", JSON.stringify(res.data));
+  //       setAllTickets(res.data);
+  //       const filterdData = res.data.filter(item => item.comp_status < 3);
+  //       console.log("filterd data", JSON.stringify(filterdData));
+  //       setTickets(filterdData);
 
-  }, []);
+  //     }
+  //     setIsLoading(false);
+  //   } catch (err) {
+  //     alert("There was an unexpected error: " + err);
+  //   }
+
+  // }, []);
 
   const startIndex = (currentPage - 1) * ticketsPerPage;
   const endIndex = startIndex + ticketsPerPage;
@@ -80,35 +82,41 @@ function AdminComplaintTable() {
     setCurrentPage(lastPage);
   };
 
-  const getTicketsByStatus = useCallback(async (status) => {
+  const getTicketsByStatus = (status) => {
+    var statusNumber = 0;
     handleFirstPage();
-    setIsLoading(true);
     setPageStatus(status);
-    if (status === 0) {
-      getAllTickets();
+    switch (status) {
+      case 1:
+        // pending
+        statusNumber = 1;
+        break;
+      case 2:
+        // on-going
+        statusNumber = 2;
+        break;
+      case 3:
+        // complete
+        statusNumber = 3;
+        break;
+      default:
+        setTickets(allData);
+        return;
     }
-    try {
-      setTickets([]);
-      const url = localStorage.getItem("url") + "admin.php";
-      const jsonData = { compStatus: status };
-      const formData = new FormData();
-      formData.append("json", JSON.stringify(jsonData));
-      formData.append("operation", "getTicketsByStatus");
-      const res = await axios({ url: url, data: formData, method: "post" });
-      if (res.data !== 0) {
-        setTickets(res.data);
-      } else {
-        // no tickets found
-      }
-      setIsLoading(false);
-    } catch (error) {
-      alert("There was an error: " + error.message);
-    }
-  }, [getAllTickets])
+    const filteredTickets = allData.filter(item => item.comp_status === statusNumber);
+    setTickets(filteredTickets);
+  }
 
   useEffect(() => {
-    getAllTickets();
-  }, [getAllTickets]);
+    console.log("allData in AdminComplaintTable:", allData);
+    if (allData) {
+      const filterdData = allData.filter(item => item.comp_status < 3);
+      setTickets(filterdData);
+    }
+    console.log("alldata: " + allData);
+  }, [allData]);
+
+
 
   return (
     <>
@@ -124,75 +132,70 @@ function AdminComplaintTable() {
           <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success"><FontAwesomeIcon icon={faCheck} className="me-2" />Completed</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-      {isLoading ?
-        <Container className='text-center mt-3'>
-          <Spinner animation='border' variant='success' />
-        </Container>
-        :
-        <Container fluid>
+      <Container fluid>
 
-          {displayedTickets.length <= 0 ?
-            <AlertScript show={true} variant={"dark"} message={"No tickets yet"} />
-            :
-            <Table striped bordered hover responsive variant="success" className="border-1">
-              <thead>
-                <tr>
-                  <th className="green-header">Subject</th>
-                  <th className="green-header">Status</th>
-                  <th className="green-header">Date</th>
+        {displayedTickets.length <= 0 ?
+          <AlertScript show={true} variant={"dark"} message={"No tickets yet"} />
+          :
+          <Table striped bordered hover responsive variant="success" className="border-1">
+            <thead>
+              <tr>
+                <th className="green-header">Subject</th>
+                <th className="green-header">Status</th>
+                <th className="green-header">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(displayedTickets) && displayedTickets.map((ticket, index) => (
+                <tr
+                  key={index}
+                  onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}
+                  className="clickable"
+                >
+                  <td>{ticket.comp_subject}</td>
+                  <td>
+                    {ticket.joStatus_name === "Pending" ? (
+                      <span><FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending</span>
+                    ) : ticket.joStatus_name === "On-Going" ? (
+                      <span><FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-Going</span>
+                    ) : (
+                      <span><FontAwesomeIcon icon={faCheck} className="me-2 text-success" />Completed</span>
+                    )}
+                  </td>
+
+                  <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>
+                    {formatDate(ticket.comp_date)}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(displayedTickets) && displayedTickets.map((ticket, index) => (
-                  <tr
-                    key={index}
-                    onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}
-                    className="clickable"
-                  >
-                    <td>{ticket.comp_subject}</td>
-                    <td>
-                      {ticket.joStatus_name === "Pending" ? (
-                        <span><FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending</span>
-                      ) : ticket.joStatus_name === "On-Going" ? (
-                        <span><FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-Going</span>
-                      ) : (
-                        <span><FontAwesomeIcon icon={faCheck} className="me-2 text-success" />Completed</span>
-                      )}
-                    </td>
+              )
+              )}
+            </tbody>
+          </Table>
+        }
 
-                    <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>
-                      {formatDate(ticket.comp_date)}
-                    </td>
-                  </tr>
-                )
-                )}
-              </tbody>
-            </Table>
-          }
+        {showPagination && (
+          <div className="d-flex justify-content-end mt-2">
+            <Pagination>
+              <Pagination.First onClick={handleFirstPage} />
+              <Pagination.Prev onClick={handlePreviousPage} />
+              {Array.from({ length: Math.ceil(tickets.length / ticketsPerPage) }, (_, index) => (
+                <Pagination.Item
+                  key={index}
+                  active={currentPage === index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </Pagination.Item>
+              ))}
+              <Pagination.Next onClick={handleNextPage} />
+              <Pagination.Last onClick={handleLastPage} />
+            </Pagination>
+          </div>
+        )}
+        <JobOrderModal show={showJobOrderModal} onHide={handleClose} ticketId={ticketId} />
+        <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={ticketId} />
+      </Container>
 
-          {showPagination && (
-            <div className="d-flex justify-content-end mt-2">
-              <Pagination>
-                <Pagination.First onClick={handleFirstPage} />
-                <Pagination.Prev onClick={handlePreviousPage} />
-                {Array.from({ length: Math.ceil(tickets.length / ticketsPerPage) }, (_, index) => (
-                  <Pagination.Item
-                    key={index}
-                    active={currentPage === index + 1}
-                    onClick={() => handlePageChange(index + 1)}
-                  >
-                    {index + 1}
-                  </Pagination.Item>
-                ))}
-                <Pagination.Next onClick={handleNextPage} />
-                <Pagination.Last onClick={handleLastPage} />
-              </Pagination>
-            </div>
-          )}
-          <JobOrderModal show={showJobOrderModal} onHide={handleClose} ticketId={ticketId} />
-          <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={ticketId} />
-        </Container>
-      }
     </>
   );
 }
