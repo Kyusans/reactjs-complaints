@@ -34,7 +34,6 @@ export default function AdminDashboard() {
 
   }, []);
 
-  
   const refreshData = async () => {
     await getAllTickets();
   }
@@ -45,7 +44,8 @@ export default function AdminDashboard() {
     } else {
       getAllTickets();
     }
-  }, [getAllTickets, navigateTo])
+  }, [getAllTickets, navigateTo]);
+
   return (
     <>
       {localStorage.getItem("adminLoggedIn") === "true" ? (
