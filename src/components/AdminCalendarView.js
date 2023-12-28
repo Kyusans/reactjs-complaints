@@ -2,73 +2,69 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Container, Spinner } from 'react-bootstrap'
-import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import { Button, Container } from 'react-bootstrap'
 import JobDetails from './JobDetails'
 import { colorFormatter } from './PersonnelJobCalendarView'
 import { statusFormatter } from './ClientCalendarView'
 import JobOrderModal from './JobOrderModal'
+import { getAllTickets } from './AdminDashboard'
 
-function AdminCalendarView() {
+function AdminCalendarView({ allData }) {
   const [eventsWithoutEndDate, setEventsWithoutEndDate] = useState([]);
   const [events, setEvents] = useState(null);
   const [ticketId, setTicketId] = useState("");
   const [showJobDetails, setShowJobDetails] = useState(false);
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
   const [startDateOnly, setStartDateOnly] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleClose = async () => {
+  const handleClose = () => {
     setEvents(null);
-    await getAllTickets();
+    getAllTickets();
     setShowJobOrderModal(false)
   };
 
-  const hideJobDetails = () => {
+  const hideJobDetails = async () => {
     getAllTickets();
     setShowJobDetails(false);
   }
 
-  const getAllTickets = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const url = localStorage.getItem("url") + "admin.php";
-      const userId = localStorage.getItem("userId");
-      const jsonData = { userId: userId }
-      const formData = new FormData();
-      formData.append("operation", "getAllTickets");
-      formData.append("json", JSON.stringify(jsonData));
-      const res = await axios({ url: url, data: formData, method: "post" });
-      if (res.data !== 0) {
-        console.log("getalltickets res.data: " + JSON.stringify(res.data));
-        // with end dates (default)
-        const formattedEvents = res.data.map((comp) => ({
-          id: comp.comp_id,
-          status: comp.comp_status,
-          title: comp.comp_subject,
-          start: new Date(comp.comp_date),
-          end: new Date(comp.comp_end_date),
-          color: colorFormatter(statusFormatter(comp.comp_status)),
-        }));
-        setEvents(formattedEvents);
+  // const getAllTickets = useCallback(async () => {
+  //   try {
+  //     const url = localStorage.getItem("url") + "admin.php";
+  //     const userId = localStorage.getItem("userId");
+  //     const jsonData = { userId: userId }
+  //     const formData = new FormData();
+  //     formData.append("operation", "getAllTickets");
+  //     formData.append("json", JSON.stringify(jsonData));
+  //     const res = await axios({ url: url, data: formData, method: "post" });
+  //     if (res.data !== 0) {
+  //       console.log("getalltickets res.data: " + JSON.stringify(res.data));
+  //       // with end dates (default)
+  //       const formattedEvents = res.data.map((comp) => ({
+  //         id: comp.comp_id,
+  //         status: comp.comp_status,
+  //         title: comp.comp_subject,
+  //         start: new Date(comp.comp_date),
+  //         end: new Date(comp.comp_end_date),
+  //         color: colorFormatter(statusFormatter(comp.comp_status)),
+  //       }));
+  //       setEvents(formattedEvents);
 
-        // without end date para sa switch 
-        const withoutEndDate = res.data.map((comp) => ({
-          id: comp.comp_id,
-          status: comp.comp_status,
-          title: comp.comp_subject,
-          date: new Date(comp.comp_date),
-          color: colorFormatter(statusFormatter(comp.comp_status)),
-        }));
-        setEventsWithoutEndDate(withoutEndDate);
-      }
-    } catch (error) {
-      alert("There was an unexpected error: " + error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  //       // without end date para sa switch 
+  //       const withoutEndDate = res.data.map((comp) => ({
+  //         id: comp.comp_id,
+  //         status: comp.comp_status,
+  //         title: comp.comp_subject,
+  //         date: new Date(comp.comp_date),
+  //         color: colorFormatter(statusFormatter(comp.comp_status)),
+  //       }));
+  //       setEventsWithoutEndDate(withoutEndDate);
+  //     }
+  //   } catch (error) {
+  //     alert("There was an unexpected error: " + error);
+  //   }
+  // }, []);
 
   const handleStartDateOnly = (status) => {
     setStartDateOnly(status === 1);
@@ -85,8 +81,29 @@ function AdminCalendarView() {
   };
 
   useEffect(() => {
-    getAllTickets()
-  }, [getAllTickets])
+    if (allData) {
+      // with end dates (default)
+      const formattedEvents = allData.map((comp) => ({
+        id: comp.comp_id,
+        status: comp.comp_status,
+        title: comp.comp_subject,
+        start: new Date(comp.comp_date),
+        end: new Date(comp.comp_end_date),
+        color: colorFormatter(statusFormatter(comp.comp_status)),
+      }));
+      setEvents(formattedEvents);
+
+      // without end date para sa switch 
+      const withoutEndDate = allData.map((comp) => ({
+        id: comp.comp_id,
+        status: comp.comp_status,
+        title: comp.comp_subject,
+        date: new Date(comp.comp_date),
+        color: colorFormatter(statusFormatter(comp.comp_status)),
+      }));
+      setEventsWithoutEndDate(withoutEndDate);
+    }
+  }, [allData])
 
   const maxEventsToShow = 4;
 
@@ -97,28 +114,22 @@ function AdminCalendarView() {
         :
         (<Button onClick={() => handleStartDateOnly(0)} className='btn-info'>Include Deadline</Button>)
       }
-      {isLoading ?
-        <Container className='text-center mt-3'>
-          <Spinner animation='border' variant='success' />
-        </Container>
-        :
-        <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView='dayGridMonth'
-          weekends={true}
-          allDaySlot={false}
-          events={startDateOnly ? eventsWithoutEndDate : events || []}
-          dayMaxEvents={events && events.length >= maxEventsToShow ? maxEventsToShow : false}
-          eventClick={handleEventClick}
-          headerToolbar={{
-            left: 'title',
-            center: '',
-            right: 'today,prev,next dayGridMonth,timeGridWeek,timeGridDay'
-          }}
-          height={'90vh'}
-        />
 
-      }
+      <FullCalendar
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        initialView='dayGridMonth'
+        weekends={true}
+        allDaySlot={false}
+        events={startDateOnly ? eventsWithoutEndDate : events || []}
+        dayMaxEvents={events && events.length >= maxEventsToShow ? maxEventsToShow : false}
+        eventClick={handleEventClick}
+        headerToolbar={{
+          left: 'title',
+          center: '',
+          right: 'today,prev,next dayGridMonth,timeGridWeek,timeGridDay'
+        }}
+        height={'90vh'}
+      />
 
       <JobOrderModal show={showJobOrderModal} onHide={handleClose} ticketId={ticketId} />
       <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={ticketId} />

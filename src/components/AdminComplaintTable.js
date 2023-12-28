@@ -18,7 +18,6 @@ function AdminComplaintTable({ allData }) {
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
   const showPagination = tickets.length > ticketsPerPage;
   const [showJobDetails, setShowJobDetails] = useState(false);
-  // const [defaultTicket, setDefaultTicket] = useState([]);
 
   const hideJobDetails = () => {
     getTicketsByStatus(pageStatus);
@@ -38,48 +37,6 @@ function AdminComplaintTable({ allData }) {
       setShowJobDetails(true);
       // navigateTo(`/job/details/${id}`);
     }
-  };
-
-  // const getAllTickets = useCallback(async () => {
-  //   try {
-  //     const url = localStorage.getItem("url") + "admin.php";
-  //     const formData = new FormData();
-  //     formData.append("operation", "getAllTickets");
-  //     const res = await axios({ url: url, data: formData, method: "post" });
-  //     console.log("res ni getAllTickets", JSON.stringify(res.data));
-  //     if (res.data !== 0) {
-  //       console.log("res.data", JSON.stringify(res.data));
-  //       setAllTickets(res.data);
-  //       const filterdData = res.data.filter(item => item.comp_status < 3);
-  //       console.log("filterd data", JSON.stringify(filterdData));
-  //       setTickets(filterdData);
-
-  //     }
-  //     setIsLoading(false);
-  //   } catch (err) {
-  //     alert("There was an unexpected error: " + err);
-  //   }
-
-  // }, []);
-
-  const startIndex = (currentPage - 1) * ticketsPerPage;
-  const endIndex = startIndex + ticketsPerPage;
-  const displayedTickets = tickets ? tickets.slice(startIndex, endIndex) : 0;
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
-  const handleNextPage = () => {
-    setCurrentPage(currentPage + 1);
-  };
-  const handlePreviousPage = () => {
-    setCurrentPage(currentPage - 1);
-  }
-  const handleFirstPage = () => {
-    setCurrentPage(1);
-  };
-  const handleLastPage = () => {
-    const lastPage = Math.ceil(tickets.length / ticketsPerPage);
-    setCurrentPage(lastPage);
   };
 
   const getTicketsByStatus = (status) => {
@@ -116,6 +73,26 @@ function AdminComplaintTable({ allData }) {
     console.log("alldata: " + allData);
   }, [allData]);
 
+
+  const startIndex = (currentPage - 1) * ticketsPerPage;
+  const endIndex = startIndex + ticketsPerPage;
+  const displayedTickets = tickets ? tickets.slice(startIndex, endIndex) : 0;
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+  const handlePreviousPage = () => {
+    setCurrentPage(currentPage - 1);
+  }
+  const handleFirstPage = () => {
+    setCurrentPage(1);
+  };
+  const handleLastPage = () => {
+    const lastPage = Math.ceil(tickets.length / ticketsPerPage);
+    setCurrentPage(lastPage);
+  };
 
 
   return (
