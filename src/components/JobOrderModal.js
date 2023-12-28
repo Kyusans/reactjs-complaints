@@ -131,7 +131,6 @@ function JobOrderModal(props) {
     setPriorityValidation(null);
     setPersonnelValidation(null);
     setJobPersonnel([]);
-    setDescription("");
     setPersonnel([]);
     setJobPersonnel([]);
     setPriorities([]);
@@ -192,7 +191,7 @@ function JobOrderModal(props) {
 
   return (
     <div>
-      <Modal show={show} onHide={handleHide} size='lg' backdrop="static">
+      <Modal show={show} onHide={handleHide} size='lg' backdrop="static" className='bg-dark'>
         <Modal.Header closeButton>
           <h3>Job order creation</h3>
         </Modal.Header>

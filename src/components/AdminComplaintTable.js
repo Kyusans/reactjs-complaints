@@ -7,9 +7,11 @@ import JobDetails, { formatDate } from "./JobDetails";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faClock, faPlay, faThList } from "@fortawesome/free-solid-svg-icons";
 import AlertScript from "./AlertScript";
+import axios from "axios";
 
 function AdminComplaintTable({ allData }) {
   // const navigateTo = useNavigate();
+  const [allTickets, setAllTickets] = useState(allData);
   const [pageStatus, setPageStatus] = useState(0);
   const [tickets, setTickets] = useState([]);
   const [ticketId, setTicketId] = useState("");
@@ -18,14 +20,15 @@ function AdminComplaintTable({ allData }) {
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
   const showPagination = tickets.length > ticketsPerPage;
   const [showJobDetails, setShowJobDetails] = useState(false);
+  // const [defaultTicket, setDefaultTicket] = useState([]);
 
-  const hideJobDetails = () => {
-    getTicketsByStatus(pageStatus);
+  const hideJobDetails = async () => {
+    await getAllTickets();
     setShowJobDetails(false);
   }
 
-  const handleClose = () => {
-    getTicketsByStatus(pageStatus);
+  const handleClose = async () => {
+    await getAllTickets();
     setShowJobOrderModal(false)
   };
   const handleShow = (id, status) => {
@@ -37,6 +40,23 @@ function AdminComplaintTable({ allData }) {
       setShowJobDetails(true);
       // navigateTo(`/job/details/${id}`);
     }
+  };
+
+  const getAllTickets = async () => {
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const formData = new FormData();
+      formData.append("operation", "getAllTickets");
+      const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("res ni getAllTickets", JSON.stringify(res.data));
+      if (res.data !== 0) {
+        setAllTickets(res.data);
+        getTicketsByStatus(pageStatus);
+      }
+    } catch (err) {
+      alert("There was an unexpected error: " + err);
+    }
+
   };
 
   const getTicketsByStatus = (status) => {
@@ -57,7 +77,7 @@ function AdminComplaintTable({ allData }) {
         statusNumber = 3;
         break;
       default:
-        setTickets(allData);
+        setTickets(allTickets);
         return;
     }
     const filteredTickets = allData.filter(item => item.comp_status === statusNumber);
@@ -65,14 +85,12 @@ function AdminComplaintTable({ allData }) {
   }
 
   useEffect(() => {
-    console.log("allData in AdminComplaintTable:", allData);
-    if (allData) {
-      const filterdData = allData.filter(item => item.comp_status < 3);
+    if (allTickets) {
+      const filterdData = allTickets.filter(item => item.comp_status < 3);
       setTickets(filterdData);
     }
-    console.log("alldata: " + allData);
-  }, [allData]);
-
+    console.log("alldata: " + allTickets);
+  }, [allTickets]);
 
   const startIndex = (currentPage - 1) * ticketsPerPage;
   const endIndex = startIndex + ticketsPerPage;
@@ -93,6 +111,7 @@ function AdminComplaintTable({ allData }) {
     const lastPage = Math.ceil(tickets.length / ticketsPerPage);
     setCurrentPage(lastPage);
   };
+
 
 
   return (
@@ -178,4 +197,3 @@ function AdminComplaintTable({ allData }) {
 }
 
 export default AdminComplaintTable;
-

@@ -8,7 +8,6 @@ import JobDetails from './JobDetails'
 import { colorFormatter } from './PersonnelJobCalendarView'
 import { statusFormatter } from './ClientCalendarView'
 import JobOrderModal from './JobOrderModal'
-import { getAllTickets } from './AdminDashboard'
 
 function AdminCalendarView({ allData }) {
   const [eventsWithoutEndDate, setEventsWithoutEndDate] = useState([]);
@@ -20,12 +19,12 @@ function AdminCalendarView({ allData }) {
 
   const handleClose = () => {
     setEvents(null);
-    getAllTickets();
+    // getAllTickets();
     setShowJobOrderModal(false)
   };
 
   const hideJobDetails = async () => {
-    getAllTickets();
+    // getAllTickets();
     setShowJobDetails(false);
   }
 
@@ -71,7 +70,6 @@ function AdminCalendarView({ allData }) {
   }
 
   function handleEventClick(info) {
-    console.log("status: " + info.event.extendedProps.status)
     setTicketId(info.event.id);
     if (info.event.extendedProps.status === 1) {
       setShowJobOrderModal(true);
@@ -103,7 +101,7 @@ function AdminCalendarView({ allData }) {
       }));
       setEventsWithoutEndDate(withoutEndDate);
     }
-  }, [allData])
+  }, [allData,])
 
   const maxEventsToShow = 4;
 

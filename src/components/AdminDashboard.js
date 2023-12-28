@@ -11,27 +11,37 @@ import axios from "axios";
 export default function AdminDashboard() {
   const [isCalendarView, setIsCalendarView] = useState(false);
   const [allTickets, setAllTickets] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigateTo = useNavigate();
 
-  const fetchData = useCallback((data) => {
+  const getAllTickets = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const formData = new FormData();
+      formData.append("operation", "getAllTickets");
+      const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("res ni getAllTickets", JSON.stringify(res.data));
+      if (res.data !== 0) {
+        console.log("res.data ni getAllTickets", JSON.stringify(res.data));
+        setAllTickets(res.data);
+        // const filterdData = res.data.filter(item => item.comp_status < 3);
+      }
+    } catch (err) {
+      alert("There was an unexpected error: " + err);
+    } finally {
+      setIsLoading(false);
+    }
+
+  }, []);
+
+  useEffect(() => {
     if (localStorage.getItem("adminLoggedIn") !== "true") {
       navigateTo(-1);
     } else {
-      setIsLoading(true);
-      try {
-        setAllTickets(data);
-      } catch (error) {
-        alert("There was an unexpected error: " + error);
-      } finally {
-        setIsLoading(false);
-      }
+      getAllTickets();
     }
-  },[navigateTo]);
-
-  useEffect(() => {
-    getAllTickets(fetchData);
-  }, [fetchData])
+  }, [getAllTickets, navigateTo])
   return (
     <>
       {localStorage.getItem("adminLoggedIn") === "true" ? (
@@ -41,7 +51,7 @@ export default function AdminDashboard() {
             <Button variant="light" onClick={() => setIsCalendarView(true)}><FontAwesomeIcon icon={faCalendar} /> </Button>
           </div>
           {isLoading ?
-            <Container className="text-center">
+            <Container>
               <Spinner variant="success" />
             </Container> :
             isCalendarView ? <AdminCalendarView allData={allTickets} /> : <AdminComplaintTable allData={allTickets} />}
@@ -51,17 +61,4 @@ export default function AdminDashboard() {
       )}
     </>
   );
-}
-
-export async function getAllTickets(fetchData) {
-  try {
-    const url = localStorage.getItem("url") + "admin.php";
-    const formData = new FormData();
-    formData.append("operation", "getAllTickets");
-    const res = await axios({ url: url, data: formData, method: "post" });
-    console.log("res ni getAllTickets", JSON.stringify(res.data));
-    fetchData(res.data);
-  } catch (err) {
-    alert("There was an unexpected error: " + err);
-  }
 }
