@@ -2,6 +2,7 @@ import axios from "axios";
 
 export const requestPermission = () =>{
   Notification.requestPermission().then((permission) => {
+    console.log("Permission granted: " + permission);
     if (permission === "granted") {
       navigator.serviceWorker.ready.then((sw) => {
         sw.pushManager.subscribe({

@@ -9,7 +9,7 @@ import { colorFormatter } from './PersonnelJobCalendarView'
 import { statusFormatter } from './ClientCalendarView'
 import JobOrderModal from './JobOrderModal'
 
-function AdminCalendarView({ allData }) {
+function AdminCalendarView({ allData, refreshData }) {
   const [eventsWithoutEndDate, setEventsWithoutEndDate] = useState([]);
   const [events, setEvents] = useState(null);
   const [ticketId, setTicketId] = useState("");
@@ -17,53 +17,16 @@ function AdminCalendarView({ allData }) {
   const [showJobOrderModal, setShowJobOrderModal] = useState(false);
   const [startDateOnly, setStartDateOnly] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setEvents(null);
-    // getAllTickets();
+    await refreshData();
     setShowJobOrderModal(false)
   };
 
   const hideJobDetails = async () => {
-    // getAllTickets();
+    await refreshData();
     setShowJobDetails(false);
   }
-
-  // const getAllTickets = useCallback(async () => {
-  //   try {
-  //     const url = localStorage.getItem("url") + "admin.php";
-  //     const userId = localStorage.getItem("userId");
-  //     const jsonData = { userId: userId }
-  //     const formData = new FormData();
-  //     formData.append("operation", "getAllTickets");
-  //     formData.append("json", JSON.stringify(jsonData));
-  //     const res = await axios({ url: url, data: formData, method: "post" });
-  //     if (res.data !== 0) {
-  //       console.log("getalltickets res.data: " + JSON.stringify(res.data));
-  //       // with end dates (default)
-  //       const formattedEvents = res.data.map((comp) => ({
-  //         id: comp.comp_id,
-  //         status: comp.comp_status,
-  //         title: comp.comp_subject,
-  //         start: new Date(comp.comp_date),
-  //         end: new Date(comp.comp_end_date),
-  //         color: colorFormatter(statusFormatter(comp.comp_status)),
-  //       }));
-  //       setEvents(formattedEvents);
-
-  //       // without end date para sa switch 
-  //       const withoutEndDate = res.data.map((comp) => ({
-  //         id: comp.comp_id,
-  //         status: comp.comp_status,
-  //         title: comp.comp_subject,
-  //         date: new Date(comp.comp_date),
-  //         color: colorFormatter(statusFormatter(comp.comp_status)),
-  //       }));
-  //       setEventsWithoutEndDate(withoutEndDate);
-  //     }
-  //   } catch (error) {
-  //     alert("There was an unexpected error: " + error);
-  //   }
-  // }, []);
 
   const handleStartDateOnly = (status) => {
     setStartDateOnly(status === 1);

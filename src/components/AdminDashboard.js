@@ -23,7 +23,6 @@ export default function AdminDashboard() {
       const res = await axios({ url: url, data: formData, method: "post" });
       console.log("res ni getAllTickets", JSON.stringify(res.data));
       if (res.data !== 0) {
-        console.log("res.data ni getAllTickets", JSON.stringify(res.data));
         setAllTickets(res.data);
         // const filterdData = res.data.filter(item => item.comp_status < 3);
       }
@@ -35,13 +34,18 @@ export default function AdminDashboard() {
 
   }, []);
 
+  const refreshData = async () => {
+    await getAllTickets();
+  }
+
   useEffect(() => {
     if (localStorage.getItem("adminLoggedIn") !== "true") {
       navigateTo(-1);
     } else {
       getAllTickets();
     }
-  }, [getAllTickets, navigateTo])
+  }, [getAllTickets, navigateTo]);
+
   return (
     <>
       {localStorage.getItem("adminLoggedIn") === "true" ? (
@@ -54,7 +58,7 @@ export default function AdminDashboard() {
             <Container>
               <Spinner variant="success" />
             </Container> :
-            isCalendarView ? <AdminCalendarView allData={allTickets} /> : <AdminComplaintTable allData={allTickets} />}
+            isCalendarView ? <AdminCalendarView allData={allTickets} refreshData={refreshData} /> : <AdminComplaintTable allData={allTickets} refreshData={refreshData} />}
         </div>
       ) : (
         <h2 className="text-center text-danger">You are not admin</h2>
