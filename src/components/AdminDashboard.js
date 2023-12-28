@@ -1,21 +1,47 @@
 import AdminComplaintTable from "./AdminComplaintTable";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminCalendarView from "./AdminCalendarView";
-import { Button } from "react-bootstrap";
+import { Button, Container, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faTh } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 
 export default function AdminDashboard() {
   const [isCalendarView, setIsCalendarView] = useState(false);
+  const [allTickets, setAllTickets] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const navigateTo = useNavigate();
+
+  const getAllTickets = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const formData = new FormData();
+      formData.append("operation", "getAllTickets");
+      const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("res ni getAllTickets", JSON.stringify(res.data));
+      if (res.data !== 0) {
+        console.log("res.data ni getAllTickets", JSON.stringify(res.data));
+        setAllTickets(res.data);
+        // const filterdData = res.data.filter(item => item.comp_status < 3);
+      }
+    } catch (err) {
+      alert("There was an unexpected error: " + err);
+    } finally {
+      setIsLoading(false);
+    }
+
+  }, []);
 
   useEffect(() => {
     if (localStorage.getItem("adminLoggedIn") !== "true") {
       navigateTo(-1);
+    } else {
+      getAllTickets();
     }
-  }, [navigateTo])
+  }, [getAllTickets, navigateTo])
   return (
     <>
       {localStorage.getItem("adminLoggedIn") === "true" ? (
@@ -24,7 +50,11 @@ export default function AdminDashboard() {
             <Button variant="info" onClick={() => setIsCalendarView(false)} className="me-1 ms-2"><FontAwesomeIcon icon={faTh} /> </Button>
             <Button variant="light" onClick={() => setIsCalendarView(true)}><FontAwesomeIcon icon={faCalendar} /> </Button>
           </div>
-          {isCalendarView ? <AdminCalendarView /> : <AdminComplaintTable />}
+          {isLoading ?
+            <Container>
+              <Spinner variant="success" />
+            </Container> :
+            isCalendarView ? <AdminCalendarView allData={allTickets} /> : <AdminComplaintTable allData={allTickets} />}
         </div>
       ) : (
         <h2 className="text-center text-danger">You are not admin</h2>
