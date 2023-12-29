@@ -47,8 +47,10 @@ export default function ConfirmModal(props) {
 
 
   const handleHide = () => {
-    setIsJobComplete(false);
     hide();
+    setTimeout(() => {
+      setIsJobComplete(false);
+    }, 1000);
   };
 
   return (

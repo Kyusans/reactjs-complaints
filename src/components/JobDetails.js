@@ -48,7 +48,7 @@ export default function JobDetails(props) {
   const { show, onHide, compId } = props;
   // const { compId } = useParams();
   const [isGoingToUpload, setIsGoingToUpload] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [details, setDetails] = useState({});
   const [assignedPersonnel, setAssignedPersonnel] = useState([]);
   const [comment, setComment] = useState([]);
@@ -217,6 +217,11 @@ export default function JobDetails(props) {
     }
   }
 
+  const handleHide = () => {
+    setIsLoading(true);
+    onHide()
+  }
+
   useEffect(() => {
     if (show) {
       setIsAddingComment(false);
@@ -237,7 +242,7 @@ export default function JobDetails(props) {
             </Container>
             :
             <div>
-              <Button variant='outline-danger button-m' onClick={onHide}>
+              <Button variant='outline-danger button-m' onClick={handleHide}>
                 <FontAwesomeIcon icon={faArrowLeft} />
               </Button>
 
