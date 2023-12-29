@@ -7,7 +7,7 @@ import { Button, Container, Spinner } from 'react-bootstrap'
 import axios from 'axios';
 import JobDetails from './JobDetails'
 
-function PersonnelJobCalendarView() {
+function PersonnelJobCalendarView({allData, refreshData}) {
   const [eventsWithoutEndDate, setEventsWithoutEndDate] = useState([]);
   const [events, setEvents] = useState([]);
   const [ticketId, setTicketId] = useState("");

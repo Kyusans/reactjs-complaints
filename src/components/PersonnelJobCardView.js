@@ -1,6 +1,5 @@
-import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react'
-import { Container, Dropdown, Spinner } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react'
+import { Container, Dropdown } from 'react-bootstrap';
 import "./css/site.css";
 import JobDetails, { formatDate } from './JobDetails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,91 +7,46 @@ import { faArrowDown, faArrowRight, faArrowUp, faCheck, faPlay, faThList } from 
 import TicketCard from './TicketCard';
 import AlertScript from './AlertScript';
 
-export default function PersonnelJobCardView() {
-  const [isLoading, setIsLoading] = useState(false);
+export default function PersonnelJobCardView({ allData, refreshData }) {
   const [isOnGoing, setIsOnGoing] = useState(true);
   const [compId, setCompId] = useState(0);
   const [ticket, setTicket] = useState([]);
   const [statusType, setStatusType] = useState(null);
   const [priorityType, setPriorityType] = useState(null);
   const [showJobDetails, setShowJobDetails] = useState(false);
-  const hideJobDetails = () => {
+
+  const hideJobDetails = async () => {
     setCompId(0);
-    getTicketsByStatus(statusType);
+    await refreshData();
+    // getTicketsByStatus(statusType);
     setShowJobDetails(false)
   };
-
-  const getJobTicket = async () => {
-    try {
-      const url = localStorage.getItem("url") + "personnel.php";
-      const userId = localStorage.getItem("userId");
-      const jsonData = { userId: userId }
-      const formData = new FormData();
-      formData.append("operation", "getJobTicket");
-      formData.append("json", JSON.stringify(jsonData));
-      const res = await axios({ url: url, data: formData, method: "post" });
-      if (res.data !== 0) {
-        setTicket(res.data);
-        setIsLoading(false);
-      }
-    } catch (error) {
-      alert("There was an unexpected error: " + error);
-    }
-  }
 
   //priority ni siya
   const getSelectedStatus = async (priority) => {
     setPriorityType(priority);
-    setIsLoading(true);
-    try {
-      const url = localStorage.getItem("url") + "personnel.php";
-      const userId = localStorage.getItem("userId");
-      const jsonData = { priority: priority, userId: userId }
-      const formData = new FormData();
-      formData.append("operation", "getSelectedStatus");
-      formData.append("json", JSON.stringify(jsonData));
-      const res = await axios({ url: url, data: formData, method: "post" });
-      if (res.data !== 0) {
-        setTicket(res.data);
-        setIsLoading(false);
-      } else {
-        alert("No ticket found");
-        setIsLoading(false);
-      }
-    } catch (error) {
-      alert("There was an unexpected error: " + error);
+    if (priority === 0) {
+      setTicket(allData);
+    } else {
+      const filterData = allData.filter(item => item.priority_id === priority);
+      setTicket(filterData);
     }
   }
 
-  const getTicketsByStatus = useCallback(async (status) => {
+  const getTicketsByStatus = (status) => {
     setStatusType(status);
-    setIsLoading(true);
-    if (status === 2) {
-      setIsOnGoing(true);
-    } else if (status === 0) {
+    if (status === 0) {
       setIsOnGoing(false);
-      getJobTicket();
+      setTicket(allData);
+      return;
+    } else if (status === 2) {
+      setIsOnGoing(true);
     } else {
       setIsOnGoing(false);
     }
-
-    try {
-      setTicket([]);
-      const url = localStorage.getItem("url") + "personnel.php";
-      const userId = localStorage.getItem("userId");
-      const jsonData = { status: status, userId: userId };
-      const formData = new FormData();
-      formData.append("json", JSON.stringify(jsonData));
-      formData.append("operation", "getJobsByStatus");
-      const res = await axios({ url: url, data: formData, method: "post" });
-      if (res.data !== 0) {
-        setTicket(res.data);
-      }
-      setIsLoading(false);
-    } catch (error) {
-      alert("There was an error: " + error.message);
-    }
-  }, [])
+    const filteredTickets = allData.filter(item => item.comp_status === status);
+    setTicket(filteredTickets);
+  }
 
   const handleNavigate = (id) => {
     setCompId(id);
@@ -100,9 +54,13 @@ export default function PersonnelJobCardView() {
   }
 
   useEffect(() => {
-    setIsLoading(true);
-    getTicketsByStatus(2);
-  }, [getTicketsByStatus])
+    if (allData) {
+      console.log('allData: ', allData);
+      const filterData = allData.filter(item => item.comp_status === 2);
+      setTicket(filterData);
+    }
+
+  }, [allData])
 
   return (
     <>
@@ -113,11 +71,18 @@ export default function PersonnelJobCardView() {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item onClick={() => getTicketsByStatus(0)}><FontAwesomeIcon icon={faThList} className="me-2" />All Ticket</Dropdown.Item>
-            <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning"><FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-going</Dropdown.Item>
-            <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success"><FontAwesomeIcon icon={faCheck} className="me-2" />Completed</Dropdown.Item>
+            <Dropdown.Item onClick={() => getTicketsByStatus(0)}>
+              <FontAwesomeIcon icon={faThList} className="me-2" />All Ticket
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning">
+              <FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-going
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success">
+              <FontAwesomeIcon icon={faCheck} className="me-2" />Completed
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+
         {isOnGoing && (
           <Dropdown className="mb-2 mx-2 mt-2">
             <Dropdown.Toggle variant={priorityType === 1 ? "danger" : priorityType === 2 ? "warning" : priorityType === 3 ? "secondary" : "primary"}>
@@ -125,38 +90,42 @@ export default function PersonnelJobCardView() {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item onClick={() => getSelectedStatus(1)} className="text-danger"><FontAwesomeIcon icon={faArrowUp} className="text-danger me-2" />High</Dropdown.Item>
-              <Dropdown.Item onClick={() => getSelectedStatus(2)} className="text-warning"><FontAwesomeIcon icon={faArrowRight} className="text-warning me-1" />Medium</Dropdown.Item>
-              <Dropdown.Item onClick={() => getSelectedStatus(3)} className="text-dark"><FontAwesomeIcon icon={faArrowDown} className="text-dark me-2" />Low</Dropdown.Item>
+              <Dropdown.Item onClick={() => getSelectedStatus(0)} className="text-primary">
+                <FontAwesomeIcon icon={faCheck} className="text-primary me-2" />All Priority
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => getSelectedStatus(1)} className="text-danger">
+                <FontAwesomeIcon icon={faArrowUp} className="text-danger me-2" />High
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => getSelectedStatus(2)} className="text-warning">
+                <FontAwesomeIcon icon={faArrowRight} className="text-warning me-1" />Medium
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => getSelectedStatus(3)} className="text-dark">
+                <FontAwesomeIcon icon={faArrowDown} className="text-dark me-2" />Low
+              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         )}
       </Container>
-      {isLoading ?
-        <Container className='text-center mt-3 vh-100'>
-          <Spinner animation='border' variant='success' />
-        </Container>
-        :
-        <Container className='scrollable-container vh-100'>
-          <div>
-            {ticket.length === 0 && <AlertScript show={true} variant={"dark"} message={"No tickets yet"} />}
 
-            {ticket.map((tickets, index) => (
-              <div className='p-1 clickable' key={index} onClick={() => handleNavigate(tickets.job_complaintId)}>
-                <TicketCard
-                  subject={tickets.job_title}
-                  priority={tickets.priority_name}
-                  status={tickets.joStatus_name}
-                  date={formatDate(tickets.job_createDate)}
-                  lastUser={tickets.comp_lastUser}
-                />
-              </div>
-            ))
-            }
-          </div>
+      <Container className='scrollable-container vh-100 mt-3'>
+        <div>
+          {ticket.length === 0 && <AlertScript show={true} variant={"dark"} message={"No tickets yet"} />}
 
-        </Container>
-      }
+          {ticket.map((tickets, index) => (
+            <div className='p-1 clickable' key={index} onClick={() => handleNavigate(tickets.job_complaintId)}>
+              <TicketCard
+                subject={tickets.job_title}
+                priority={tickets.priority_name}
+                status={tickets.joStatus_name}
+                date={formatDate(tickets.job_createDate)}
+                lastUser={tickets.comp_lastUser}
+              />
+            </div>
+          ))
+          }
+        </div>
+      </Container>
+
       <JobDetails show={showJobDetails} onHide={hideJobDetails} compId={compId} />
     </>
   )

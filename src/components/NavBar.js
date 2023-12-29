@@ -21,7 +21,7 @@ function AdminNavbar() {
     localStorage.setItem("facCode", "");
     localStorage.setItem("userCommentId", "");
     localStorage.setItem("userFullName", "");
-
+    localStorage.setItem("personnelLoggedIn", "");
   }
 
   const handleToggleOffcanvas = () => {

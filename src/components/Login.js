@@ -64,7 +64,7 @@ export default function Login() {
           localStorage.setItem("userFullName", res.data.user_full_name);
           localStorage.setItem("userLevel", res.data.user_level);
           localStorage.setItem("userCommentId", res.data.user_id);
-
+          localStorage.setItem("personnelLoggedIn", "true");
           if (permission !== "granted") {
             requestPermission();
           }
