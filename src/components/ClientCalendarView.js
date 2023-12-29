@@ -12,7 +12,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import ComplaintForm from './ComplaintForm'
 import UpdateTicketModal from './UpdateTicketModal'
 
-function ClientCalendarView() {
+function ClientCalendarView({allData, refreshData}) {
   const [eventsWithoutEndDate, setEventsWithoutEndDate] = useState([]);
   const [events, setEvents] = useState([]);
   const [ticketId, setTicketId] = useState("");

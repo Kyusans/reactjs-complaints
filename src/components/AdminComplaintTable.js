@@ -40,27 +40,14 @@ function AdminComplaintTable({ allData, refreshData }) {
   };
 
   const getTicketsByStatus = (status) => {
-    var statusNumber = 0;
     handleFirstPage();
     setPageStatus(status);
-    switch (status) {
-      case 1:
-        // pending
-        statusNumber = 1;
-        break;
-      case 2:
-        // on-going
-        statusNumber = 2;
-        break;
-      case 3:
-        // complete
-        statusNumber = 3;
-        break;
-      default:
-        setTickets(allData);
-        return;
+    if (status === 0) {
+      setTickets(allData);
+      return;
     }
-    const filteredTickets = allData.filter(item => item.comp_status === statusNumber);
+
+    const filteredTickets = allData.filter(item => item.comp_status === status);
     setTickets(filteredTickets);
   }
 
@@ -92,8 +79,6 @@ function AdminComplaintTable({ allData, refreshData }) {
     setCurrentPage(lastPage);
   };
 
-
-
   return (
     <>
       <Dropdown className="mb-2 ms-3">
@@ -102,10 +87,18 @@ function AdminComplaintTable({ allData, refreshData }) {
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item onClick={() => getTicketsByStatus(0)}><FontAwesomeIcon icon={faThList} className="me-2" />All Ticket</Dropdown.Item>
-          <Dropdown.Item onClick={() => getTicketsByStatus(1)} className="text-dark"><FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending</Dropdown.Item>
-          <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning"><FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-going</Dropdown.Item>
-          <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success"><FontAwesomeIcon icon={faCheck} className="me-2" />Completed</Dropdown.Item>
+          <Dropdown.Item onClick={() => getTicketsByStatus(0)}>
+            <FontAwesomeIcon icon={faThList} className="me-2" />All Ticket
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => getTicketsByStatus(1)} className="text-dark">
+            <FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning">
+            <FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-going
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success">
+            <FontAwesomeIcon icon={faCheck} className="me-2" />Completed
+          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
       <Container fluid>
