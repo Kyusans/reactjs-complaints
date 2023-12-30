@@ -10,8 +10,8 @@ import AlertScript from "./AlertScript";
 
 function AdminComplaintTable({ allData, refreshData }) {
   // const navigateTo = useNavigate();
-  const [pageStatus, setPageStatus] = useState(0);
-  const [tickets, setTickets] = useState([]);
+  const [statusType, setStatusType] = useState(parseInt(localStorage.getItem("selectedStatus")));
+  const [tickets, setTickets] = useState(0);
   const [ticketId, setTicketId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const ticketsPerPage = 20;
@@ -20,7 +20,7 @@ function AdminComplaintTable({ allData, refreshData }) {
   const [showJobDetails, setShowJobDetails] = useState(false);
 
   const hideJobDetails = async () => {
-    await refreshData()
+    await refreshData();
     setShowJobDetails(false);
   }
 
@@ -39,25 +39,22 @@ function AdminComplaintTable({ allData, refreshData }) {
     }
   };
 
-  const getTicketsByStatus = (status) => {
-    handleFirstPage();
-    setPageStatus(status);
-    if (status === 0) {
-      setTickets(allData);
-      return;
-    }
-
-    const filteredTickets = allData.filter(item => item.comp_status === status);
-    setTickets(filteredTickets);
+  const handleSetStatus = (status) => {
+    localStorage.setItem("selectedStatus", status);
+    setStatusType(status);
   }
 
   useEffect(() => {
     if (allData) {
-      const filterdData = allData.filter(item => item.comp_status < 3);
-      setTickets(filterdData);
+      if (statusType === 0) {
+        setTickets(allData);
+      } else {
+        const filterdData = allData.filter(item => item.comp_status === statusType);
+        setTickets(filterdData);
+      }
     }
-    console.log("alldata: " + allData);
-  }, [allData]);
+    // console.log("alldata: " + allData);
+  }, [allData, statusType]);
 
   const startIndex = (currentPage - 1) * ticketsPerPage;
   const endIndex = startIndex + ticketsPerPage;
@@ -82,21 +79,21 @@ function AdminComplaintTable({ allData, refreshData }) {
   return (
     <>
       <Dropdown className="mb-2 ms-3">
-        <Dropdown.Toggle variant={pageStatus === 0 ? "primary" : pageStatus === 1 ? "dark" : pageStatus === 2 ? "warning text-dark" : pageStatus === 3 ? "success" : "primary"}>
-          {pageStatus === 0 ? "All Tickets" : pageStatus === 1 ? "Pending Tickets" : pageStatus === 2 ? "On-going Tickets" : pageStatus === 3 ? "Completed Tickets" : "Select Ticket Type"}
+        <Dropdown.Toggle variant={statusType === 0 ? "primary" : statusType === 1 ? "dark" : statusType === 2 ? "warning text-dark" : statusType === 3 ? "success" : "primary"}>
+          {statusType === 0 ? "All Tickets" : statusType === 1 ? "Pending Tickets" : statusType === 2 ? "On-going Tickets" : statusType === 3 ? "Completed Tickets" : "Select Ticket Type"}
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item onClick={() => getTicketsByStatus(0)}>
+          <Dropdown.Item onClick={() => handleSetStatus(0)}>
             <FontAwesomeIcon icon={faThList} className="me-2" />All Ticket
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => getTicketsByStatus(1)} className="text-dark">
+          <Dropdown.Item onClick={() => handleSetStatus(1)} className="text-dark">
             <FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => getTicketsByStatus(2)} className="text-warning">
+          <Dropdown.Item onClick={() => handleSetStatus(2)} className="text-warning">
             <FontAwesomeIcon icon={faPlay} className="me-2 text-warning" />On-going
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => getTicketsByStatus(3)} className="text-success">
+          <Dropdown.Item onClick={() => handleSetStatus(3)} className="text-success">
             <FontAwesomeIcon icon={faCheck} className="me-2" />Completed
           </Dropdown.Item>
         </Dropdown.Menu>
