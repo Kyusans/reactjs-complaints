@@ -1,9 +1,10 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, Button, Col, Container, FloatingLabel, Form, Image, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
 import "./css/site.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { formatDates } from './ReportModule';
 
 function JobOrderModal(props) {
   const { show, onHide, ticketId } = props;
@@ -22,6 +23,8 @@ function JobOrderModal(props) {
   const [priorityValidation, setPriorityValidation] = useState(null);
   const [personnelValidation, setPersonnelValidation] = useState(null);
   const [additionalComment, setAdditionalComment] = useState("");
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const [image, setImage] = useState("");
   const [isRetrieving, setIsRetrieving] = useState(false);
 
@@ -84,7 +87,6 @@ function JobOrderModal(props) {
     }
   };
 
-
   const addJobPersonnel = (e) => {
     const newPersonnelValue = e.target.value;
     const [userId, username] = newPersonnelValue.split(',');
@@ -126,6 +128,53 @@ function JobOrderModal(props) {
     return isValid;
   };
 
+  const getSelectedTicket = useCallback(async () => {
+    setIsRetrieving(true);
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const jsonData = { compId: ticketId };
+      const formData = new FormData();
+      formData.append("json", JSON.stringify(jsonData));
+      formData.append("operation", "getSelectedTicket");
+      const response = await axios({ url: url, data: formData, method: "post" });
+      console.log("response ni getSelectedTicket: comp_end_date " + JSON.stringify(response.data));
+      if (response.data !== 0) {
+        const resData = response.data[0];
+        setTicketNumber(resData.comp_id);
+        setFacultyName(resData.fac_name);
+        setSubject(resData.comp_subject);
+        setDescription(resData.comp_description);
+        setLocationCategory(resData.locCateg_name);
+        setLocation(resData.location_name);
+        setImage(resData.comp_image);
+        setStartDate(Date(resData.comp_date));
+        setEndDate(Date(resData.comp_end_date));
+        console.log("start date: " + startDate)
+        console.log("endDate: " + endDate)
+        getAllPersonnel();
+      }
+    } catch (error) {
+      alert("There was an unexpected error: " + error);
+    } finally {
+      setIsRetrieving(false);
+    }
+  }, [endDate, startDate, ticketId]);
+
+  const getPriority = useCallback(async () => {
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const formData = new FormData();
+      formData.append("operation", "getPriority");
+      const res = await axios({ url: url, data: formData, method: "post" });
+      if (res.data !== 0) {
+        setPriorities(res.data);
+      }
+    } catch (error) {
+      getAlert("danger", "There was an error: " + error);
+    }
+    setIsLoading(false);
+  }, [])
+
   function handleHide() {
     setShowAlert(false);
     setPriorityValidation(null);
@@ -137,57 +186,17 @@ function JobOrderModal(props) {
     setJobPersonnelId([]);
     setJobPriority("");
     setAdditionalComment("");
+    setStartDate("");
+    setEndDate("");
     onHide();
   }
 
   useEffect(() => {
     if (show) {
-      const getSelectedTicket = async () => {
-        setIsRetrieving(true);
-        try {
-          const url = localStorage.getItem("url") + "admin.php";
-          const jsonData = { compId: ticketId };
-          const formData = new FormData();
-          formData.append("json", JSON.stringify(jsonData));
-          formData.append("operation", "getSelectedTicket");
-          const response = await axios({ url: url, data: formData, method: "post" });
-          if (response.data !== 0) {
-            const resData = response.data[0];
-            setTicketNumber(resData.comp_id);
-            setFacultyName(resData.fac_name);
-            setSubject(resData.comp_subject);
-            setDescription(resData.comp_description);
-            setLocationCategory(resData.locCateg_name);
-            setLocation(resData.location_name);
-            setImage(resData.comp_image);
-            getAllPersonnel();
-          }
-        } catch (error) {
-          alert("There was an unexpected error: " + error);
-        } finally {
-          setIsRetrieving(false);
-        }
-      };
-
-      const getPriority = async () => {
-        try {
-          const url = localStorage.getItem("url") + "admin.php";
-          const formData = new FormData();
-          formData.append("operation", "getPriority");
-          const res = await axios({ url: url, data: formData, method: "post" });
-          if (res.data !== 0) {
-            setPriorities(res.data);
-          }
-        } catch (error) {
-          getAlert("danger", "There was an error: " + error);
-        }
-        setIsLoading(false);
-      }
-
       getPriority();
       getSelectedTicket();
     }
-  }, [show, ticketId])
+  }, [getPriority, getSelectedTicket, show, ticketId])
 
   return (
     <div>
@@ -205,15 +214,17 @@ function JobOrderModal(props) {
               <>
                 <Row className='mb-3'>
                   <Col>
-                    Location:
-                    <Form.Control type="text" placeholder={location} readOnly />
+                    <FloatingLabel label="Location">
+                      <Form.Control type="text" value={location} readOnly />
+                    </FloatingLabel>
                   </Col>
                 </Row>
 
                 <Row className='mb-3'>
                   <Col>
-                    Subject:
-                    <Form.Control type="text" placeholder={subject} readOnly />
+                    <FloatingLabel label="Subject">
+                      <Form.Control type="text" value={subject} readOnly />
+                    </FloatingLabel>
                   </Col>
                 </Row>
 
@@ -233,6 +244,28 @@ function JobOrderModal(props) {
 
                 <Row className='mb-3'>
                   <Col>
+                    <FloatingLabel label="Submitted by">
+                      <Form.Control type="text" placeholder={"Submitted by"} value={facultyName} readOnly />
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+
+                <Row className='mb-3'>
+                  <Col>
+                    <FloatingLabel label="Date submitted">
+                      <Form.Control type="text" value={formatDates(startDate)} readOnly />
+                    </FloatingLabel>
+                  </Col>
+                  <Col>
+                    <FloatingLabel label="Deadline">
+                      <Form.Control type="text" value={formatDates(endDate)} readOnly />
+                    </FloatingLabel>
+                  </Col>
+                </Row>
+
+
+                <Row className='mb-3'>
+                  <Col>
                     <Container className='image-border'>
                       {image ? (
                         <>
@@ -243,15 +276,6 @@ function JobOrderModal(props) {
                         <p className='text-secondary mt-2'>No image submitted</p>
                       )}
                     </Container>
-                  </Col>
-                </Row>
-
-
-                <Row className='mb-3'>
-                  <Col>
-                    <FloatingLabel label="Submitted by">
-                      <Form.Control type="text" placeholder={"Submitted by"} value={facultyName} readOnly />
-                    </FloatingLabel>
                   </Col>
                 </Row>
 

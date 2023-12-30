@@ -10,17 +10,17 @@ import { faFileExcel, faFilePdf, faFilter } from "@fortawesome/free-solid-svg-ic
 export function formatDates (inputDate){
   const date = new Date(inputDate);
   const monthNames = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
   ];
   const month = monthNames[date.getMonth()];
   const day = date.getDate();
-  return `${month} ${day}`;
+  const year = date.getFullYear();
+  return `${month} ${day}, ${year}`;
 }
 
 function ReportModule() {
-  const [tickets, setTickets] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [tickets, setTickets] = useState([]);  const [isLoading, setIsLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
