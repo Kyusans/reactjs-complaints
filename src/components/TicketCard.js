@@ -12,8 +12,8 @@ function TicketCard(props) {
         className={status === "On-Going" ? "text-dark" : "text-white"}
         bg={status === "On-Going" ? "warning" : status === "Completed" ? "success" : "secondary"}
       >
-        <Container className='p-3'>
-          <Row>
+        <Container className='p-4'>
+          <Row className='d-flex align-content-center justify-content-between'>
             <Col xs={12} md={3}><b>Subject: </b>
               {subject}
             </Col>
@@ -31,6 +31,7 @@ function TicketCard(props) {
                 }
               </Col>
             }
+
             <Col xs={12} md={2}><b className='me-2'>Status:</b>
               {
                 status === "Completed" ?
@@ -42,8 +43,13 @@ function TicketCard(props) {
                     <FontAwesomeIcon icon={faPlay} className='text-dark' />
               }
             </Col>
+
+            {status !== "Pending" ?
+              <Col xs={12} md={5}><b>Last Updated By:</b> {lastUser === "" ? "GSD Administrator" : lastUser}</Col> :
+              <Col xs={12} md={5}><b>Last Updated By:</b> N/A</Col>
+            }
+
             <Col xs={12} md={2}><b>Date:</b> {date}</Col>
-            {status !== "Pending" && <Col xs={12} md={2}><b>Last Updated By:</b> {lastUser === "" ? "GSD Administrator" : lastUser}</Col>}
           </Row>
         </Container>
       </Card>

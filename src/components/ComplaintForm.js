@@ -118,9 +118,6 @@ function ComplaintForm(props) {
     }
   }, []);
 
-  function handleOnChangeCategory(id) {
-    setLocationCategoryId(id);
-  }
 
   function handleClose() {
     setValidated(false);
@@ -142,6 +139,10 @@ function ComplaintForm(props) {
     }
   }
 
+  function handleOnChangeCategory(id) {
+    setLocationCategoryId(id);
+  }
+  
   useEffect(() => {
     // console.log("location ko to: ", JSON.stringify(location))
     if(show){

@@ -14,6 +14,7 @@ function UpdateTicketModal(props) {
   const [endDate, setEndDate] = useState("");
   const [location, setLocation] = useState([]);
   const [validated, setValidated] = useState(false);
+  const [filteredLocation, setFilteredLocation] = useState([]);
 
   //for alert
   const [showAlert, setShowAlert] = useState(false);
@@ -43,9 +44,9 @@ function UpdateTicketModal(props) {
     formData.append("operation", "updateTicket");
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
-        if(res.data === 5){
+        if (res.data === 5) {
           getAlert("danger", "End date cannot be earlier than today's date");
-        }else if (res.data === 0) {
+        } else if (res.data === 0) {
           getAlert("success", "No changes made");
           setTimeout(() => {
             handleClose();
@@ -72,6 +73,7 @@ function UpdateTicketModal(props) {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getSelectedComplaint");
       const res = await axios({ url: url, data: formData, method: "post" });
+      // console.log("res ni getSelectedComplaint", JSON.stringify(res.data));
       if (res.data !== 0) {
         setLocationId(res.data.comp_locationId);
         setLocationCategoryId(res.data.comp_locationCategoryId);
@@ -95,6 +97,7 @@ function UpdateTicketModal(props) {
         data: formData,
         method: "post"
       });
+      console.log("res ni category", JSON.stringify(response.data));
       if (response.data !== 0) {
         setLocationCategory(response.data);
       }
@@ -103,14 +106,14 @@ function UpdateTicketModal(props) {
     }
   }, []);
 
-  const getLocation = (id) => {
+  const getLocation = () => {
     const url = localStorage.getItem("url") + "admin.php";
-    const jsonData = { categoryId: id };
     const formData = new FormData();
-    formData.append("json", JSON.stringify(jsonData));
-    formData.append("operation", "getLocations");
+    formData.append("operation", "getAllLocation");
+
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
+        console.log("res ni location", JSON.stringify(res.data));
         if (res.data !== 0) {
           setLocation(res.data);
         }
@@ -141,21 +144,33 @@ function UpdateTicketModal(props) {
     setValidated(true);
   }
 
+  function handleOnChangeCategory(id) {
+    setLocationCategoryId(id);
+  }
+
   useEffect(() => {
-    getLocationCategory();
-    if (locationCategoryId !== "") {
-      // setLocationId("");
-      getLocation(locationCategoryId);
-    }
-  }, [getLocationCategory, locationCategoryId]);
+    const filterData = location.filter(item => item.location_categoryId === Number(locationCategoryId));
+    setFilteredLocation(filterData);
+  }, [location, locationCategoryId])
+  
+
+  // useEffect(() => {
+  //   getLocationCategory();
+  //   if (locationCategoryId !== "") {
+  //     // setLocationId("");
+  //     getLocation(locationCategoryId);
+  //   }
+  // }, [getLocationCategory, locationCategoryId]);
 
 
   useEffect(() => {
     if (show) {
       setIsLoading(true);
       getSelectedComplaint();
+      getLocation();
+      getLocationCategory();
     }
-  }, [getSelectedComplaint, show]);
+  }, [getLocationCategory, getSelectedComplaint, show]);
 
   return (
     <>
@@ -189,7 +204,7 @@ function UpdateTicketModal(props) {
               <Row className='g2'>
                 <Form.Group as={Col} className='mb-4'>
                   <FloatingLabel label="Location Category">
-                    <Form.Select value={locationCategoryId} onChange={e => setLocationCategoryId(e.target.value)} required>
+                    <Form.Select value={locationCategoryId} onChange={e => handleOnChangeCategory(e.target.value)} required>
                       <option disabled={locationCategoryId !== "" ? true : false} value="">Open this select menu</option>
                       {locationCategory.map((locationCateg, index) => (
                         <option key={index} value={locationCateg.locCateg_id}>{locationCateg.locCateg_name}</option>
@@ -204,7 +219,7 @@ function UpdateTicketModal(props) {
                       <FloatingLabel label="Location">
                         <Form.Select value={locationId} onChange={e => setLocationId(e.target.value)} required>
                           <option value={""}>Open this select menu</option>
-                          {location.map((locations, index) => (
+                          {filteredLocation.map((locations, index) => (
                             <option key={index} value={locations.location_id}>{locations.location_name}</option>
                           ))}
                         </Form.Select>
