@@ -27,7 +27,7 @@ function TicketCard(props) {
                     priority === "Medium" ?
                       <FontAwesomeIcon icon={faArrowRight} className="text-dark me-2" />
                       :
-                      <FontAwesomeIcon icon={faArrowDown} className="text-secondary me-2" />
+                      <FontAwesomeIcon icon={faArrowDown} className="text-dark me-2" />
                 }
               </Col>
             }
