@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import AdminCalendarView from "./AdminCalendarView";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendar, faTh } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faSync, faTh } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 
@@ -51,14 +51,25 @@ export default function AdminDashboard() {
       {localStorage.getItem("adminLoggedIn") === "true" ? (
         <div className="p-2" >
           <div className="p-2">
-            <Button variant="info" onClick={() => setIsCalendarView(false)} className="me-1 ms-2"><FontAwesomeIcon icon={faTh} /> </Button>
-            <Button variant="light" onClick={() => setIsCalendarView(true)}><FontAwesomeIcon icon={faCalendar} /> </Button>
+            <Button variant="info" onClick={() => setIsCalendarView(false)} className="me-1 ms-2">
+              <FontAwesomeIcon icon={faTh} />
+            </Button>
+            <Button variant="secondary" onClick={() => setIsCalendarView(true)}>
+              <FontAwesomeIcon icon={faCalendar} />
+            </Button>
+            <Button onClick={getAllTickets} className='ms-1'>
+              <FontAwesomeIcon icon={faSync} /> Refresh
+            </Button>
           </div>
           {isLoading ?
-            <Container>
+            <Container className="text-center">
               <Spinner variant="success" />
             </Container> :
-            isCalendarView ? <AdminCalendarView allData={allTickets} refreshData={refreshData} /> : <AdminComplaintTable allData={allTickets} refreshData={refreshData} />}
+            isCalendarView ?
+              <AdminCalendarView allData={allTickets} refreshData={refreshData} />
+              :
+              <AdminComplaintTable allData={allTickets} refreshData={refreshData} />
+          }
         </div>
       ) : (
         <h2 className="text-center text-danger">You are not admin</h2>
