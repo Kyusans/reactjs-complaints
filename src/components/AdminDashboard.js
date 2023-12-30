@@ -54,7 +54,7 @@ export default function AdminDashboard() {
             <Button variant="info" onClick={() => setIsCalendarView(false)} className="me-1 ms-2">
               <FontAwesomeIcon icon={faTh} />
             </Button>
-            <Button variant="secondary" onClick={() => setIsCalendarView(true)}>
+            <Button variant="light" onClick={() => setIsCalendarView(true)}>
               <FontAwesomeIcon icon={faCalendar} />
             </Button>
             <Button onClick={getAllTickets} className='ms-1'>

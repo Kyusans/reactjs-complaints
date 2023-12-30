@@ -4,7 +4,7 @@ import PersonnelJobCardView from "./PersonnelJobCardView";
 import "./css/site.css";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendar, faTh } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faSync, faTh } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -59,6 +59,9 @@ export default function PersonnelDashboard() {
           </Button>
           <Button variant="light" onClick={() => setIsCalendarView(true)}>
             <FontAwesomeIcon icon={faCalendar} />
+          </Button>
+          <Button onClick={getJobTicket} className='ms-1'>
+            <FontAwesomeIcon icon={faSync} /> Refresh
           </Button>
         </Container>
         {isLoading ?
