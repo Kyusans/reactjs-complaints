@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Row, Col, FloatingLabel, Form, Modal, Button, Spinner, Container } from 'react-bootstrap';
 import AlertScript from './AlertScript';
 
@@ -11,10 +11,11 @@ function ComplaintForm(props) {
   const [description, setDescription] = useState("");
   const [locationCategory, setLocationCategory] = useState([]);
   const [location, setLocation] = useState([]);
-  const [endDate, setEndDate] = useState(new Date().toISOString().slice(0,10));
+  const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 10));
   const [image, setImage] = useState(null);
   const [validated, setValidated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [filteredLocations, setFilteredLocations] = useState([]);
   // for alert
   const [showAlert, setShowAlert] = useState(false);
   const [alertVariant, setAlertVariant] = useState("");
@@ -82,14 +83,13 @@ function ComplaintForm(props) {
     }
   };
 
-  const getLocation = (id) => {
+  const getLocation = () => {
     const url = localStorage.getItem("url") + "admin.php";
-    const jsonData = { categoryId: id };
     const formData = new FormData();
-    formData.append("json", JSON.stringify(jsonData));
-    formData.append("operation", "getLocations");
+    formData.append("operation", "getAllLocation");
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
+         console.log("res ni getLocation: " + JSON.stringify(res.data))
         if (res.data !== 0) {
           setLocation(res.data);
         }
@@ -99,6 +99,29 @@ function ComplaintForm(props) {
       });
   };
 
+  const getLocationCategory = useCallback(async () => {
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const formData = new FormData();
+      formData.append("operation", "getLocationCategory");
+      const response = await axios({
+        url: url,
+        data: formData,
+        method: "post"
+      });
+      if (response.data !== 0) {
+        console.log("response ni getlocationCategory: " + JSON.stringify(response.data));
+        setLocationCategory(response.data);
+      }
+    } catch (error) {
+      getAlert("danger", "There was an unexpected error: " + error);
+    }
+  }, []);
+
+  function handleOnChangeCategory(id) {
+    setLocationCategoryId(id);
+  }
+
   function handleClose() {
     setValidated(false);
     setSubject("");
@@ -106,7 +129,7 @@ function ComplaintForm(props) {
     setLocationCategoryId("");
     setDescription("");
     setShowAlert(false);
-    setEndDate(new Date().toISOString().slice(0,10));
+    setEndDate(new Date().toISOString().slice(0, 10));
     onHide();
   }
   const formValidation = (e) => {
@@ -118,32 +141,23 @@ function ComplaintForm(props) {
       addComplaint();
     }
   }
+
+  useEffect(() => {
+    // console.log("location ko to: ", JSON.stringify(location))
+    if(show){
+      const filterData = location.filter(item => item.location_categoryId === Number(locationCategoryId));
+      console.log("filterData: ", JSON.stringify(filterData));
+      setFilteredLocations(filterData);
+    }
+  }, [location, locationCategoryId, show]);
+
   useEffect(() => {
     if (show) {
-      const getLocationCategory = async () => {
-        try {
-          const url = localStorage.getItem("url") + "admin.php";
-          const formData = new FormData();
-          formData.append("operation", "getLocationCategory");
-          const response = await axios({
-            url: url,
-            data: formData,
-            method: "post"
-          });
-          if (response.data !== 0) {
-            setLocationCategory(response.data);
-          }
-        } catch (error) {
-          getAlert("danger", "There was an unexpected error: " + error);
-        }
-      };
+      console.log("show useefect")
       getLocationCategory();
-      if (locationCategoryId !== "") {
-        setLocationId("");
-        getLocation(locationCategoryId);
-      }
+      getLocation();
     }
-  }, [locationCategoryId, show])
+  }, [getLocationCategory, show])
 
   return (
     <>
@@ -161,7 +175,7 @@ function ComplaintForm(props) {
               <Form.Group as={Col} className='mb-4'>
 
                 <FloatingLabel label="Location Category">
-                  <Form.Select value={locationCategoryId} onChange={e => setLocationCategoryId(e.target.value)} required>
+                  <Form.Select value={locationCategoryId} onChange={e => handleOnChangeCategory(e.target.value)} required>
                     <option disabled={locationCategoryId !== "" ? true : false} value="">Open this select menu</option>
                     {locationCategory.map((locationCateg, index) => (
                       <option key={index} value={locationCateg.locCateg_id}>{locationCateg.locCateg_name}</option>
@@ -173,17 +187,15 @@ function ComplaintForm(props) {
               </Form.Group>
 
               <Form.Group as={Col}>
-                <>
-                  <FloatingLabel label="Location">
-                    <Form.Select value={locationId} onChange={e => setLocationId(e.target.value)} required disabled={locationCategoryId === ""}>
-                      <option value={""}>Open this select menu</option>
-                      {location.map((locations, index) => (
-                        <option key={index} value={locations.location_id}>{locations.location_name}</option>
-                      ))}
-                    </Form.Select>
-                    <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
-                  </FloatingLabel>
-                </>
+                <FloatingLabel label="Location">
+                  <Form.Select value={locationId} onChange={e => setLocationId(e.target.value)} required disabled={locationCategoryId === ""}>
+                    <option value={""}>Open this select menu</option>
+                    {Array.isArray(filteredLocations) && filteredLocations.map((locations, index) => (
+                      <option key={index} value={locations.location_id}>{locations.location_name}</option>
+                    ))}
+                  </Form.Select>
+                  <Form.Control.Feedback type='invalid'>This field is required</Form.Control.Feedback>
+                </FloatingLabel>
               </Form.Group>
 
             </Row>
@@ -211,11 +223,11 @@ function ComplaintForm(props) {
 
             <Form.Group className="mb-3">
               <Row>
-                  <Container>
-                    <FloatingLabel controlId="endDateLabel" label="Expected finish date">
-                      <Form.Control type='date' value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
-                    </FloatingLabel>
-                  </Container>
+                <Container>
+                  <FloatingLabel controlId="endDateLabel" label="Expected finish date">
+                    <Form.Control type='date' value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
+                  </FloatingLabel>
+                </Container>
               </Row>
             </Form.Group>
 

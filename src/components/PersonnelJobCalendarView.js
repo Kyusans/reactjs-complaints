@@ -96,7 +96,7 @@ export function colorFormatter(status) {
       colorCode = "#ffa500";
       break;
     default:
-      colorCode = "#006400"
+      colorCode = "#228b22"
       break;
   }
   return colorCode;
