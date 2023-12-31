@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Button, Card, Col, Container, FloatingLabel, Form, Row, Spinner, Table } from "react-bootstrap";
-import { usePDF } from "react-to-pdf";
+import generatePDF, { usePDF } from "react-to-pdf";
 import * as XLSX from 'xlsx';
 import axios from "axios";
 import AlertScript from "./AlertScript";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel, faFilePdf, faFilter } from "@fortawesome/free-solid-svg-icons";
 
-export function formatDates (inputDate){
+export function formatDates(inputDate) {
   const date = new Date(inputDate);
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
@@ -20,7 +20,7 @@ export function formatDates (inputDate){
 }
 
 function ReportModule() {
-  const [tickets, setTickets] = useState([]);  const [isLoading, setIsLoading] = useState(false);
+  const [tickets, setTickets] = useState([]); const [isLoading, setIsLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -58,7 +58,8 @@ function ReportModule() {
       getAlert("danger", "There was an unexpected error: " + err);
     }
   };
-  const { toPDF, targetRef } = usePDF({ filename: 'page.pdf' });
+
+  const { targetRef } = usePDF({ filename: 'gsdReport.pdf' });
   const exportToExcel = () => {
     try {
       const wb = XLSX.utils.book_new();
@@ -68,6 +69,13 @@ function ReportModule() {
     } catch (error) {
       console.error("Error exporting to Excel:", error);
     }
+  };
+  const pdfOption = {
+    method: 'open'
+  }
+
+  const handleGeneratePDF = () => {
+    generatePDF(targetRef, pdfOption);
   };
   return (
     <>
@@ -79,7 +87,7 @@ function ReportModule() {
         <>
           <Card>
             <Card.Header>
-              <Button variant="outline-primary" onClick={() => toPDF()}>
+              <Button variant="outline-primary" onClick={() => handleGeneratePDF()}>
                 <FontAwesomeIcon icon={faFilePdf} /> Get PDF
               </Button>
               <Button variant="outline-success" onClick={exportToExcel} className="ms-1">
