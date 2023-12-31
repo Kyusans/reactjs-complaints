@@ -65,7 +65,7 @@ export default function PersonnelDashboard() {
           </Button>
         </Container>
         {isLoading ?
-          <Container className="text-center">
+          <Container className="text-center mt-3">
             <Spinner variant="success" />
           </Container> :
           isCalendarView ?

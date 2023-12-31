@@ -1,10 +1,12 @@
-import { faArrowDown, faArrowRight, faArrowUp, faCheck, faClock, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faClock, faDownLong, faExclamationTriangle, faPlay, faRightLong } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
+import { useMediaQuery } from 'react-responsive';
 
 function TicketCard(props) {
   const { subject, status, priority, date, lastUser } = props;
+  const isMobile = useMediaQuery({ maxWidth: 767 });
   return (
     <>
       <Card
@@ -14,42 +16,41 @@ function TicketCard(props) {
       >
         <Container className='p-4'>
           <Row className='d-flex align-content-center justify-content-between'>
-            <Col xs={12} md={3}><b>Subject: </b>
+            <Col xs={12} md={3}><b>Subject: </b>{!isMobile && <br />}
               {subject}
             </Col>
 
             {priority === null ? <></> :
-              <Col xs={12} md={2}><b className='me-2'>Priority:</b>
+              <Col xs={12} md={2}><b className='me-2'>Priority:</b> {!isMobile && <br />}
                 {
                   priority === "High" ?
-                    <FontAwesomeIcon icon={faArrowUp} className="text-danger me-2" />
+                    <FontAwesomeIcon icon={faExclamationTriangle} className={`text-danger ${!isMobile ? "ms-4" : null} `} />
                     :
                     priority === "Medium" ?
-                      <FontAwesomeIcon icon={faArrowRight} className="text-dark me-2" />
+                      <FontAwesomeIcon icon={faRightLong} className={`${!isMobile ? "ms-4" : null} ${status === "On-Going" ? "text-dark" : "text-warning"} `} />
                       :
-                      <FontAwesomeIcon icon={faArrowDown} className="text-dark me-2" />
+                      <FontAwesomeIcon icon={faDownLong} className={`text-dark ${!isMobile ? "ms-4" : null} `} />
                 }
               </Col>
             }
 
-            <Col xs={12} md={2}><b className='me-2'>Status:</b>
+            <Col xs={12} md={2}><b className='me-1 '>Status:</b> {!isMobile && <br />}
               {
                 status === "Completed" ?
-                  <FontAwesomeIcon icon={faCheck} />
+                  <FontAwesomeIcon icon={faCheck} className={`${!isMobile ? "ms-3" : null}`} />
                   :
                   status === "Pending" ?
-                    <FontAwesomeIcon icon={faClock} />
+                    <FontAwesomeIcon icon={faClock} className={`${!isMobile ? "ms-3" : null}`} />
                     :
-                    <FontAwesomeIcon icon={faPlay} className='text-dark' />
+                    <FontAwesomeIcon icon={faPlay} className={`text-dark ${!isMobile ? "ms-3" : null}`} />
               }
             </Col>
 
-            {status !== "Pending" ?
-              <Col xs={12} md={5}><b>Last Updated By:</b> {lastUser === "" ? "GSD Administrator" : lastUser}</Col> :
-              <Col xs={12} md={5}><b>Last Updated By:</b> N/A</Col>
-            }
+            <Col xs={12} md={3}><b>Last Updated By:</b> {!isMobile && <br />}
+              {status === "Pending" ? <div className='ms-5'>N/A</div> : lastUser === "" ? "GSD Administrator" : lastUser}
+            </Col>
 
-            <Col xs={12} md={2}><b>Date:</b> {date}</Col>
+            <Col xs={12} md={2}><b>Date:{!isMobile && <br />}</b> {date}</Col>
           </Row>
         </Container>
       </Card>

@@ -3,7 +3,7 @@ import { Container, Dropdown } from 'react-bootstrap';
 import "./css/site.css";
 import JobDetails, { formatDate } from './JobDetails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown, faArrowRight, faArrowUp, faCheck, faPlay, faThList } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faDownLong, faExclamationTriangle, faPlay, faRightLong, faThList } from '@fortawesome/free-solid-svg-icons';
 import TicketCard from './TicketCard';
 import AlertScript from './AlertScript';
 
@@ -13,7 +13,6 @@ export default function PersonnelJobCardView({ allData, refreshData }) {
   const [statusType, setStatusType] = useState(parseInt(localStorage.getItem("selectedStatus")));
   const [priorityType, setPriorityType] = useState(null);
   const [showJobDetails, setShowJobDetails] = useState(false);
-  const [firstTime, setFirstTime] = useState(true);
 
   const hideJobDetails = async () => {
     setCompId(0);
@@ -23,14 +22,19 @@ export default function PersonnelJobCardView({ allData, refreshData }) {
   };
 
   //priority ni siya
-  const getSelectedPriority = async (priority) => {
+  const getSelectedPriority = (priority) => {
     setPriorityType(priority);
-    if (priority === 0) {
+    var filterData;
+    if (parseInt(priority) === 0 && parseInt(statusType) === 0) {
       setTicket(allData);
-    } else {
-      const filterData = allData.filter(item => item.priority_id === priority);
-      setTicket(filterData);
+      return;
+    } else if (parseInt(statusType) === 0) {
+      filterData = allData.filter(item => item.priority_id === Number(priority));
     }
+    else {
+      filterData = allData.filter(item => item.priority_id === priority && item.comp_status === statusType);
+    }
+    setTicket(filterData);
   }
 
   const handleNavigate = (id) => {
@@ -44,14 +48,7 @@ export default function PersonnelJobCardView({ allData, refreshData }) {
   }
 
   useEffect(() => {
-    if (firstTime && allData) {
-      setStatusType(2);
-      setFirstTime(false);
-    }
-
     if (allData) {
-      const filterData = allData.filter(item => item.comp_status === 2);
-      setTicket(filterData);
       if (statusType === 0) {
         setTicket(allData);
       } else {
@@ -61,7 +58,7 @@ export default function PersonnelJobCardView({ allData, refreshData }) {
     }
     setPriorityType(0);
     console.log("allData", allData);
-  }, [allData, statusType, firstTime])
+  }, [allData, statusType])
 
   return (
     <>
@@ -94,13 +91,13 @@ export default function PersonnelJobCardView({ allData, refreshData }) {
               <FontAwesomeIcon icon={faCheck} className="text-primary me-2" />All Priority
             </Dropdown.Item>
             <Dropdown.Item onClick={() => getSelectedPriority(1)} className="text-danger">
-              <FontAwesomeIcon icon={faArrowUp} className="text-danger me-2" />High
+              <FontAwesomeIcon icon={faExclamationTriangle} className="text-danger me-2" />High
             </Dropdown.Item>
             <Dropdown.Item onClick={() => getSelectedPriority(2)} className="text-warning">
-              <FontAwesomeIcon icon={faArrowRight} className="text-warning me-1" />Medium
+              <FontAwesomeIcon icon={faRightLong} className="text-warning me-1" />Medium
             </Dropdown.Item>
             <Dropdown.Item onClick={() => getSelectedPriority(3)} className="text-dark">
-              <FontAwesomeIcon icon={faArrowDown} className="text-dark me-2" />Low
+              <FontAwesomeIcon icon={faDownLong} className="text-dark me-2" />Low
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
