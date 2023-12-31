@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Button, Card, Col, Container, FloatingLabel, Form, Row, Spinner, Table } from "react-bootstrap";
-import { usePDF } from "react-to-pdf";
+import generatePDF, { usePDF } from "react-to-pdf";
 import * as XLSX from 'xlsx';
 import axios from "axios";
 import AlertScript from "./AlertScript";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel, faFilePdf, faFilter } from "@fortawesome/free-solid-svg-icons";
 
-export function formatDates (inputDate){
+export function formatDates(inputDate) {
   const date = new Date(inputDate);
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
@@ -20,7 +20,7 @@ export function formatDates (inputDate){
 }
 
 function ReportModule() {
-  const [tickets, setTickets] = useState([]);  const [isLoading, setIsLoading] = useState(false);
+  const [tickets, setTickets] = useState([]); const [isLoading, setIsLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -44,10 +44,12 @@ function ReportModule() {
     try {
       const url = localStorage.getItem("url") + "admin.php";
       const jsonData = { startDate: startDate, endDate: endDate }
+      console.log("JSON data: ", JSON.stringify(jsonData))
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData))
       formData.append("operation", "getTicketsByDate");
       const res = await axios({ url: url, data: formData, method: "post" });
+      console.log("Res ni getTicketsByDate: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         setTickets(res.data);
       } else {
@@ -58,7 +60,8 @@ function ReportModule() {
       getAlert("danger", "There was an unexpected error: " + err);
     }
   };
-  const { toPDF, targetRef } = usePDF({ filename: 'page.pdf' });
+
+  const { targetRef } = usePDF({ filename: 'gsdReport.pdf' });
   const exportToExcel = () => {
     try {
       const wb = XLSX.utils.book_new();
@@ -68,6 +71,13 @@ function ReportModule() {
     } catch (error) {
       console.error("Error exporting to Excel:", error);
     }
+  };
+  const pdfOption = {
+    method: 'open'
+  }
+
+  const handleGeneratePDF = () => {
+    generatePDF(targetRef, pdfOption);
   };
   return (
     <>
@@ -79,7 +89,7 @@ function ReportModule() {
         <>
           <Card>
             <Card.Header>
-              <Button variant="outline-primary" onClick={() => toPDF()}>
+              <Button variant="outline-primary" onClick={() => handleGeneratePDF()}>
                 <FontAwesomeIcon icon={faFilePdf} /> Get PDF
               </Button>
               <Button variant="outline-success" onClick={exportToExcel} className="ms-1">
@@ -111,38 +121,46 @@ function ReportModule() {
               </Container>
 
               <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
-              <div ref={targetRef}>
-                <Container className="mt-3">
-                  <Table bordered hover responsive variant="light" className="border-1 mx-auto">
-                    <thead>
-                      <tr>
-                        <th>Subject</th>
-                        <th>Location</th>
-                        <th>Personnel</th>
-                        <th>Submitted by</th>
-                        <th>Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Array.isArray(tickets) ? (
-                        tickets.map((ticket, index) => (
-                          <tr key={index}>
-                            <td>{ticket.comp_subject}</td>
-                            <td>{ticket.location_name}</td>
-                            <td>{ticket.personnel_names}</td>
-                            <td>{ticket.fac_name}</td>
-                            <td>{formatDates(ticket.comp_date)}</td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="3">No tickets to display.</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </Table>
+              <div />
+
+              <Container fluid ref={targetRef} className="mt-3 scrollable-container">
+                <Container className="text-center mt-3">
+                  <h3>CAGAYAN DE ORO COLLEGE</h3>
+                  <h5>PHINMA EDUCATION NETWORK</h5>
+                  <h6>GSD SUPPORT TICKET SYSTEM</h6>
                 </Container>
-              </div>
+                <Table bordered hover variant="light" className="border-1 mx-auto mt-3">
+                  <thead>
+                    <tr>
+                      <th>Subject</th>
+                      <th>Location</th>
+                      <th>Personnels</th>
+                      <th>Submitted by</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.isArray(tickets) ? (
+                      tickets.map((ticket, index) => (
+                        <tr key={index}>
+                          <td>{ticket.Subject}</td>
+                          <td>{ticket.Location}</td>
+                          <td>{ticket.Personnel}</td>
+                          <td>{ticket.Submitted_By}</td>
+                          <td>{ticket.Status}</td>
+                          <td>{formatDates(ticket.Date)}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="3">No tickets to display.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
+              </Container>
+
             </Card.Body>
           </Card>
         </>

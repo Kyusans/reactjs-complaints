@@ -103,7 +103,7 @@ function AdminComplaintTable({ allData, refreshData }) {
         {displayedTickets.length <= 0 ?
           <AlertScript show={true} variant={"dark"} message={"No tickets yet"} />
           :
-          <Table striped bordered hover responsive variant="success" className="border-1">
+          <Table striped bordered hover responsive variant="success" className="border-1 ">
             <thead>
               <tr>
                 <th className="green-header">Subject</th>
@@ -118,8 +118,8 @@ function AdminComplaintTable({ allData, refreshData }) {
                   onClick={() => handleShow(ticket.comp_id, ticket.comp_status)}
                   className="clickable"
                 >
-                  <td>{ticket.comp_subject}</td>
-                  <td>
+                  <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>{ticket.comp_subject}</td>
+                  <td className={`ticket-date ${ticket.joStatus_name === "Pending" ? "ticket-unread" : ""}`}>
                     {ticket.joStatus_name === "Pending" ? (
                       <span><FontAwesomeIcon icon={faClock} className="me-2 text-dark" />Pending</span>
                     ) : ticket.joStatus_name === "On-Going" ? (

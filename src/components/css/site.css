@@ -1,158 +1,159 @@
 .card-body {
-    padding: 40px !important;
-    border-radius: 5px;
+  padding: 40px !important;
+  border-radius: 5px;
 }
 
-.card-thin{
-    width: 350px !important;
-    margin: 0 auto;
+.card-thin {
+  width: 350px !important;
+  margin: 0 auto;
 }
 
-.card-medium{
-    width: 90%;
-    margin: 0 auto;
+.card-medium {
+  width: 90%;
+  margin: 0 auto;
 }
 
-.width-100{
-    width: 100%;
+.width-100 {
+  width: 100%;
 }
 
 .small-image {
-    width: 150px;
-    height: 150px;
-  }
+  width: 150px;
+  height: 150px;
+}
 
 .navbar-light .navbar-brand,
 .navbar-light .navbar-nav .nav-link {
-    color: white;
-  
+  color: white;
+
 }
 
-.nav-background{
-    background-color: #0c472d;
+.nav-background {
+  background-color: #0c472d;
 }
 
 .site-body {
-    /* background-color: #181a1b; */
-    background-color: rgb(160, 160, 160);
+  /* background-color: #181a1b; */
+  background-color: rgb(160, 160, 160);
 }
 
 .fatter-text {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .centered-label {
-    width: 250px !important;
-    margin: 0 auto;
+  width: 250px !important;
+  margin: 0 auto;
 }
 
 .centered {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .green-header {
-    background-color: #136d46 !important;
-    color: white !important; 
-  }
-
-.button-large {
-    width: 250px !important;
+  background-color: #136d46 !important;
+  color: white !important;
 }
 
-.button-m{
-    width: 100px !important;
+.button-large {
+  width: 250px !important;
+}
+
+.button-m {
+  width: 100px !important;
 }
 
 .text-small {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .big-height {
-    height: 50px;
-    border-radius: 0;
+  height: 50px;
+  border-radius: 0;
 }
 
 
 .green-x {
-    color: green;
-    cursor: pointer;
-    font-weight: bold;
-    margin-left: 5px; 
-  }
-  
+  color: green;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
 .link-button {
-    background-color: transparent;
-    border: none;
-    color: #10a481;
-    text-decoration: underline;
-    cursor: pointer;
+  background-color: transparent;
+  border: none;
+  color: #10a481;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .ms-auto {
-    padding-right: 30px;
+  padding-right: 30px;
 }
 
 .rating-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .small-card {
-    max-width: 500px;
-    max-height: 750px;
-    margin: 0 auto;
+  max-width: 500px;
+  max-height: 750px;
+  margin: 0 auto;
 }
 
 .icon-image {
-    width: 300px;
-    height: 325px;
+  width: 300px;
+  height: 325px;
 }
 
-.margin-auto{
-    margin: 0 auto;
+.margin-auto {
+  margin: 0 auto;
 }
 
-.minimum-height{
-    min-height: 200px;
-    min-width: 200px;
+.minimum-height {
+  min-height: 200px;
+  min-width: 200px;
 }
 
-.brand{
-    padding-left: 10px;
-    padding-right: 20px;
+.brand {
+  padding-left: 10px;
+  padding-right: 20px;
 }
 
-.max-height{
-    max-height: 300px;
-    max-width: 300px;
+.max-height {
+  max-height: 300px;
+  max-width: 300px;
 }
 
 .border-1 {
-    border: 1px solid black !important;
+  border: 1px solid black !important;
 }
 
 .border-2 {
-    border: 1.5px solid black !important;
+  border: 1.5px solid black !important;
 }
 
 .border-3 {
-    border: 3px solid black !important;
+  border: 3px solid black !important;
 }
 
 .small-button {
-    height: 50px;
-    width: 50px;
+  height: 50px;
+  width: 50px;
 }
 
 .ticket-cell {
-    cursor: pointer;
-    padding: 10px;
-    transition: background-color 0.3s ease;
+  cursor: pointer;
+  padding: 10px;
+  transition: background-color 0.3s ease;
 }
+
 /* .unread-ticket {
     font-weight: bold;
     background-color: #f5f5f5;
@@ -163,119 +164,125 @@
     background-color: white;
 } */
 
-.ticket-unread{
-    font-weight: bold;
-    font-size: 12px;
+.ticket-unread {
+  font-weight: bold;
+  font-size: 12px;
 }
 
 .ticket-description {
-    width: 50%; 
-  }
-  
+  width: 50%;
+}
 
-.ticket-date{
-    font-size: 13px;
-    padding: 10px;
+
+.ticket-date {
+  font-size: 13px;
+  padding: 10px;
 }
 
 .scrollable-container {
-    overflow-x: auto;
+  overflow-x: auto;
 }
 
 .gray-header {
-    background-color: #1a1a1d !important;
-    color: white !important; 
-  }
+  background-color: #1a1a1d !important;
+  color: white !important;
+}
 
 .clickable {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .pending {
-    color: black;
-  }
-  
-  .ongoing {
-    color: rgb(195, 195, 0);
-  }
-  
-  .completed {
-    color: green;
-  }
+  color: black;
+}
+
+.ongoing {
+  color: rgb(195, 195, 0);
+}
+
+.completed {
+  color: green;
+}
 
 .custom-offcanvas {
-    background-color: #333 !important; 
-    color: #fff !important; 
+  background-color: #333 !important;
+  color: #fff !important;
 }
 
 .offCanvas-footer {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    padding: 15px; 
-  }
-  
-  .card-image {
-    width: 100%;
-    max-height: 400px;
-    padding: 10px;
-  }
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  padding: 15px;
+}
 
-  .image-border {
-    border: 1px solid rgba(128, 128, 128, 0.479);
-    border-radius: 5px;
-  }
+.card-image {
+  width: 100%;
+  max-height: 400px;
+  padding: 10px;
+}
 
-  .fc-daygrid-day-number {
-    color: white; 
-  }
+.image-border {
+  border: 1px solid rgba(128, 128, 128, 0.479);
+  border-radius: 5px;
+}
 
-  .fc-col-header-cell-cushion{
-    color: white;
-    font-size: 11px;
-  }
+.fc-daygrid-day-number {
+  color: white;
+}
 
-  .fc-event-title{
-    cursor: pointer;
-    font-size: 15px;
-    color: white;
-    font-weight: bold;
-  }
+.fc-col-header-cell-cushion {
+  color: white;
+  font-size: 11px;
+}
 
-  .fc-event-time{
-    font-size: 1px;
-  }
+.fc-event-title {
+  cursor: pointer;
+  font-size: 15px;
+  color: white;
+  font-weight: bold;
+}
 
-  .fc-event-title-container{
-    cursor: pointer;
-  }
+.fc-event-time {
+  font-size: 1px;
+}
 
-  .fc-toolbar-title{
-    padding: 10px;
-  }
+.fc-event-title-container {
+  cursor: pointer;
+}
 
-  .fc-popover-header {
-    background-color: #0c0c0c !important;
-    color: white !important;
-  }
+.fc-toolbar-title {
+  padding: 10px;
+}
 
-  .fc-popover-body {
-    background-color: #383838 !important;
-    color: white !important;
-  }
+.fc-popover-header {
+  background-color: #0c0c0c !important;
+  color: white !important;
+}
 
-  .fc-popover {
-    z-index: 100 !important;
-  }
+.fc-popover-body {
+  background-color: #383838 !important;
+  color: white !important;
+}
 
-  .gray-body{
-    background-color: #3e3e3e !important;
-  }
+.fc-popover {
+  z-index: 100 !important;
+}
 
-  .webcam-height{
-    height: 500px !important;
-  }
+.gray-body {
+  background-color: #3e3e3e !important;
+}
 
-  .orange-text {
-    color: rgb(182, 118, 0) !important;
-  }
+.webcam-height {
+  height: 500px !important;
+}
+
+.orange-text {
+  color: rgb(182, 118, 0) !important;
+}
+
+.lower-right {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
