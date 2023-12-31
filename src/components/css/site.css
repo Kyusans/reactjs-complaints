@@ -275,3 +275,7 @@
   .webcam-height{
     height: 500px !important;
   }
+
+  .orange-text {
+    color: rgb(182, 118, 0) !important;
+  }

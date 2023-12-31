@@ -37,22 +37,25 @@ function ReopenJob(props) {
       });
       if (res.data === 1) {
         getAlert("success", "Success!");
+        setTimeout(() => {
+          handleOnHide();
+        }, 1200);
+      } else {
+        getAlert("danger", "Unsuccessful! Please try again later");
+
       }
     } catch (err) {
       alert("There was an unexpected error: " + err);
     } finally {
       setIsLoading(false);
-      setTimeout(() => {
-        handleOnHide();
-      }, 1200);   
     }
   };
 
 
   const handleOnHide = () => {
-    setNote("");
     onHide();
     setValidated(false);
+    setNote("");
   }
 
   const handleSubmit = (event) => {
