@@ -52,14 +52,14 @@ function ClientCardView({ allData, refreshData }) {
 
   useEffect(() => {
     if (allData) {
-      console.log("allData sa ClientCard:", allData);
+      // console.log("allData sa ClientCard:", allData);
       if(statusType === 0){
         setTickets(allData);
       }else{
         const filteredTickets = allData.filter(item => item.comp_status === statusType);
         setTickets(filteredTickets);
       }
-      console.log("statusType: " + statusType);
+      // console.log("statusType: " + statusType);
     }
   }, [allData, statusType])
 

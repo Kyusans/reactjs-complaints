@@ -29,7 +29,7 @@ function PersonnelJobCalendarView({ allData, refreshData }) {
 
   useEffect(() => {
     if (allData) {
-      console.log('allData sa calendar: ', allData);
+      // console.log('allData sa calendar: ', allData);
       // with end dates (default)
       const formattedEvents = allData.map((job) => ({
         id: job.job_complaintId,

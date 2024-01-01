@@ -147,14 +147,13 @@ function ComplaintForm(props) {
     // console.log("location ko to: ", JSON.stringify(location))
     if(show){
       const filterData = location.filter(item => item.location_categoryId === Number(locationCategoryId));
-      console.log("filterData: ", JSON.stringify(filterData));
+     // console.log("filterData: ", JSON.stringify(filterData));
       setFilteredLocations(filterData);
     }
   }, [location, locationCategoryId, show]);
 
   useEffect(() => {
     if (show) {
-      console.log("show useefect")
       getLocationCategory();
       getLocation();
     }

@@ -9,6 +9,7 @@ import './css/site.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faBars, faKey, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import AddPersonnel from './AddPersonnel';
+import { handleSignout } from './NavBar';
 
 function AdminNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
@@ -68,13 +69,3 @@ function AdminNavbar() {
 }
 
 export default AdminNavbar;
-
-export function handleSignout () {
-  localStorage.setItem("adminLoggedIn", "false");
-  localStorage.setItem("userId", "");
-  localStorage.setItem("userLevel", "");
-  localStorage.setItem("userCommentId", "");
-  localStorage.setItem("userFullName", "");
-  localStorage.setItem("isLoggedIn", "");
-  localStorage.setItem("selectedStatus", "0");
-}

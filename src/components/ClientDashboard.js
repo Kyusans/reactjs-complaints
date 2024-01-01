@@ -42,9 +42,7 @@ function ClientDashboard() {
   useEffect(() => {
     if (localStorage.getItem("facultyLoggedIn") !== "true") {
       handleSignout();
-      setTimeout(() => {
-        navigateTo("/gsd");
-      }, 1500);
+      navigateTo(-1);
     } else {
       getComplaints();
     }

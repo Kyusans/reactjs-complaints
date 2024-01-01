@@ -44,7 +44,7 @@ export default function PersonnelDashboard() {
   useEffect(() => {
     if (localStorage.getItem("personnelLoggedIn") !== "true") {
       handleSignout();
-      navigateTo("/gsd")
+      navigateTo(-1);
     } else {
       getJobTicket();
     }

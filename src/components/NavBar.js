@@ -71,4 +71,5 @@ export function handleSignout(){
   localStorage.setItem("userFullName", "");
   localStorage.setItem("personnelLoggedIn", "");
   localStorage.setItem("selectedStatus", "0");
+  localStorage.setItem("adminLoggedIn", "");
 }
