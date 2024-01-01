@@ -6,6 +6,7 @@ import { Button, Container, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faSync, faTh } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { handleSignout } from "./AdminNavbar";
 
 
 export default function AdminDashboard() {
@@ -40,7 +41,8 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (localStorage.getItem("adminLoggedIn") !== "true") {
-      navigateTo(-1);
+      handleSignout();
+      navigateTo("/gsd");
     } else {
       getAllTickets();
     }

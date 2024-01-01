@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faSync, faTh } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { handleSignout } from './NavBar';
 
 function ClientDashboard() {
   const [isCalendarView, setIsCalendarView] = useState(false);
@@ -40,8 +41,9 @@ function ClientDashboard() {
 
   useEffect(() => {
     if (localStorage.getItem("facultyLoggedIn") !== "true") {
+      handleSignout();
       setTimeout(() => {
-        navigateTo(-1);
+        navigateTo("/gsd");
       }, 1500);
     } else {
       getComplaints();

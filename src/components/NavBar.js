@@ -13,17 +13,6 @@ function AdminNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
 
   const userFullName = localStorage.getItem("userFullName");
-  const handleSignout = () => {
-    localStorage.setItem("userId", "");
-    localStorage.setItem("userLevel", "");
-    localStorage.setItem("isLoggedIn", "");
-    localStorage.setItem("facultyLoggedIn", "");
-    localStorage.setItem("facCode", "");
-    localStorage.setItem("userCommentId", "");
-    localStorage.setItem("userFullName", "");
-    localStorage.setItem("personnelLoggedIn", "");
-    localStorage.setItem("selectedStatus", "0");
-  }
 
   const handleToggleOffcanvas = () => {
     setShowOffcanvas((prev) => !prev);
@@ -71,3 +60,15 @@ function AdminNavbar() {
 }
 
 export default AdminNavbar;
+
+export function handleSignout(){
+  localStorage.setItem("userId", "");
+  localStorage.setItem("userLevel", "");
+  localStorage.setItem("isLoggedIn", "");
+  localStorage.setItem("facultyLoggedIn", "");
+  localStorage.setItem("facCode", "");
+  localStorage.setItem("userCommentId", "");
+  localStorage.setItem("userFullName", "");
+  localStorage.setItem("personnelLoggedIn", "");
+  localStorage.setItem("selectedStatus", "0");
+}

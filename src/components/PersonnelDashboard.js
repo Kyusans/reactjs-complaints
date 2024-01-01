@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faSync, faTh } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { handleSignout } from "./NavBar";
 
 
 export default function PersonnelDashboard() {
@@ -42,7 +43,8 @@ export default function PersonnelDashboard() {
 
   useEffect(() => {
     if (localStorage.getItem("personnelLoggedIn") !== "true") {
-      navigateTo(-1)
+      handleSignout();
+      navigateTo("/gsd")
     } else {
       getJobTicket();
     }
