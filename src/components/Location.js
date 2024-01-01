@@ -145,7 +145,7 @@ function Location() {
                   <Button className='mt-3' type="submit" variant='outline-success' disabled={isLoading}>
                     {!isLoading && <FontAwesomeIcon icon={faCheck} className='me-2'/>}
                     {isLoading && <Spinner animation='border' size='sm' className='me-2' />}
-                    {isLoading ? 'Submitting...' : 'Submit'}
+                    Submit
                   </Button>
                   <Button className='ms-1 mt-3' variant='outline-secondary' onClick={openLocationModal}>
                     <FontAwesomeIcon icon={faEye} /> See all location

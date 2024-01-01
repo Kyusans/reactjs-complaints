@@ -127,7 +127,7 @@ export default function Login() {
               </Form.Group>
 
               <Container className='text-center'>
-                <Button className='button-large btn-lg' variant='outline-success' onClick={login}>
+                <Button className='button-large btn-lg' variant='outline-success' onClick={login} disabled={isLoading}>
                   {isLoading ? <Spinner animation="border" size="sm" /> : "Login"}
                 </Button>
               </Container>

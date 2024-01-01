@@ -137,7 +137,7 @@ function JobOrderModal(props) {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getSelectedTicket");
       const response = await axios({ url: url, data: formData, method: "post" });
-      console.log("response ni getSelectedTicket: comp_end_date " + JSON.stringify(response.data));
+      // console.log("response ni getSelectedTicket: comp_end_date " + JSON.stringify(response.data));
       if (response.data !== 0) {
         const resData = response.data[0];
         setTicketNumber(resData.comp_id);
@@ -149,8 +149,7 @@ function JobOrderModal(props) {
         setImage(resData.comp_image);
         setStartDate(Date(resData.comp_date));
         setEndDate(Date(resData.comp_end_date));
-        console.log("start date: " + startDate)
-        console.log("endDate: " + endDate)
+
         getAllPersonnel();
       }
     } catch (error) {
@@ -158,7 +157,7 @@ function JobOrderModal(props) {
     } finally {
       setIsRetrieving(false);
     }
-  }, [endDate, startDate, ticketId]);
+  }, [ticketId]);
 
   const getPriority = useCallback(async () => {
     try {

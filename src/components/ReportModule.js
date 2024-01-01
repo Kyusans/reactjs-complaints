@@ -44,12 +44,12 @@ function ReportModule() {
     try {
       const url = localStorage.getItem("url") + "admin.php";
       const jsonData = { startDate: startDate, endDate: endDate }
-      console.log("JSON data: ", JSON.stringify(jsonData))
+      //console.log("JSON data: ", JSON.stringify(jsonData))
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData))
       formData.append("operation", "getTicketsByDate");
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("Res ni getTicketsByDate: " + JSON.stringify(res.data));
+      //console.log("Res ni getTicketsByDate: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         setTickets(res.data);
       } else {

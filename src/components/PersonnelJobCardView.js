@@ -57,7 +57,7 @@ export default function PersonnelJobCardView({ allData, refreshData }) {
       }
     }
     setPriorityType(0);
-    console.log("allData", allData);
+    // console.log("allData", allData);
   }, [allData, statusType])
 
   return (

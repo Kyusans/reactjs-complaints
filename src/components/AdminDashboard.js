@@ -6,7 +6,7 @@ import { Button, Container, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faSync, faTh } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-
+import { handleSignout } from "./NavBar";
 
 export default function AdminDashboard() {
   const [isCalendarView, setIsCalendarView] = useState(false);
@@ -21,7 +21,7 @@ export default function AdminDashboard() {
       const formData = new FormData();
       formData.append("operation", "getAllTickets");
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res ni getAllTickets", JSON.stringify(res.data));
+      // console.log("res ni getAllTickets", JSON.stringify(res.data));
       if (res.data !== 0) {
         setAllTickets(res.data);
         // const filterdData = res.data.filter(item => item.comp_status < 3);
@@ -40,6 +40,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (localStorage.getItem("adminLoggedIn") !== "true") {
+      handleSignout();
       navigateTo(-1);
     } else {
       getAllTickets();

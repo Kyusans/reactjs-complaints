@@ -97,7 +97,7 @@ function UpdateTicketModal(props) {
         data: formData,
         method: "post"
       });
-      console.log("res ni category", JSON.stringify(response.data));
+     // console.log("res ni category", JSON.stringify(response.data));
       if (response.data !== 0) {
         setLocationCategory(response.data);
       }
@@ -113,7 +113,7 @@ function UpdateTicketModal(props) {
 
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
-        console.log("res ni location", JSON.stringify(res.data));
+       // console.log("res ni location", JSON.stringify(res.data));
         if (res.data !== 0) {
           setLocation(res.data);
         }
