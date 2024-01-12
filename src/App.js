@@ -11,8 +11,8 @@ function App() {
     navigator.serviceWorker.register('/gsd/service-worker.js');
   }
 
-  if (localStorage.getItem("url") !== "https://coc-studentinfo.net/gsd/api/") {
-    localStorage.setItem("url", "https://coc-studentinfo.net/gsd/api/");
+  if (localStorage.getItem("url") !== "http://localhost/gsd/api/") {
+    localStorage.setItem("url", "http://localhost/gsd/api/");
     // https://coc-studentinfo.net/gsd/api/
   }
 

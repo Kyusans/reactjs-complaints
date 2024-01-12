@@ -10,12 +10,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faBars, faKey, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import AddPersonnel from './AddPersonnel';
 import { handleSignout } from './NavBar';
+import AdminAddClient from './AdminAddClient';
 
 function AdminNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [showAddPersonnel, setShowAddPersonnel] = useState(false);
-  const hideAddPersonnel = () =>{setShowAddPersonnel(false)}
-  const openAddPersonnel = () =>{setShowAddPersonnel(true)}
+  const hideAddPersonnel = () => { setShowAddPersonnel(false); };
+  const openAddPersonnel = () => { setShowAddPersonnel(true); };
+
+  const [showAddClient, setShowAddClient] = useState(false);
+  const hideAddClient = () => { setShowAddClient(false); };
+  const openAddClient = () => { setShowAddClient(true); };
 
   const userFullName = localStorage.getItem("userFullName");
 
@@ -51,6 +56,7 @@ function AdminNavbar() {
               <Nav.Link href="/gsd/admin/addlocation/">Add Location</Nav.Link>
               <Nav.Link href="/gsd/report/">Report</Nav.Link>
               <Nav.Link onClick={openAddPersonnel}>Add Personnel</Nav.Link>
+              <Nav.Link onClick={openAddClient}>Add Client</Nav.Link>
             </Nav>
 
             <Container className='offCanvas-footer'>
@@ -60,9 +66,10 @@ function AdminNavbar() {
               </NavDropdown>
             </Container>
           </Offcanvas.Body>
-        
+
         </Offcanvas>
         <AddPersonnel show={showAddPersonnel} onHide={hideAddPersonnel} />
+        <AdminAddClient show={showAddClient} onHide={hideAddClient} />
       </Container>
     </Navbar>
   );
