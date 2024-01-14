@@ -68,9 +68,9 @@ function AdminNavbar() {
           </Offcanvas.Body>
 
         </Offcanvas>
-        <AddPersonnel show={showAddPersonnel} onHide={hideAddPersonnel} />
-        <AdminAddClient show={showAddClient} onHide={hideAddClient} />
       </Container>
+      <AddPersonnel show={showAddPersonnel} onHide={hideAddPersonnel} />
+      <AdminAddClient show={showAddClient} onHide={hideAddClient} />
     </Navbar>
   );
 }

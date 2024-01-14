@@ -344,18 +344,27 @@ export default function JobDetails(props) {
                   ) : (isAdmin && isCompleted) ? (
                     <Button className='mt-2' variant='outline-success' onClick={openReopenJob}>Reopen Job</Button>
                   ) : isCompleted ?
-                    <Row className='mt-3'>
-                      <Col>
-                        <FloatingLabel label="Closed by">
-                          <Form.Control type="text" value={details.comp_closedBy} readOnly />
-                        </FloatingLabel>
-                      </Col>
-                      <Col>
-                        <FloatingLabel label="Date closed">
-                          <Form.Control type="text" value={formatDate(details.comp_date_closed)} readOnly />
-                        </FloatingLabel>
-                      </Col>
-                    </Row>
+                    <>
+                      <Row className='mt-3'>
+                        <Col>
+                          <FloatingLabel label="Closed by">
+                            <Form.Control type="text" value={details.comp_closedBy} readOnly />
+                          </FloatingLabel>
+                        </Col>
+                        <Col>
+                          <FloatingLabel label="Date closed">
+                            <Form.Control type="text" value={formatDate(details.comp_date_closed)} readOnly />
+                          </FloatingLabel>
+                        </Col>
+                      </Row>
+                      <Row className='mt-3'>
+                        <Col>
+                          <FloatingLabel label="Remarks">
+                            <Form.Control type="text" value={details.comp_remark} readOnly />
+                          </FloatingLabel>
+                        </Col>
+                      </Row>
+                    </>
                     : <></>
                 }
               </Container>

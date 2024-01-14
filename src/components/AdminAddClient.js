@@ -89,7 +89,7 @@ function AdminAddClient({ show, onHide }) {
           <Spinner variant='success' />
         </Container>
         :
-        <Modal show={show} onHide={handleHide}>
+        <Modal show={show} onHide={handleHide} backdrop="static">
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Modal.Header>
               <Modal.Title>
@@ -151,7 +151,7 @@ function AdminAddClient({ show, onHide }) {
 
             <Modal.Footer>
               <Button variant='outline-secondary' onClick={handleHide}>Close</Button>
-              <Button type='submit' variant='outline-success' >{isLoading && <Spinner variant='success' size="sm" />} Submit</Button>
+              <Button type='submit' variant='outline-success' >{isSubmitted && <Spinner variant='success' size="sm" />} Submit</Button>
             </Modal.Footer>
           </Form>
         </Modal>
