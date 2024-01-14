@@ -51,6 +51,7 @@ function ComplaintForm(props) {
           'Content-Type': 'multipart/form-data',
         },
       });
+      console.log("response ni add complaint: " + JSON.stringify(response));
       switch (response.data) {
         case 1:
           getAlert("success", "Success");

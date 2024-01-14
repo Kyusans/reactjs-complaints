@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { Button, Card, Container, FloatingLabel, Form, Modal, Spinner } from 'react-bootstrap';
 import AlertScript from './AlertScript';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
 function AddPersonnel(props) {
-  const {show, onHide} = props; 
+  const { show, onHide } = props;
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -80,15 +78,13 @@ function AddPersonnel(props) {
     <Modal show={show} onHide={onHide} backdrop="static" centered>
       <Container className='centered'>
         <Card className="card-thin" border='success'>
-          <Card.Header>
-            <Button variant='outline-danger button-m' onClick={() => handleBackButtonClick()} className='me-3'>
-              <FontAwesomeIcon icon={faArrowLeft} />
-            </Button>
-          </Card.Header>
-          <Card.Body>
-            <h3 className='text-center'>Add Personnel</h3>
-            <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
-            <Form noValidate validated={validated} autoComplete="off" onSubmit={handleSubmit}>
+
+          <Form noValidate validated={validated} autoComplete="off" onSubmit={handleSubmit}>
+            <Card.Header>
+              <h4>Add Personnel</h4>
+            </Card.Header>
+            <Card.Body>
+              <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
               <Form.Group className='mt-3 mb-3 fatter-text centered-label'>
                 <FloatingLabel label="Id">
                   <Form.Control
@@ -154,11 +150,15 @@ function AddPersonnel(props) {
                   />
                 </FloatingLabel>
               </Form.Group>
+            </Card.Body>
 
-              <Container className='text-center'>
+            <Card.Footer>
+              <Container className='text-end'>
+                <Button variant='outline-secondary' onClick={() => handleBackButtonClick()} className='me-1'>
+                  Close
+                </Button>
                 <Button
                   type='submit'
-                  className='button-large btn-lg'
                   variant='outline-success'
                   disabled={isLoading}
                 >
@@ -175,9 +175,8 @@ function AddPersonnel(props) {
                   {isLoading ? 'Submitting...' : 'Submit'}
                 </Button>
               </Container>
-
-            </Form>
-          </Card.Body>
+            </Card.Footer>
+          </Form>
         </Card>
       </Container>
     </Modal>
