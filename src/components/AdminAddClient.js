@@ -32,7 +32,6 @@ function AdminAddClient({ show, onHide }) {
 
   const addClient = async () => {
     setIsSubmitted(true);
-    console.log("res ni addClient");
     try {
       const url = localStorage.getItem("url") + "admin.php";
 
@@ -43,21 +42,30 @@ function AdminAddClient({ show, onHide }) {
         deptId: deptId,
       }
 
+      //console.log("jsonData: " + JSON.stringify(jsonData));
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "addClient");
 
-      var res = axios.post(url, formData);
-      console.log("res ni addClient", JSON.stringify(res.data));
+      const res = await axios.post(url, formData);
+      // console.log("res ni addClient ko to : " + JSON.stringify(res));
 
       if (res.data === 1) {
         getAlert("success", "Successfully added!");
+        setTimeout(() => {
+          setShowAlert(false);
+          setValidated(false);
+          setUserId("");
+          setFullName("");
+          setPassword("");
+          setDeptId("");
+        }, 1200);
       } else {
         getAlert("danger", "Unsuccesful");
       }
     } catch (error) {
-      getAlert("success", "Successfully added!");
-    } finally{
+      getAlert("danger", "There was an unexpected error: " + error);
+    } finally {
       setIsSubmitted(false);
     }
   }
@@ -65,7 +73,7 @@ function AdminAddClient({ show, onHide }) {
   const handleSubmit = (e) => {
     const form = e.currentTarget;
     setValidated(true);
-    if (form.validated) {
+    if (form.checkValidity()) {
       addClient();
     }
     e.preventDefault();
@@ -89,7 +97,7 @@ function AdminAddClient({ show, onHide }) {
           <Spinner variant='success' />
         </Container>
         :
-        <Modal show={show} onHide={handleHide} backdrop="static">
+        <Modal show={show} onHide={handleHide} backdrop="static" centered>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Modal.Header>
               <Modal.Title>
