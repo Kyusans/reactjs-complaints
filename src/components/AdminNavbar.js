@@ -11,7 +11,7 @@ import { faArrowLeft, faBars, faKey, faSignOutAlt } from '@fortawesome/free-soli
 import AddPersonnel from './AddPersonnel';
 import { handleSignout } from './NavBar';
 import AdminAddClient from './AdminAddClient';
-import AdminAddEquipment from './AdminAddEquipment';
+import AddEquipmentModal from './AdminAddEquipment';
 
 function AdminNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
@@ -77,7 +77,7 @@ function AdminNavbar() {
       </Container>
       <AddPersonnel show={showAddPersonnel} onHide={hideAddPersonnel} />
       <AdminAddClient show={showAddClient} onHide={hideAddClient} />
-      <AdminAddEquipment show={showAddEquipment} onHide={hideAddEquipment} />
+      <AddEquipmentModal show={showAddEquipment} onHide={hideAddEquipment} />
     </Navbar>
   );
 }

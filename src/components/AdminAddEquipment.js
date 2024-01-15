@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { Button, FloatingLabel, Form, Modal, Spinner } from 'react-bootstrap'
+import { Button, Col, Container, FloatingLabel, Form, Modal, Nav, Row, Spinner } from 'react-bootstrap'
 import AlertScript from './AlertScript';
+import AdminShowEquipment from './AdminShowEquipment';
 
 export default function AdminAddEquipment({ show, onHide }) {
   const [equipmentName, setEquipmentName] = useState("");
+  const [isShowEquipment, setIsShowEquipment] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [validated, setValidated] = useState(false);
 
@@ -46,7 +48,7 @@ export default function AdminAddEquipment({ show, onHide }) {
       }
     } catch (error) {
       getAlert("danger", "There was an error occured: " + error);
-    }finally{
+    } finally {
       setIsLoading(false);
     }
   }
@@ -68,25 +70,43 @@ export default function AdminAddEquipment({ show, onHide }) {
     setIsLoading(false);
     onHide();
   }
+
+  const handleShowEquipmentSwitch = () => {
+    setIsShowEquipment(!isShowEquipment);
+  }
   return (
     <>
-      <Modal show={show} onHide={handleHide} backdrop="static" centered>
-        <Modal.Header>
-          <h4>Add Equipment</h4>
-        </Modal.Header>
-
+      <Modal show={show} onHide={handleHide} backdrop="static" centered size='lg'>
         <Form noValidate validated={validated} onSubmit={handleAddEquipment}>
+
           <Modal.Body>
+            <Container fluid className='mb-3'>
+              <Nav variant="tabs text-center">
+                <Row>
+                  <Nav.Item as={Col} >
+                    <Nav.Link eventKey="link-1" onClick={handleShowEquipmentSwitch}><h5 className='p-2'>Add Equipment</h5></Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item as={Col}>
+                    <Nav.Link eventKey="link-2" onClick={handleShowEquipmentSwitch}> <h5 className='p-2'>Show Equipments</h5> </Nav.Link>
+                  </Nav.Item>
+                </Row>
+              </Nav>
+            </Container>
             <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
-            <FloatingLabel label="Equipment name">
-              <Form.Control
-                type='text'
-                value={equipmentName}
-                onChange={(e) => setEquipmentName(e.target.value)}
-                placeholder='Equipment name'
-                required
-              />
-            </FloatingLabel>
+            {isShowEquipment ? <AdminShowEquipment />
+              :
+              <Container className='d-flex justify-content-center mb-3 mt-4'>
+                <FloatingLabel label="Equipment name" className='w-75'>
+                  <Form.Control
+                    type='text'
+                    value={equipmentName}
+                    onChange={(e) => setEquipmentName(e.target.value)}
+                    placeholder='Equipment name'
+                    required
+                  />
+                </FloatingLabel>
+              </Container>
+            }
           </Modal.Body>
 
           <Modal.Footer>
