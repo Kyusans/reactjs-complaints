@@ -34,7 +34,7 @@ export default function AdminAddEquipment({ show, onHide }) {
       formData.append("operation", "addEquipment");
 
       const res = await axios.post(url, formData);
-      console.log("res ni addEquipment", JSON.stringify(res.data));
+      // console.log("res ni addEquipment", JSON.stringify(res.data));
 
       if (res.data === 1) {
         getAlert("success", "Successfully added!");
@@ -76,7 +76,7 @@ export default function AdminAddEquipment({ show, onHide }) {
   }
   return (
     <>
-      <Modal show={show} onHide={handleHide} backdrop="static" centered size='lg'>
+      <Modal show={show} onHide={handleHide} centered size='xl'>
         <Form noValidate validated={validated} onSubmit={handleAddEquipment}>
 
           <Modal.Body>
@@ -111,7 +111,9 @@ export default function AdminAddEquipment({ show, onHide }) {
 
           <Modal.Footer>
             <Button variant='outline-secondary' onClick={handleHide}>Close</Button>
-            <Button variant='outline-success' type='submit'>{isLoading && <Spinner animation="border" size="sm" />} Submit</Button>
+            {!isShowEquipment &&
+              <Button variant='outline-success' type='submit'>{isLoading && <Spinner animation="border" size="sm" />} Submit</Button>
+            }
           </Modal.Footer>
         </Form>
       </Modal>
