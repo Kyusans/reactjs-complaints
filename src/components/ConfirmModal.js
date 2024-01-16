@@ -8,6 +8,7 @@ export default function ConfirmModal(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isOther, setIsOther] = useState(false);
+  const [equipmentValid, setEquipmentValid] = useState(true);
   const [selectedOperation, setSelectedOperation] = useState("");
   const [remarks, setRemarks] = useState("");
   const [item, setItem] = useState("");
@@ -23,6 +24,7 @@ export default function ConfirmModal(props) {
   ];
 
   const handleHide = () => {
+    setEquipmentValid(true);
     setIsSubmitted(false);
     setOtherEquipment("");
     setEquipments([]);
@@ -38,18 +40,25 @@ export default function ConfirmModal(props) {
   };
 
 
-  const handleEquipmentChange = (selectedEquipmentId) => {
-    setItem(selectedEquipmentId);
-    setIsOther(selectedEquipmentId === 'other');
-    handleAddEquipment();
+  const handleEquipmentChange = (selectedEquipmentTarget) => {
+    setItem(selectedEquipmentTarget);
+    setIsOther(selectedEquipmentTarget === 'other');
+    
+    if(selectedEquipmentTarget !== "other"){
+      handleAddEquipment(selectedEquipmentTarget);
+    }
   };
 
-  const handleAddEquipment = useCallback(() => {
-    if (item && !selectedEquipment.includes(item) && !isOther) {
-      setSelectedEquipment([...selectedEquipment, item]);
-      // setItem('');
+  const handleAddEquipment = useCallback((selectedEquipmentId) => {
+    if (selectedEquipmentId && !selectedEquipment.includes(selectedEquipmentId)) {
+      setEquipmentValid(true);
+      setSelectedEquipment([...selectedEquipment, selectedEquipmentId]);
     }
-  }, [isOther, item, selectedEquipment]);
+
+    if(!isOther){
+      setOtherEquipment("");
+    }
+  }, [isOther, selectedEquipment]);
 
   const handleRemoveEquipment = (removedEquipmentId) => {
     const updatedEquipmentArray = selectedEquipment.filter(id => id !== removedEquipmentId);
@@ -72,9 +81,9 @@ export default function ConfirmModal(props) {
     try {
       const url = localStorage.getItem("url") + "personnel.php";
       const fullName = localStorage.getItem("userFullName");
-      const master = { compId: compId, fullName: fullName, jobOperation: selectedOperation, remarks: remarks };
+      const master = { compId: compId, fullName: fullName, jobOperation: selectedOperation, remarks: remarks, otherEquipment: otherEquipment === "" ? null : otherEquipment };
       const detail = { selectedEquipment: selectedEquipment };
-      const jsonData = {master: master, detail: detail};
+      const jsonData = { master: master, detail: detail };
       const formData = new FormData();
       formData.append("operation", "jobDone");
       formData.append("json", JSON.stringify(jsonData));
@@ -135,13 +144,19 @@ export default function ConfirmModal(props) {
 
   const handleJobDone = (e) => {
     const form = e.currentTarget;
-
+    setValidated(true);
     e.preventDefault();
     e.stopPropagation();
-    if (form.checkValidity()) {
+    console.log("selected equipment length", selectedEquipment.length);
+    console.log("equipmentNotValid", equipmentValid);
+
+    if (selectedEquipment.length <= 0 && !isOther) {
+      setItem("");
+      setEquipmentValid(false);
+      return;
+    } else if (form.checkValidity()) {
       jobDone();
     }
-    setValidated(true);
   }
 
 
@@ -171,18 +186,25 @@ export default function ConfirmModal(props) {
 
                 <FloatingLabel label='Equipment'>
                   <Form.Select
-                    placeholder='Item'
+                    placeholder='Equipment'
                     value={item}
                     onChange={(e) => handleEquipmentChange(e.target.value)}
-                    required
+                    required={!isOther}
                   >
-                    <option value={""}>Select equipment</option>
+                    <option value={""} disabled>Select equipment</option>
                     {equipments.map((equipment, index) => (
-                      <option key={index} value={equipment.equip_name}>{equipment.equip_name}</option>
+                      <option key={index} value={`${equipment.equip_name}`}>
+                        {equipment.equip_name}
+                      </option>
                     ))}
                     <option value="other">Other..</option>
                   </Form.Select>
                 </FloatingLabel>
+                {!equipmentValid && (
+                  <Form.Text className='text-danger ms-2'>
+                    Select at least one equipment
+                  </Form.Text>
+                )}
 
                 {isOther &&
                   <FloatingLabel label='Other equipment name' className='mt-3'>
