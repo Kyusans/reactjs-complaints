@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Container, FloatingLabel, Form, ListGroup, Modal, Spinner } from 'react-bootstrap';
 import AlertScript from './AlertScript';
 
-export default function ConfirmModal(props) {
+const ConfirmModal = (props) => {
   const { show, hide, compId } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -39,33 +39,33 @@ export default function ConfirmModal(props) {
     hide();
   };
 
-
   const handleEquipmentChange = (selectedEquipmentTarget) => {
     setItem(selectedEquipmentTarget);
     setIsOther(selectedEquipmentTarget === 'other');
-    
-    if(selectedEquipmentTarget !== "other"){
+
+    if (selectedEquipmentTarget !== "other") {
       handleAddEquipment(selectedEquipmentTarget);
     }
   };
 
   const handleAddEquipment = useCallback((selectedEquipmentId) => {
-    if (selectedEquipmentId && !selectedEquipment.includes(selectedEquipmentId)) {
+    if (selectedEquipmentId && selectedEquipmentId !== null && !selectedEquipment.includes(selectedEquipmentId)) {
       setEquipmentValid(true);
-      setSelectedEquipment([...selectedEquipment, selectedEquipmentId]);
+      // Find the equipment object with the selectedEquipmentId and get the equip_id
+      const equip_id = equipments.find(equipment => equipment.equip_name === selectedEquipmentId).equip_id;
+      setSelectedEquipment([...selectedEquipment, { equip_id }]);
     }
 
-    if(!isOther){
+    if (!isOther) {
       setOtherEquipment("");
     }
-  }, [isOther, selectedEquipment]);
+  }, [isOther, selectedEquipment, equipments]);
 
   const handleRemoveEquipment = (removedEquipmentId) => {
-    const updatedEquipmentArray = selectedEquipment.filter(id => id !== removedEquipmentId);
+    const updatedEquipmentArray = selectedEquipment.filter(equipment => equipment.equip_id !== removedEquipmentId);
     setSelectedEquipment(updatedEquipmentArray);
   };
 
-  // for alert
   const [showAlert, setShowAlert] = useState(false);
   const [alertVariant, setAlertVariant] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
@@ -82,7 +82,7 @@ export default function ConfirmModal(props) {
       const url = localStorage.getItem("url") + "personnel.php";
       const fullName = localStorage.getItem("userFullName");
       const master = { compId: compId, fullName: fullName, jobOperation: selectedOperation, remarks: remarks, otherEquipment: otherEquipment === "" ? null : otherEquipment };
-      const detail = { selectedEquipment: selectedEquipment };
+      const detail = { selectedEquipment: selectedEquipment.map(equipment => equipment.equip_id) };
       const jsonData = { master: master, detail: detail };
       const formData = new FormData();
       formData.append("operation", "jobDone");
@@ -92,7 +92,7 @@ export default function ConfirmModal(props) {
 
       const response = await axios.post(url, formData);
 
-      // console.log("response", JSON.stringify(response));
+      console.log("response", JSON.stringify(response));
 
       if (response.data === 1) {
         getAlert("success", "Job Complete!");
@@ -108,6 +108,11 @@ export default function ConfirmModal(props) {
     } finally {
       setIsSubmitted(false);
     }
+  };
+
+  const getEquipmentName = (equipId) => {
+    const equipmentObject = equipments.find(equipment => equipment.equip_id === equipId);
+    return equipmentObject ? equipmentObject.equip_name : 'Unknown Equipment';
   };
 
   const getEquipment = useCallback(async () => {
@@ -139,8 +144,9 @@ export default function ConfirmModal(props) {
   }, [getEquipment, show]);
 
   useEffect(() => {
+    console.log("selectedEquipment ko to, ", selectedEquipment);
     handleAddEquipment();
-  }, [handleAddEquipment])
+  }, [handleAddEquipment, selectedEquipment]);
 
   const handleJobDone = (e) => {
     const form = e.currentTarget;
@@ -148,7 +154,6 @@ export default function ConfirmModal(props) {
     e.preventDefault();
     e.stopPropagation();
     console.log("selected equipment length", selectedEquipment.length);
-    console.log("equipmentNotValid", equipmentValid);
 
     if (selectedEquipment.length <= 0 && !isOther) {
       setItem("");
@@ -157,8 +162,7 @@ export default function ConfirmModal(props) {
     } else if (form.checkValidity()) {
       jobDone();
     }
-  }
-
+  };
 
   return (
     <>
@@ -217,10 +221,10 @@ export default function ConfirmModal(props) {
                 </FloatingLabel>
 
                 <ListGroup className='mt-3'>
-                  {selectedEquipment.map((selectedEquipment, index) => (
+                  {selectedEquipment.map((equipment, index) => (
                     <ListGroup.Item key={index} className='d-flex justify-content-between align-items-center'>
-                      {index + 1}. {selectedEquipment === "other" ? otherEquipment : selectedEquipment}
-                      <Button variant='outline-danger' size='sm' onClick={() => handleRemoveEquipment(selectedEquipment)}>Remove</Button>
+                      {index + 1}. {equipment.equip_id ? getEquipmentName(equipment.equip_id) : (equipment === "other" ? otherEquipment : equipment)}
+                      <Button variant='outline-danger' size='sm' onClick={() => handleRemoveEquipment(equipment.equip_id)}>Remove</Button>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
@@ -239,4 +243,6 @@ export default function ConfirmModal(props) {
       }
     </>
   );
-}
+};
+
+export default ConfirmModal;
