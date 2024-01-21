@@ -29,12 +29,14 @@ export default function AdminAddEquipment({ show, onHide }) {
 
       const jsonData = { equipmentName: equipmentName }
 
+      console.log("jsonData: ", JSON.stringify(jsonData));
+
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "addEquipment");
 
       const res = await axios.post(url, formData);
-      // console.log("res ni addEquipment", JSON.stringify(res.data));
+       console.log("res ni addEquipment", JSON.stringify(res.data));
 
       if (res.data === 1) {
         getAlert("success", "Successfully added!");
@@ -71,8 +73,8 @@ export default function AdminAddEquipment({ show, onHide }) {
     onHide();
   }
 
-  const handleShowEquipmentSwitch = () => {
-    setIsShowEquipment(!isShowEquipment);
+  const handleShowEquipmentSwitch = (status) => {
+    setIsShowEquipment(status === 0 ? false : true);
   }
   return (
     <>
@@ -84,10 +86,10 @@ export default function AdminAddEquipment({ show, onHide }) {
               <Nav variant="tabs text-center">
                 <Row>
                   <Nav.Item as={Col} >
-                    <Nav.Link eventKey="link-1" onClick={handleShowEquipmentSwitch}><h5 className='p-2'>Add Equipment</h5></Nav.Link>
+                    <Nav.Link eventKey="link-1" onClick={() => handleShowEquipmentSwitch(0)}><h5 className='p-2'>Add Equipment</h5></Nav.Link>
                   </Nav.Item>
                   <Nav.Item as={Col}>
-                    <Nav.Link eventKey="link-2" onClick={handleShowEquipmentSwitch}> <h5 className='p-2'>Show Equipments</h5> </Nav.Link>
+                    <Nav.Link eventKey="link-2" onClick={() => handleShowEquipmentSwitch(1)}> <h5 className='p-2'>Show Equipments</h5> </Nav.Link>
                   </Nav.Item>
                 </Row>
               </Nav>
