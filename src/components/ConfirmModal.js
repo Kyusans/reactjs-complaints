@@ -18,12 +18,6 @@ const ConfirmModal = (props) => {
   const [selectedEquipment, setSelectedEquipment] = useState([]);
   const [operationData, setOperationData] = useState([]);
 
-  // const operationData = [
-  //   { "operation_name": "Replaced" },
-  //   { "operation_name": "Repaired" },
-  //   { "operation_name": "Destroyed" },
-  // ];
-
   const handleHide = () => {
     setEquipmentValid(true);
     setIsSubmitted(false);
@@ -207,7 +201,7 @@ const ConfirmModal = (props) => {
                   <Form.Select className='mb-3' value={selectedOperation} onChange={(e) => setSelectedOperation(e.target.value)} placeholder='Operation' required>
                     <option value={""}>Select operation</option>
                     {operationData.map((operation, index) => (
-                      <option key={index} value={operation.operation_name}>{operation.operation_name}</option>
+                      <option key={index} value={operation.operation_id}>{operation.operation_name}</option>
                     ))}
                   </Form.Select>
                 </FloatingLabel>
