@@ -29,14 +29,14 @@ export default function AdminAddEquipment({ show, onHide }) {
 
       const jsonData = { equipmentName: equipmentName }
 
-      console.log("jsonData: ", JSON.stringify(jsonData));
+      // console.log("jsonData: ", JSON.stringify(jsonData));
 
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "addEquipment");
 
       const res = await axios.post(url, formData);
-       console.log("res ni addEquipment", JSON.stringify(res.data));
+      // console.log("res ni addEquipment", JSON.stringify(res.data));
 
       if (res.data === 1) {
         getAlert("success", "Successfully added!");

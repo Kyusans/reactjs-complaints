@@ -137,7 +137,7 @@ function JobOrderModal(props) {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getSelectedTicket");
       const response = await axios({ url: url, data: formData, method: "post" });
-      // console.log("response ni getSelectedTicket: comp_end_date " + JSON.stringify(response.data));
+      // //console.log("response ni getSelectedTicket: comp_end_date " + JSON.stringify(response.data));
       if (response.data !== 0) {
         const resData = response.data[0];
         setTicketNumber(resData.comp_id);

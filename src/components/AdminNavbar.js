@@ -59,10 +59,10 @@ function AdminNavbar() {
             <Nav className="justify-content-end flex-grow-1 pe-3">
               <Nav.Link href="/gsd/admin/dashboard/">Home</Nav.Link>
               <Nav.Link href="/gsd/report/">Report</Nav.Link>
-              <Nav.Link href="/gsd/admin/addlocation/">Add Location</Nav.Link>
               <Nav.Link onClick={openAddPersonnel}>Add Personnel</Nav.Link>
               <Nav.Link onClick={openAddClient}>Add Client</Nav.Link>
               <Nav.Link onClick={openAddEquipment}>Add Equipment</Nav.Link>
+              <Nav.Link href="/gsd/admin/addlocation/">Add Location</Nav.Link>
             </Nav>
 
             <Container className='offCanvas-footer'>

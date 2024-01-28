@@ -16,12 +16,7 @@ const ConfirmModal = (props) => {
   const [validated, setValidated] = useState(false);
   const [equipments, setEquipments] = useState([]);
   const [selectedEquipment, setSelectedEquipment] = useState([]);
-
-  const operationData = [
-    { "operation_name": "Replaced" },
-    { "operation_name": "Repaired" },
-    { "operation_name": "Destroyed" },
-  ];
+  const [operationData, setOperationData] = useState([]);
 
   const handleHide = () => {
     setEquipmentValid(true);
@@ -88,11 +83,11 @@ const ConfirmModal = (props) => {
       formData.append("operation", "jobDone");
       formData.append("json", JSON.stringify(jsonData));
 
-      console.log("json data ko to", JSON.stringify(jsonData));
+      //console.log("json data ko to", JSON.stringify(jsonData));
 
       const response = await axios.post(url, formData);
 
-      console.log("response", JSON.stringify(response));
+      //console.log("response", JSON.stringify(response));
 
       if (response.data === 1) {
         getAlert("success", "Job Complete!");
@@ -101,7 +96,7 @@ const ConfirmModal = (props) => {
         }, 1000);
       } else {
         getAlert("danger", "Unsuccessful!");
-
+        console.log("There was an unexpected error: " + response.data);
       }
     } catch (err) {
       getAlert("danger", "There was an unexpected error: " + err);
@@ -115,6 +110,30 @@ const ConfirmModal = (props) => {
     return equipmentObject ? equipmentObject.equip_name : 'Unknown Equipment';
   };
 
+
+  const getOperation = useCallback( async () => {
+    setIsLoading(true);
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const formData = new FormData();
+      formData.append("operation", "getOperation");
+
+      const res = await axios.post(url, formData);
+      //console.log("res ni getEquipment", JSON.stringify(res.data));
+
+      if (res.data !== 0) {
+        setOperationData(res.data);
+      } else {
+        getAlert("danger", "No operation found");
+        console.log("There was an unexpected error: " + res.data);
+      }
+    } catch (error) {
+      getAlert("danger", "There was an error occurred: " + error);
+    } finally {
+      setIsLoading(false);
+    }
+  },[]);
+
   const getEquipment = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -123,7 +142,7 @@ const ConfirmModal = (props) => {
       formData.append("operation", "getEquipment");
 
       const res = await axios.post(url, formData);
-      console.log("res ni getEquipment", JSON.stringify(res.data));
+      //console.log("res ni getEquipment", JSON.stringify(res.data));
 
       if (res.data !== 0) {
         setEquipments(res.data);
@@ -132,19 +151,18 @@ const ConfirmModal = (props) => {
       }
     } catch (error) {
       getAlert("danger", "There was an error occurred: " + error);
-    } finally {
-      setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
     if (show) {
       getEquipment();
+      getOperation();
     }
-  }, [getEquipment, show]);
+  }, [getEquipment, getOperation, show]);
 
   useEffect(() => {
-    console.log("selectedEquipment ko to, ", selectedEquipment);
+    //console.log("selectedEquipment ko to, ", selectedEquipment);
     handleAddEquipment();
   }, [handleAddEquipment, selectedEquipment]);
 
@@ -153,7 +171,7 @@ const ConfirmModal = (props) => {
     setValidated(true);
     e.preventDefault();
     e.stopPropagation();
-    console.log("selected equipment length", selectedEquipment.length);
+    //console.log("selected equipment length", selectedEquipment.length);
 
     if (selectedEquipment.length <= 0 && !isOther) {
       setItem("");
@@ -183,7 +201,7 @@ const ConfirmModal = (props) => {
                   <Form.Select className='mb-3' value={selectedOperation} onChange={(e) => setSelectedOperation(e.target.value)} placeholder='Operation' required>
                     <option value={""}>Select operation</option>
                     {operationData.map((operation, index) => (
-                      <option key={index} value={operation.operation_name}>{operation.operation_name}</option>
+                      <option key={index} value={operation.operation_id}>{operation.operation_name}</option>
                     ))}
                   </Form.Select>
                 </FloatingLabel>
@@ -233,7 +251,7 @@ const ConfirmModal = (props) => {
             <Modal.Footer>
               <Button variant='outline-secondary' onClick={handleHide}>Close</Button>
 
-              <Button type='submit' variant='outline-success' disabled={isLoading}>
+              <Button type='submit' variant='outline-success' disabled={isSubmitted}>
                 {isSubmitted && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
                 Mark as done
               </Button>
