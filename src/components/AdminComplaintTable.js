@@ -53,7 +53,7 @@ function AdminComplaintTable({ allData, refreshData }) {
         setTickets(filterdData);
       }
     }
-    // console.log("alldata: " + allData);
+    //console.log("alldata: " + allData);
   }, [allData, statusType]);
 
   const startIndex = (currentPage - 1) * ticketsPerPage;

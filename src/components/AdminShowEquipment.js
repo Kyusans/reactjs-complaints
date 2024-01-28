@@ -28,7 +28,7 @@ export default function AdminShowEquipment() {
       formData.append("operation", "getEquipment");
 
       const res = await axios.post(url, formData);
-      console.log("res ni getEquipment", JSON.stringify(res.data));
+      //console.log("res ni getEquipment", JSON.stringify(res.data));
 
       if (res.data !== 0) {
         setEquipments(res.data);

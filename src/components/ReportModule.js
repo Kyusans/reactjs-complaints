@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Button, Card, Col, Container, FloatingLabel, Form, Row, Spinner, Table } from "react-bootstrap";
 import generatePDF, { usePDF } from "react-to-pdf";
 import * as XLSX from 'xlsx';
@@ -6,6 +6,7 @@ import axios from "axios";
 import AlertScript from "./AlertScript";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel, faFilePdf, faFilter } from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
 
 export function formatDates(inputDate) {
   const date = new Date(inputDate);
@@ -36,20 +37,18 @@ function ReportModule() {
   }
 
   // month only
-
-
-  const getTicketsByDate = async () => {
+  const getReport = useCallback(async () => {
     setTickets([]);
     setShowAlert(false);
     try {
       const url = localStorage.getItem("url") + "admin.php";
-      const jsonData = { startDate: startDate, endDate: endDate }
+      // const jsonData = { startDate: startDate, endDate: endDate }
       //console.log("JSON data: ", JSON.stringify(jsonData))
       const formData = new FormData();
-      formData.append("json", JSON.stringify(jsonData))
-      formData.append("operation", "getTicketsByDate");
+      // formData.append("json", JSON.stringify(jsonData))
+      formData.append("operation", "getReport");
       const res = await axios({ url: url, data: formData, method: "post" });
-      //console.log("Res ni getTicketsByDate: " + JSON.stringify(res.data));
+      console.log("Res ni getReport: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         setTickets(res.data);
       } else {
@@ -59,7 +58,12 @@ function ReportModule() {
     } catch (err) {
       getAlert("danger", "There was an unexpected error: " + err);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    getReport();
+  }, [getReport])
+
 
   const { targetRef } = usePDF({ filename: 'gsdReport.pdf' });
   const exportToExcel = () => {
@@ -98,7 +102,7 @@ function ReportModule() {
             </Card.Header>
             <Card.Body>
 
-              <Container className="mt-3 mb-2">
+              {/* <Container className="mt-3 mb-2">
                 <Form>
                   <Row className='d-flex align-items-start'>
                     <Col xs={12} md={4} className='mb-2'>
@@ -118,7 +122,7 @@ function ReportModule() {
                     </Col>
                   </Row>
                 </Form>
-              </Container>
+              </Container> */}
 
               <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
               <div />

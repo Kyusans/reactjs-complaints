@@ -166,7 +166,7 @@ export default function JobDetails(props) {
       formData.append("operation", "getComment");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res ni getComment: " + JSON.stringify(res.data));
+      //console.log("res ni getComment: " + JSON.stringify(res.data));
       if (res.data !== 0) {
         setComment(res.data);
       } else {
@@ -186,7 +186,7 @@ export default function JobDetails(props) {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getJobDetails");
       const res = await axios({ url: url, data: formData, method: "post" });
-      console.log("res ni getJobDetails: ", JSON.stringify(res.data));
+      //console.log("res ni getJobDetails: ", JSON.stringify(res.data));
       if (res.data !== 0) {
         if (res.data.joStatus_name === "Completed") {
           setIsCompleted(true);

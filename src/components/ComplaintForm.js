@@ -51,7 +51,7 @@ function ComplaintForm(props) {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log("response ni add complaint: " + JSON.stringify(response));
+      ////console.log("response ni add complaint: " + JSON.stringify(response));
       switch (response.data) {
         case 1:
           getAlert("success", "Success");
@@ -90,7 +90,7 @@ function ComplaintForm(props) {
     formData.append("operation", "getAllLocation");
     axios({ url: url, data: formData, method: "post" })
       .then((res) => {
-         console.log("res ni getLocation: " + JSON.stringify(res.data))
+         ////console.log("res ni getLocation: " + JSON.stringify(res.data))
         if (res.data !== 0) {
           setLocation(res.data);
         }
@@ -111,7 +111,7 @@ function ComplaintForm(props) {
         method: "post"
       });
       if (response.data !== 0) {
-        console.log("response ni getlocationCategory: " + JSON.stringify(response.data));
+        //console.log("response ni getlocationCategory: " + JSON.stringify(response.data));
         setLocationCategory(response.data);
       }
     } catch (error) {
@@ -145,10 +145,10 @@ function ComplaintForm(props) {
   }
   
   useEffect(() => {
-    // console.log("location ko to: ", JSON.stringify(location))
+    // //console.log("location ko to: ", JSON.stringify(location))
     if(show){
       const filterData = location.filter(item => item.location_categoryId === Number(locationCategoryId));
-     // console.log("filterData: ", JSON.stringify(filterData));
+     // //console.log("filterData: ", JSON.stringify(filterData));
       setFilteredLocations(filterData);
     }
   }, [location, locationCategoryId, show]);
