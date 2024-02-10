@@ -11,12 +11,7 @@ function AdminAddClient({ show, onHide }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [validated, setValidated] = useState(false);
-  const [department, setDepartment] = useState([
-    { "dept_name": "CITE", "dept_id": "1" },
-    { "dept_name": "Department01", "dept_id": "2" },
-    { "dept_name": "Department02", "dept_id": "3" },
-    { "dept_name": "Department03", "dept_id": "4" },
-  ]);
+  const [department, setDepartment] = useState([]);
 
   //for alert
   const [showAlert, setShowAlert] = useState(false);

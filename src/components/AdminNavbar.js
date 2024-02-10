@@ -12,6 +12,7 @@ import AddPersonnel from './AddPersonnel';
 import { handleSignout } from './NavBar';
 import AdminAddClient from './AdminAddClient';
 import AddEquipmentModal from './AdminAddEquipment';
+import AddDepartment from './AddDepartment';
 
 function AdminNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
@@ -26,6 +27,10 @@ function AdminNavbar() {
   const [showAddEquipment, setShowAddEquipment] = useState(false);
   const hideAddEquipment = () => { setShowAddEquipment(false); };
   const openAddEquipment = () => { setShowAddEquipment(true); };
+
+  const [showAddDepartment, setShowAddDepartment] = useState(false);
+  const hideAddDepartment = () => { setShowAddDepartment(false); };
+  const openAddDepartment = () => { setShowAddDepartment(true); };
 
   const userFullName = localStorage.getItem("userFullName");
 
@@ -62,6 +67,7 @@ function AdminNavbar() {
               <Nav.Link onClick={openAddPersonnel}>Add Personnel</Nav.Link>
               <Nav.Link onClick={openAddClient}>Add Client</Nav.Link>
               <Nav.Link onClick={openAddEquipment}>Add Equipment</Nav.Link>
+              <Nav.Link onClick={openAddDepartment}>Add Department</Nav.Link>
               <Nav.Link href="/gsd/admin/addlocation/">Add Location</Nav.Link>
             </Nav>
 
@@ -78,6 +84,7 @@ function AdminNavbar() {
       <AddPersonnel show={showAddPersonnel} onHide={hideAddPersonnel} />
       <AdminAddClient show={showAddClient} onHide={hideAddClient} />
       <AddEquipmentModal show={showAddEquipment} onHide={hideAddEquipment} />
+      <AddDepartment show={showAddDepartment} onHide={hideAddDepartment} />
     </Navbar>
   );
 }
