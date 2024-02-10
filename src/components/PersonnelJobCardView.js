@@ -24,14 +24,18 @@ export default function PersonnelJobCardView({ allData, refreshData }) {
   //priority ni siya
   const getSelectedPriority = (priority) => {
     setPriorityType(priority);
+    console.log("priority", priority);
     var filterData;
+
     if (parseInt(priority) === 0 && parseInt(statusType) === 0) {
       setTicket(allData);
       return;
-    } else if (parseInt(statusType) === 0) {
-      filterData = allData.filter(item => item.priority_id === Number(priority));
-    }
-    else {
+    } else if (parseInt(statusType) === 0 && parseInt(priority) !== 0) {
+      filterData = allData.filter(item => item.priority_id === priority);
+    } else if (parseInt(statusType) !== 0 && parseInt(priority) === 0) {
+      filterData = allData.filter(item => item.comp_status === statusType);
+    } else {
+      console.log("priority mo to else", priority);
       filterData = allData.filter(item => item.priority_id === priority && item.comp_status === statusType);
     }
     setTicket(filterData);
@@ -48,6 +52,7 @@ export default function PersonnelJobCardView({ allData, refreshData }) {
   }
 
   useEffect(() => {
+    console.log("alldata: " + JSON.stringify(allData));
     if (allData) {
       if (statusType === 0) {
         setTicket(allData);
