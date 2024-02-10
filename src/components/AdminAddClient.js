@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Container, FloatingLabel, Form, Modal, Spinner } from 'react-bootstrap'
 import AlertScript from './AlertScript';
 
@@ -24,6 +24,25 @@ function AdminAddClient({ show, onHide }) {
     setAlertVariant(variantAlert);
     setAlertMessage(messageAlert);
   }
+
+  const getDepartment = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const formData = new FormData();
+      formData.append("operation", "getDepartment");
+      const res = await axios.post(url, formData);
+      if (res !== 0) {
+        setDepartment(res.data);
+      } else {
+        getAlert("danger", "No departments yet");
+      }
+    } catch (error) {
+
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   const addClient = async () => {
     setIsSubmitted(true);
@@ -85,21 +104,28 @@ function AdminAddClient({ show, onHide }) {
     onHide();
   }
 
+  useEffect(() => {
+    if (show) {
+      getDepartment();
+    }
+  }, [getDepartment, show])
+
   return (
     <div>
-      {isLoading ?
-        <Container className='text-center'>
-          <Spinner variant='success' />
-        </Container>
-        :
-        <Modal show={show} onHide={handleHide} backdrop="static" centered>
-          <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Modal.Header>
-              <Modal.Title>
-                Add Client
-              </Modal.Title>
-            </Modal.Header>
 
+      <Modal show={show} onHide={handleHide} backdrop="static" centered>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+          <Modal.Header>
+            <Modal.Title>
+              Add Client
+            </Modal.Title>
+          </Modal.Header>
+
+          {isLoading ?
+            <Container className='text-center'>
+              <Spinner variant='success' />
+            </Container>
+            :
             <Modal.Body>
               <Container>
                 <AlertScript show={showAlert} variant={alertVariant} message={alertMessage} />
@@ -151,14 +177,13 @@ function AdminAddClient({ show, onHide }) {
 
               </Container>
             </Modal.Body>
-
-            <Modal.Footer>
-              <Button variant='outline-secondary' onClick={handleHide}>Close</Button>
-              <Button type='submit' variant='outline-success' >{isSubmitted && <Spinner variant='success' size="sm" />} Submit</Button>
-            </Modal.Footer>
-          </Form>
-        </Modal>
-      }
+          }
+          <Modal.Footer>
+            <Button variant='outline-secondary' onClick={handleHide}>Close</Button>
+            <Button type='submit' variant='outline-success' >{isSubmitted && <Spinner variant='success' size="sm" />} Submit</Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
 
     </div>
   )

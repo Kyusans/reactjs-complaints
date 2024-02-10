@@ -20,31 +20,31 @@ export default function AdminShowDepartment() {
     setAlertMessage(messageAlert);
   }
 
-  // const getEquipment = useCallback(async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const url = localStorage.getItem("url") + "admin.php";
-  //     const formData = new FormData();
-  //     formData.append("operation", "getEquipment");
+  const getDepartment = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const url = localStorage.getItem("url") + "admin.php";
+      const formData = new FormData();
+      formData.append("operation", "getDepartment");
 
-  //     const res = await axios.post(url, formData);
-  //     //console.log("res ni getEquipment", JSON.stringify(res.data));
+      const res = await axios.post(url, formData);
+      //console.log("res ni getEquipment", JSON.stringify(res.data));
 
-  //     if (res.data !== 0) {
-  //       setEquipments(res.data);
-  //     } else {
-  //       getAlert("danger", "No Equipment yet");
-  //     }
-  //   } catch (error) {
-  //     getAlert("danger", "There was an error occurred: " + error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // }, []);
+      if (res.data !== 0) {
+        setDepartment(res.data);
+      } else {
+        getAlert("danger", "No Equipment yet");
+      }
+    } catch (error) {
+      getAlert("danger", "There was an error occurred: " + error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   getEquipment();
-  // }, [getEquipment]);
+  useEffect(() => {
+    getDepartment();
+  }, [getDepartment]);
 
   const handleUpdateName = (index) => {
     setEditMode((prevEditMode) => ({
@@ -55,15 +55,16 @@ export default function AdminShowDepartment() {
 
   const handleInputChange = (index, event) => {
     const newDepartment = [...department];
-    newDepartment[index].equip_name = event.target.value;
+    newDepartment[index].dept_name = event.target.value;
     setDepartment(newDepartment);
   };
 
-  const updateDepartment= async (index, department) => {
+  const updateDepartment = async (index, department) => {
+    setShowAlert(false);
     setIsUpdating(true);
     try {
       const url = localStorage.getItem("url") + "admin.php";
-      const jsonData = { departmentName: department.equip_name, departmentId: department.equip_id };
+      const jsonData = { departmentName: department.dept_name, departmentId: department.dept_id };
 
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
@@ -72,6 +73,7 @@ export default function AdminShowDepartment() {
       const res = await axios.post(url, formData);
       if (res.data !== 1) {
         getAlert("danger", "Failed to update department name");
+        console.log("res ni updateDepartment", JSON.stringify(res.data));
       }
     } catch (error) {
       getAlert("There was an error occurred: " + error);
@@ -120,20 +122,22 @@ export default function AdminShowDepartment() {
                       <Button
                         variant="success"
                         onClick={() => updateDepartment(index, departments)}
+                        disabled={isUpdating}
                       >
+                        {isUpdating && <Spinner animation="border" size="sm" />}
                         Save
                       </Button>
                       <Button
                         variant="secondary"
                         className="ms-2"
                         onClick={() => handleCancelUpdate(index)}
+                        disabled={isUpdating}
                       >
                         Cancel
                       </Button>
                     </>
                   ) : (
                     <Button onClick={() => handleUpdateName(index)} disabled={isUpdating}>
-                      {isUpdating && <Spinner animation="border" size="sm" />}
                       Update name
                     </Button>
                   )}
