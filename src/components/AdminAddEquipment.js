@@ -37,8 +37,9 @@ export default function AdminAddEquipment({ show, onHide }) {
 
       const res = await axios.post(url, formData);
       // console.log("res ni addEquipment", JSON.stringify(res.data));
-
-      if (res.data === 1) {
+      if (res.data === -1) {
+        getAlert("danger", "Equipment name already exist!");
+      } else if (res.data === 1) {
         getAlert("success", "Successfully added!");
         setTimeout(() => {
           setEquipmentName("");
@@ -74,6 +75,7 @@ export default function AdminAddEquipment({ show, onHide }) {
   }
 
   const handleShowEquipmentSwitch = (status) => {
+    setShowAlert(false);
     setIsShowEquipment(status === 0 ? false : true);
   }
   return (
